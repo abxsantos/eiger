@@ -37,9 +37,6 @@ SECRET_KEY = config('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
-
 # Application definition
 
 INSTALLED_APPS: Tuple[str, ...] = (
@@ -175,3 +172,22 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+if DEBUG:
+    STATIC_ROOT = '.static'
+    ALLOWED_HOSTS = [
+        config('DOMAIN_NAME'),
+        'localhost',
+        '0.0.0.0',  # noqa: S104
+        '127.0.0.1',
+        '[::1]',
+        'web',
+    ]
+else:
+    STATIC_ROOT = '/var/www/django/static/'
+    ALLOWED_HOSTS = [
+        config('DOMAIN_NAME'),
+        # We need this value for `healthcheck` to work:
+        'localhost',
+        '0.0.0.0',
+    ]
