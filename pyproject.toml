@@ -51,3 +51,158 @@ major_version_zero = true
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+
+[tool.ruff]
+line-length = 80
+
+# Excluding some directories:
+exclude = [".git","__pycache__",".venv",".eggs","*.egg"]
+
+# Disable some pydocstyle checks:
+ignore = ["D100", "D104", "D106", "D401"]
+
+[per-file-ignores]
+  # Enable `assert` keyword and magic numbers for tests:
+  "tests/*.py"=["S101"]
+
+
+[tool.isort]
+profile = "black"
+src_paths = ["eiger", "test"]
+line_length = 79
+
+
+[tool.blue]
+preview = true
+
+
+[tool.pytest]
+# pytest configuration:
+# https://docs.pytest.org/en/stable/customize.html
+
+# pytest-django configuration:
+# https://pytest-django.readthedocs.io/en/latest/
+DJANGO_SETTINGS_MODULE = "eiger.settings"
+
+# Timeout for tests, in seconds
+timeout = 10
+
+# Strict `@xfail` by default
+xfail_strict = true
+
+# Directories that are not visited by pytest collector
+norecursedirs = [
+  "*.egg",
+  ".eggs",
+  "dist",
+  "build",
+  "docs",
+  ".tox",
+  ".git",
+  "__pycache__",
+  "reports"
+]
+
+# Add your desired pytest options
+addopts = [
+  "--showlocals",
+  "--strict-markers",
+  "--strict-config",
+  "--doctest-modules",
+  "--fail-on-template-vars",
+  # Output:
+  "--tb=short",
+  # Coverage:
+  "--cov=.",
+  "--cov=tests",
+  "--cov-branch",
+  "--cov-report=term-missing:skip-covered",
+  "--cov-fail-under=95",
+  "--junitxml=reports/junit.xml",
+  "--cov-report=xml:reports/coverage.xml",
+  "--cov-report=html:reports/html"
+]
+
+[coverage.run]
+# Coverage configuration:
+# https://coverage.readthedocs.io/en/latest/config.html
+
+omit = [
+  # Is not reported, because is imported during setup:
+  "eiger/logging.py",
+  "eiger/settings.py",
+  "manage.py",
+  "__init__.py",
+  "tests/*",
+  "**/wsgi.py",
+  "**/asgi.py",
+  "**/__init__.py",
+  "reports/*"
+]
+
+
+[tool.mypy]
+# Mypy configuration:
+# https://mypy.readthedocs.io/en/latest/config_file.html
+
+# Enable specific error codes to check for
+enable_error_code = [
+  "truthy-bool",
+  "redundant-expr",
+  "unused-awaitable",
+  "ignore-without-code"
+]
+
+# Disallow redefinition of names
+allow_redefinition = false
+# Check untyped definitions
+check_untyped_defs = true
+# Disallow untyped decorators
+disallow_untyped_decorators = true
+# Disallow explicit Any types
+disallow_any_explicit = true
+# Disallow generic types without explicit type arguments
+disallow_any_generics = true
+# Disallow untyped function and method calls
+disallow_untyped_calls = true
+# Require explicit types for package base classes
+explicit_package_bases = true
+# Treat all errors as fatal
+ignore_errors = false
+# Ignore missing imports
+ignore_missing_imports = true
+# Disable implicit re-exporting of imported names
+implicit_reexport = false
+# Enable local partial types
+local_partial_types = true
+# Enable strict optional types
+strict_optional = true
+# Enable strict equality checks
+strict_equality = true
+# Show error codes in error messages
+show_error_codes = true
+# Disallow implicit Optional types
+no_implicit_optional = true
+# Warn about unused type ignores
+warn_unused_ignores = true
+# Warn about redundant casts
+warn_redundant_casts = true
+# Warn about unused configurations
+warn_unused_configs = true
+# Warn about unreachable code
+warn_unreachable = true
+# Warn about missing return statements
+warn_no_return = true
+
+[tool.mypy.plugins.django-stubs]
+# Specify the Django settings module for Django-stubs plugin
+django_settings_module = "eiger.settings"
+
+[tool.mypy."eiger.apps.*.migrations.*"]
+# Ignore errors in Django migrations
+ignore_errors = true
+
+[tool.mypy."eiger.*.models"]
+# Allow usage of `Any` type inside models
+disallow_any_explicit = false
