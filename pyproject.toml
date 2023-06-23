@@ -77,7 +77,7 @@ line_length = 79
 preview = true
 
 
-[tool.pytest]
+[tool.pytest.ini_options]
 # pytest configuration:
 # https://docs.pytest.org/en/stable/customize.html
 
