@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Tuple
 
 import django_stubs_ext
+import structlog
 from decouple import AutoConfig
 
 # Monkeypatching Django, so stubs will work for all generics,
@@ -53,7 +54,10 @@ INSTALLED_APPS: Tuple[str, ...] = (
     'django.contrib.admin',
 )
 
-MIDDLEWARE = [
+MIDDLEWARE: Tuple[str, ...] = (
+    # Logging:
+    'eiger.logging.LoggingContextVarsMiddleware',
+    # Django
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -61,7 +65,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
+)
 
 ROOT_URLCONF = 'eiger.urls'
 
@@ -94,6 +98,51 @@ DATABASES = {
     }
 }
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    # We use these formatters in our `'handlers'` configuration.
+    # Probably, you won't need to modify these lines.
+    # Unless, you know what you are doing.
+    'formatters': {
+        'json_formatter': {
+            '()': structlog.stdlib.ProcessorFormatter,
+            'processor': structlog.processors.JSONRenderer(),
+        },
+        'console': {
+            '()': structlog.stdlib.ProcessorFormatter,
+            'processor': structlog.processors.KeyValueRenderer(
+                key_order=['timestamp', 'level', 'event', 'logger'],
+            ),
+        },
+    },
+    # You can easily swap `key/value` (default) output and `json` ones.
+    # Use `'json_console'` if you need `json` logs.
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'console',
+        },
+        'json_console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'json_formatter',
+        },
+    },
+    # These loggers are required by our app:
+    # - django is required when using `logger.getLogger('django')`
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'propagate': True,
+            'level': 'INFO',
+        },
+        'security': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+    },
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
