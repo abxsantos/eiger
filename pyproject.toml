@@ -8,6 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 django = {extras = ["argon2"], version = "^4.2.2"}
+python-decouple = "^3.8"
 
 
 [tool.poetry.group.dev.dependencies]
