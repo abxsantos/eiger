@@ -10,6 +10,7 @@ python = "^3.11"
 django = {extras = ["argon2"], version = "^4.2.2"}
 python-decouple = "^3.8"
 django-stubs-ext = "^4.2.1"
+psycopg2-binary = "^2.9.6"
 
 
 [tool.poetry.group.dev.dependencies]
