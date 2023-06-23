@@ -1,0 +1,35 @@
+repos:
+- hooks:
+  - id: trailing-whitespace
+  - id: end-of-file-fixer
+  - id: check-yaml
+  - id: check-added-large-files
+  - id: debug-statements
+  repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v3.2.0
+- hooks:
+  - id: autoflake
+  repo: https://github.com/PyCQA/autoflake
+  rev: v2.1.1
+- hooks:
+  - id: isort
+  repo: https://github.com/pycqa/isort
+  rev: 5.12.0
+- hooks:
+  - id: blue
+  repo: https://github.com/grantjenks/blue
+  rev: v0.9.1
+- hooks:
+  - args:
+    - --fix
+    - --exit-non-zero-on-fix
+    id: ruff
+  repo: https://github.com/charliermarsh/ruff-pre-commit
+  rev: v0.0.269
+- hooks:
+  - id: commitizen
+  - id: commitizen-branch
+    stages:
+    - push
+  repo: https://github.com/commitizen-tools/commitizen
+  rev: v3.5.0
