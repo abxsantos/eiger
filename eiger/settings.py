@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 from pathlib import Path
+from typing import Tuple
 
 import django_stubs_ext
 from decouple import AutoConfig
@@ -40,14 +41,17 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = [
-    'django.contrib.admin',
+INSTALLED_APPS: Tuple[str, ...] = (
+    # Default django apps:
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-]
+    # django-admin:
+    'django.contrib.admindocs',
+    'django.contrib.admin',
+)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
