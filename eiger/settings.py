@@ -35,7 +35,7 @@ config = AutoConfig(search_path=BASE_DIR)
 SECRET_KEY = config('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False if config('DJANGO_ENV') == 'production' else True
 
 # Application definition
 
@@ -189,10 +189,32 @@ if DEBUG:
         'web',
     ]
 else:
-    STATIC_ROOT = '/var/www/django/static/'
+    _COLLECTSTATIC_DRYRUN = config(
+        'DJANGO_COLLECTSTATIC_DRYRUN',
+        cast=bool,
+        default=False,
+    )
+
+    # Adding STATIC_ROOT to collect static files via 'collectstatic':
+    STATIC_ROOT = (
+        '.static' if _COLLECTSTATIC_DRYRUN else '/var/www/django/static'
+    )
     ALLOWED_HOSTS = [
         config('DOMAIN_NAME'),
         # We need this value for `healthcheck` to work:
         'localhost',
         '0.0.0.0',
     ]
+
+    # Security
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_REDIRECT_EXEMPT = [
+        # This is required for healthcheck to work:
+        '^healthcheck/',
+    ]
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_SSL_REDIRECT = True

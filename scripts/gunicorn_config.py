@@ -13,5 +13,5 @@ max_requests = 2000
 max_requests_jitter = 400
 
 log_file = '-'
-chdir = './'
-worker_tmp_dir = './dev/shm'  # noqa: S108
+chdir = '/code'
+worker_tmp_dir = '/dev/shm'  # noqa: S108

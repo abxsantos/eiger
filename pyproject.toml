@@ -26,7 +26,6 @@ safety = "^2.3.5"
 django-migration-linter = "^4.1.0"
 django-extra-checks = "^0.13.3"
 mypy = "^1.4.0"
-django-stubs = "^4.2.1"
 nplusone = "^1.0.0"
 model-bakery = "^1.12.0"
 django-test-migrations = "^1.3.0"
@@ -46,6 +45,7 @@ pytest-sugar = "^0.9.7"
 pre-commit = "^3.3.3"
 ipython = "^8.14.0"
 commitizen = "^3.5.0"
+django-stubs = "^4.2.1"
 
 
 [tool.commitizen]
@@ -202,14 +202,19 @@ warn_unreachable = true
 # Warn about missing return statements
 warn_no_return = true
 
-[tool.mypy.plugins.django-stubs]
+plugins = ["mypy_django_plugin.main"]
+
+
+[tool.django-stubs]
 # Specify the Django settings module for Django-stubs plugin
 django_settings_module = "eiger.settings"
 
-[tool.mypy."eiger.apps.*.migrations.*"]
+[[tool.mypy.overrides]]
+module = "eiger.apps.*.migrations.*"
 # Ignore errors in Django migrations
 ignore_errors = true
 
-[tool.mypy."eiger.*.models"]
+[[tool.mypy.overrides]]
+module = "eiger.*.models"
 # Allow usage of `Any` type inside models
 disallow_any_explicit = false

@@ -1,0 +1,13 @@
+!scripts
+!templates
+!eiger
+!tests
+!.dockerignore
+!.env
+!.gitignore
+!.pre-commit-config.yaml
+!Dockerfile
+!manage.py
+!poetry.lock
+!pyproject.toml
+!docker-compose.yaml
