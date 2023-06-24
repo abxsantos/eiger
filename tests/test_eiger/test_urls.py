@@ -1,5 +1,6 @@
 from http import HTTPStatus
 
+import pytest
 from django.test import Client
 
 
@@ -30,3 +31,15 @@ def test_admin_docs_authorized(admin_client: Client) -> None:
 
     assert response.status_code == HTTPStatus.OK
     assert b'docutils' not in response.content
+
+
+@pytest.mark.django_db()
+def test_health_check(client: Client) -> None:
+    """This test ensures that health check is accessible."""
+    response = client.get('/healthcheck/')
+
+    assert response.status_code == HTTPStatus.OK
+    assert (
+        '<td>DatabaseBackend</td><td><p>working</p></td>'
+        in response.content.decode('utf-8').replace('\n', '').replace(' ', '')
+    )

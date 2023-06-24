@@ -49,6 +49,11 @@ INSTALLED_APPS: Tuple[str, ...] = (
     # django-admin:
     'django.contrib.admindocs',
     'django.contrib.admin',
+    # Health checks:
+    # You may want to enable other checks as well,
+    # see: https://github.com/KristianOellegaard/django-health-check
+    'health_check',
+    'health_check.db',
 )
 
 MIDDLEWARE: Tuple[str, ...] = (
