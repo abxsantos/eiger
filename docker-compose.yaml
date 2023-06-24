@@ -140,13 +140,15 @@ services:
 
   nginx:
     build:
-      dockerfile: nginx/Dockerfile
+      context: nginx
+      dockerfile: Dockerfile
     restart: always
     volumes:
       - static_volume:/var/www/django/static
       - media_volume:/var/www/django/media
     ports:
       - "8080:80"
+      - "443:443"
     networks:
       - web-prd-network
 
