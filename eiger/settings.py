@@ -188,6 +188,7 @@ if DEBUG:
         '[::1]',
         'web',
     ]
+    SELENIUM_HUB_URL = config('SELENIUM_HUB_URL')
 else:
     _COLLECTSTATIC_DRYRUN = config(
         'DJANGO_COLLECTSTATIC_DRYRUN',
