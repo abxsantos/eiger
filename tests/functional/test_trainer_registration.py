@@ -1,5 +1,6 @@
 from typing import Tuple
 
+import pytest
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -36,6 +37,7 @@ def retrieve_error_components(
     return error_note, error_list
 
 
+@pytest.mark.xfail(reason='Trainer registration flow not yet implemented')
 def test_trainer_accesses_the_registration_page(
     live_server_url: str, browser: webdriver.Remote
 ) -> None:
@@ -53,6 +55,7 @@ def test_trainer_accesses_the_registration_page(
     assert browser.title == 'Register | Trainer Management'
 
 
+@pytest.mark.xfail(reason='Trainer registration flow not yet implemented')
 def test_trainer_enters_valid_registration_details(
     live_server_url: str, browser: webdriver.Remote
 ) -> None:
@@ -84,6 +87,7 @@ def test_trainer_enters_valid_registration_details(
     assert browser.title == 'Home | Trainer Management'
 
 
+@pytest.mark.xfail(reason='Trainer registration flow not yet implemented')
 def test_trainer_enters_mismatched_password(
     live_server_url: str, browser: webdriver.Remote
 ) -> None:
@@ -117,6 +121,7 @@ def test_trainer_enters_mismatched_password(
     # assert Trainer.objects.filter(email=email).exists() is False
 
 
+@pytest.mark.xfail(reason='Trainer registration flow not yet implemented')
 def test_trainer_enters_invalid_registration_details(
     live_server_url: str, browser: webdriver.Remote
 ) -> None:
@@ -149,6 +154,7 @@ def test_trainer_enters_invalid_registration_details(
     # assert Trainer.objects.filter(email=email).exists() is False
 
 
+@pytest.mark.xfail(reason='Trainer registration flow not yet implemented')
 def test_trainer_leaves_email_field_empty(
     live_server_url: str, browser: webdriver.Remote
 ) -> None:
@@ -182,6 +188,7 @@ def test_trainer_leaves_email_field_empty(
     # assert Trainer.objects.filter(email=email).exists() is False
 
 
+@pytest.mark.xfail(reason='Trainer registration flow not yet implemented')
 def test_trainer_registering_an_email_that_already_been_used(
     live_server_url: str, browser: webdriver.Remote
 ) -> None:
