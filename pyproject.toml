@@ -46,6 +46,7 @@ pre-commit = "^3.3.3"
 ipython = "^8.14.0"
 commitizen = "^3.5.0"
 django-stubs = "^4.2.1"
+pytest-xdist = "^3.3.1"
 
 
 [tool.commitizen]
@@ -93,7 +94,7 @@ preview = true
 DJANGO_SETTINGS_MODULE = "eiger.settings"
 
 # Timeout for tests, in seconds
-#timeout = 10
+timeout = 30
 
 # Strict `@xfail` by default
 xfail_strict = true
@@ -113,6 +114,8 @@ norecursedirs = [
 
 # Add your desired pytest options
 addopts = [
+  "--durations=10",
+  "--durations-min=1.0",
   "--showlocals",
   "--strict-markers",
   "--strict-config",

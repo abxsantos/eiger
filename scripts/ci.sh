@@ -71,8 +71,8 @@ run_ci () {
 # Remove any cache before the script:
 pyclean
 
-# Clean everything up:
-trap pyclean EXIT INT TERM
-
 # Run the CI process:
 run_ci
+
+# Clean everything up:
+trap pyclean EXIT INT TERM
