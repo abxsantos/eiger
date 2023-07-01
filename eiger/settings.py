@@ -16,6 +16,8 @@ import django_stubs_ext
 import structlog
 from decouple import AutoConfig
 
+from eiger.trainers.apps import TrainersConfig
+
 # Monkeypatching Django, so stubs will work for all generics,
 # see: https://github.com/typeddjango/django-stubs
 django_stubs_ext.monkeypatch()
@@ -40,6 +42,7 @@ DEBUG = False if config('DJANGO_ENV') == 'production' else True
 # Application definition
 
 INSTALLED_APPS: Tuple[str, ...] = (
+    TrainersConfig.name,
     # Default django apps:
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -74,7 +77,7 @@ ROOT_URLCONF = 'eiger.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR.joinpath('eiger', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -95,9 +98,18 @@ WSGI_APPLICATION = 'eiger.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('POSTGRES_DB'),
+        'USER': config('POSTGRES_USER'),
+        'PASSWORD': config('POSTGRES_PASSWORD'),
+        'HOST': config('DJANGO_DATABASE_HOST'),
+        'PORT': config('DJANGO_DATABASE_PORT', cast=int),
+        'CONN_MAX_AGE': config('CONN_MAX_AGE', cast=int, default=60),
+        'OPTIONS': {
+            'connect_timeout': 10,
+            'options': '-c statement_timeout=15000ms',
+        },
+    },
 }
 
 LOGGING = {
@@ -187,8 +199,11 @@ if DEBUG:
         '127.0.0.1',
         '[::1]',
         'web',
+        'functional-tests',
+        'ci',
     ]
     SELENIUM_HUB_URL = config('SELENIUM_HUB_URL')
+    LIVE_SERVER_HOST = config('LIVE_SERVER_HOST')
 else:
     _COLLECTSTATIC_DRYRUN = config(
         'DJANGO_COLLECTSTATIC_DRYRUN',

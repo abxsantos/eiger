@@ -17,7 +17,4 @@ fi
 # Remove any cache before the script:
 pyclean
 
-# Clean everything up:
-pytest tests/functional
-
-exit
+pytest -p no:cacheprovider tests/functional

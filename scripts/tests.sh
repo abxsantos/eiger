@@ -18,5 +18,7 @@ fi
 # Remove any cache before the script:
 pyclean
 
+pytest tests/test_eiger
+
 # Clean everything up:
-trap pytest EXIT INT TERM
+trap pyclean EXIT INT TERM

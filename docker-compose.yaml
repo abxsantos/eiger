@@ -51,7 +51,7 @@ services:
       db:
         condition: service_healthy
       selenium:
-        condition: service_started
+        condition: service_healthy
     command: bash -c "python manage.py makemigrations &&
       python manage.py migrate &&
       python -Wd manage.py runserver 0.0.0.0:8000"
@@ -72,13 +72,24 @@ services:
 
   ci:
     <<: *web
+    build:
+      target: production_build
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - DJANGO_ENV=development
+        - LOCAL_SELENIUM=true
+      cache_from:
+        - "eiger:latest"
     depends_on:
       db:
         condition: service_healthy
       selenium:
-        condition: service_started
-    ports: [ ]
+        condition: service_healthy
     command: ./scripts/ci.sh
+    container_name: ci
+    environment:
+      - LIVE_SERVER_HOST=ci
 
   tests:
     <<: *web
@@ -155,6 +166,8 @@ services:
   functional-tests:
     <<: *web
     image: "eiger:latest"
+    environment:
+      - LIVE_SERVER_HOST=functional-tests
     build:
       target: production_build
       context: .
@@ -167,7 +180,8 @@ services:
       db:
         condition: service_healthy
       selenium:
-        condition: service_started
+        condition: service_healthy
+    container_name: functional-tests
     command: ./scripts/functional-tests.sh
     restart: unless-stopped
 
@@ -176,6 +190,11 @@ services:
     ports:
       - 4444:4444
       - 7900:7900
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "http://localhost:4444/ui" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
 networks:
   web-prd-network:
