@@ -1,19 +1,19 @@
-from typing import Tuple
-
 import pytest
+from django.contrib.auth.models import User
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.remote.webelement import WebElement
 
 
 def fill_registration_form(
     browser: webdriver.Remote,
-    email: str,
+    username: str,
     password: str,
     confirmation_password: str,
 ) -> None:
-    email_inputbox = browser.find_element(by=By.ID, value='id_email')
-    email_inputbox.send_keys(email)
+    username_inputbox = browser.find_element(
+        by=By.ID, value='register-component'
+    ).find_element(by=By.ID, value='id_username')
+    username_inputbox.send_keys(username)
 
     password_inputbox = browser.find_element(by=By.ID, value='id_password1')
     password_inputbox.send_keys(password)
@@ -25,37 +25,19 @@ def fill_registration_form(
 
 
 def submit_registration_form(browser: webdriver.Remote) -> None:
-    register_button = browser.find_element(by=By.ID, value='register-input')
-    register_button.click()
+    register_input = browser.find_element(by=By.ID, value='register-input')
+    register_input.click()
 
 
-def retrieve_error_components(
+def retrieve_error_list(
     browser: webdriver.Remote,
-) -> Tuple[WebElement, WebElement]:
-    error_note = browser.find_element(by=By.CLASS_NAME, value='errornote')
-    error_list = browser.find_element(by=By.CLASS_NAME, value='errorlist')
-    return error_note, error_list
+) -> str:
+    return browser.find_element(by=By.CLASS_NAME, value='errorlist').text
 
 
-@pytest.mark.xfail(reason='Trainer registration flow not yet implemented')
-def test_trainer_accesses_the_registration_page(
-    live_server_url: str, browser: webdriver.Remote
-) -> None:
-    """
-    Feature: Trainer Registration
-    Scenario: Trainer accesses the registration page
-    """
-    # Given I'm on the website's homepage
-    browser.get(f'{live_server_url}/')
-    assert browser.title == 'Climb Hard | Trainer Management'
-    # When I click on the "Register" button
-    register_button = browser.find_element(by=By.ID, value='register-button')
-    register_button.click()
-    # Then I should be redirected to the registration page
-    assert browser.title == 'Register | Trainer Management'
-
-
-@pytest.mark.xfail(reason='Trainer registration flow not yet implemented')
+@pytest.mark.xfail(reason='Home page not yet implemented')
+@pytest.mark.ignore_template_errors()
+@pytest.mark.django_db(transaction=True)
 def test_trainer_enters_valid_registration_details(
     live_server_url: str, browser: webdriver.Remote
 ) -> None:
@@ -63,19 +45,19 @@ def test_trainer_enters_valid_registration_details(
     Feature: Trainer Registration
     Scenario: Trainer enters valid registration details
     """
-    browser.get(f'{live_server_url}/register/')
+    browser.get(live_server_url)
     # Given I am on the registration page
-    assert browser.title == 'Register | Trainer Management'
+    assert browser.title == 'Climb Hard - Trainers'
 
     # When I fill in the following details:
-    # | Email            | trainer@example.com |
+    # | Username            | trainer |
     # | Password         | StrongPass123!      |
     # | Confirm Password | StrongPass123!      |
-    email = 'trainer@example.com'
+    username = 'trainer'
     password = 'StrongPass123!'
     fill_registration_form(
         browser=browser,
-        email=email,
+        username=username,
         password=password,
         confirmation_password=password,
     )
@@ -83,11 +65,12 @@ def test_trainer_enters_valid_registration_details(
     # And I click on the register button
     submit_registration_form(browser=browser)
 
-    # Then I should be redirected to the admin index page
-    assert browser.title == 'Home | Trainer Management'
+    # Then I should be redirected to the management home page
+    assert browser.title == 'Climb Hard - Home'
 
 
-@pytest.mark.xfail(reason='Trainer registration flow not yet implemented')
+@pytest.mark.ignore_template_errors()
+@pytest.mark.django_db(transaction=True)
 def test_trainer_enters_mismatched_password(
     live_server_url: str, browser: webdriver.Remote
 ) -> None:
@@ -95,33 +78,34 @@ def test_trainer_enters_mismatched_password(
     Feature: Trainer Registration
     Scenario: Trainer enters mismatched password
     """
-    browser.get(f'{live_server_url}/register/')
+    browser.get(live_server_url)
     # Given I am on the registration page
-    assert browser.title == 'Register | Trainer Management'
+    assert browser.title == 'Climb Hard - Trainers'
     # When I fill in the following details:
-    # | Email            | trainer@example.com |
+    # | username         | trainer |
     # | Password         | StrongPass123!      |
     # | Confirm Password | DifferentPass456!   |
-    email = 'trainer@example.com'
+    username = 'trainer'
     password = 'StrongPass123!'
     mismatched_confirmation_password = 'DifferentPass456!'
     fill_registration_form(
         browser=browser,
-        email=email,
+        username=username,
         password=password,
         confirmation_password=mismatched_confirmation_password,
     )
     # And I click on the "Register" button
     submit_registration_form(browser=browser)
     # Then I should see an error message indicating password mismatch
-    error_note, error_list = retrieve_error_components(browser)
-    assert error_note.text == 'Error'
-    assert error_list.text == 'Password mismatch'
+    assert (
+        retrieve_error_list(browser) == 'The two password fields didn’t match.'
+    )
     # And the trainer's account should not be created.
-    # assert Trainer.objects.filter(email=email).exists() is False
+    assert User.objects.filter(username=username).exists() is False
 
 
-@pytest.mark.xfail(reason='Trainer registration flow not yet implemented')
+@pytest.mark.ignore_template_errors()
+@pytest.mark.django_db(transaction=True)
 def test_trainer_enters_invalid_registration_details(
     live_server_url: str, browser: webdriver.Remote
 ) -> None:
@@ -129,66 +113,37 @@ def test_trainer_enters_invalid_registration_details(
     Feature: Trainer Registration
     Scenario: Trainer enters invalid registration details
     """
-    browser.get(f'{live_server_url}/register/')
+    browser.get(live_server_url)
     # Given I am on the registration page
-    assert browser.title == 'Register | Trainer Management'
+    assert browser.title == 'Climb Hard - Trainers'
     # When I fill in the following details:
-    # | Email            | invalid_email       |
-    # | Password         | StrongPass123!      |
-    # | Confirm Password | StrongPass123!      |
-    email = 'invalid_email'
-    password = 'weakpassword'
+    # | Email            | weak       |
+    # | Password         | weakpass      |
+    # | Confirm Password | weakpass      |
+    username = '1'
+    password = '1'
     fill_registration_form(
         browser=browser,
-        email=email,
+        username=username,
         password=password,
         confirmation_password=password,
     )
     # And I click on the "Register" button
     submit_registration_form(browser=browser)
-    # Then I should see an error message indicating invalid email format
-    error_note, error_list = retrieve_error_components(browser)
-    assert error_note.text == 'Error'
-    assert error_list.text == 'Invalid email format'
-    # And the trainer's account should not be created.
-    # assert Trainer.objects.filter(email=email).exists() is False
-
-
-@pytest.mark.xfail(reason='Trainer registration flow not yet implemented')
-def test_trainer_leaves_email_field_empty(
-    live_server_url: str, browser: webdriver.Remote
-) -> None:
-    """
-    Feature: Trainer Registration
-    Scenario: Trainer leaves email field empty
-    """
-    browser.get(f'{live_server_url}/register/')
-    # Given I am on the registration page
-    assert browser.title == 'Register | Trainer Management'
-    # When I fill in the following details:
-    # | Email            |                     |
-    # | Password         | weakpassword        |
-    # | Confirm Password | weakpassword        |
-    email = 'invalid_email'
-    password = 'weakpassword'
-    fill_registration_form(
-        browser=browser,
-        email=email,
-        password=password,
-        confirmation_password=password,
+    # Then I should see an error message indicating invalid username format
+    assert (
+        retrieve_error_list(browser)
+        == 'The password is too similar to the username.\n'
+        'This password is too short. It must contain at least 8 characters.\n'
+        'This password is too common.\n'
+        'This password is entirely numeric.'
     )
-    # And I click on the "Register" button
-    submit_registration_form(browser=browser)
-    # Then I should see an error message indicating the
-    # email field is required
-    error_note, error_list = retrieve_error_components(browser)
-    assert error_note.text == 'Error'
-    assert error_list.text == 'Email field is required'
     # And the trainer's account should not be created.
-    # assert Trainer.objects.filter(email=email).exists() is False
+    assert User.objects.filter(username=username).exists() is False
 
 
-@pytest.mark.xfail(reason='Trainer registration flow not yet implemented')
+@pytest.mark.ignore_template_errors()
+@pytest.mark.django_db(transaction=True)
 def test_trainer_registering_an_email_that_already_been_used(
     live_server_url: str, browser: webdriver.Remote
 ) -> None:
@@ -196,19 +151,21 @@ def test_trainer_registering_an_email_that_already_been_used(
     Feature: Trainer Registration
     Scenario: Trainer registering an email that already been used
     """
-    browser.get(f'{live_server_url}/register/')
+    username = 'trainer'
+    password = 'StrongPass123!'
+    User.objects.create_user(username=username, password=password)
+    browser.get(live_server_url)
     # Given I am on the registration page
-    assert browser.title == 'Register | Trainer Management'
+    assert browser.title == 'Climb Hard - Trainers'
     # When I enter an email that is already registered:
-    # | Email            | trainer@example.com |
+    # | Username         | trainer             |
     # And I fill in the passwords:
     # | Password         | StrongPass123!      |
     # | Confirm Password | StrongPass123!      |
-    email = 'trainer@example.com'
-    password = 'StrongPass123!'
+
     fill_registration_form(
         browser=browser,
-        email=email,
+        username=username,
         password=password,
         confirmation_password=password,
     )
@@ -216,8 +173,7 @@ def test_trainer_registering_an_email_that_already_been_used(
     submit_registration_form(browser=browser)
     # Then I should see an error message indicating that
     # an account with that email already exists
-    error_note, error_list = retrieve_error_components(browser)
-    assert error_note.text == 'Error'
-    assert error_list.text == 'Account with this email already exists'
-    # And the trainer's account should not be created.
-    # assert Trainer.objects.filter(email=email).exists() is False
+    assert (
+        retrieve_error_list(browser)
+        == 'A user with that username already exists.'
+    )
