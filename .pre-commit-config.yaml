@@ -31,3 +31,13 @@ repos:
     id: ruff
   repo: https://github.com/charliermarsh/ruff-pre-commit
   rev: v0.0.269
+
+- repo: local
+  hooks:
+    - id: inline-ci-with-bash
+      verbose: true
+      name: inline-ci-with-bash
+      entry: bash -c 'docker compose up ci'
+      language: system
+      stages:
+        - push
