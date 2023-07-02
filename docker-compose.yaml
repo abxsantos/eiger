@@ -54,6 +54,7 @@ services:
         condition: service_healthy
     command: bash -c "python manage.py makemigrations &&
       python manage.py migrate &&
+      python manage.py loaddata initial.json &&
       python -Wd manage.py runserver 0.0.0.0:8000"
     container_name: web
     healthcheck:
@@ -90,6 +91,8 @@ services:
     container_name: ci
     environment:
       - LIVE_SERVER_HOST=ci
+    stdin_open: true
+    tty: true
 
   tests:
     <<: *web
@@ -103,13 +106,24 @@ services:
 
   mutation-tests:
     <<: *web
+    volumes:
+      - ./reports:/code/reports
+    depends_on:
+      db:
+        condition: service_healthy
+      selenium:
+        condition: service_healthy
     ports: [ ]
     command: ./scripts/mutation-tests.sh
+    stdin_open: true
+    tty: true
 
   formatter:
     <<: *web
     ports: [ ]
     command: ./scripts/formatter.sh
+    stdin_open: true
+    tty: true
 
   web-prd:
     <<: *web
@@ -184,6 +198,8 @@ services:
     container_name: functional-tests
     command: ./scripts/functional-tests.sh
     restart: unless-stopped
+    stdin_open: true
+    tty: true
 
   selenium:
     image: selenium/standalone-firefox
