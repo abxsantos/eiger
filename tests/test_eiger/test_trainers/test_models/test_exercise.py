@@ -11,11 +11,6 @@ from tests.test_eiger.strategies import postgres_allowed_characters
 from eiger.trainers.models import Exercise, ExerciseType
 
 
-@pytest.fixture()
-def exercise() -> Exercise:
-    return baker.make(Exercise)
-
-
 @pytest.mark.django_db()
 def test_exercise_string_representation(
     exercise: Exercise,

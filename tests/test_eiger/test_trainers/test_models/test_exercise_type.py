@@ -10,17 +10,14 @@ from tests.test_eiger.strategies import postgres_allowed_characters
 from eiger.trainers.models import Category, ExerciseType
 
 
-@pytest.fixture()
-@pytest.mark.django_db()
-def exercise_type() -> ExerciseType:
-    return baker.make(ExerciseType)
-
-
 @pytest.mark.django_db()
 def test_exercise_type_string_representation(
     exercise_type: ExerciseType,
 ) -> None:
-    assert str(exercise_type) == exercise_type.name
+    assert (
+        str(exercise_type)
+        == f'{exercise_type.category.name} - {exercise_type.name}'
+    )
 
 
 def test_exercise_type_meta_verbose_name() -> None:
