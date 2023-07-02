@@ -35,7 +35,6 @@ def retrieve_error_list(
     return browser.find_element(by=By.CLASS_NAME, value='errorlist').text
 
 
-@pytest.mark.xfail(reason='Home page not yet implemented')
 @pytest.mark.ignore_template_errors()
 @pytest.mark.django_db(transaction=True)
 def test_trainer_enters_valid_registration_details(
