@@ -43,6 +43,7 @@ DEBUG = False if config('DJANGO_ENV') == 'production' else True
 
 INSTALLED_APPS: Tuple[str, ...] = (
     TrainersConfig.name,
+    'colorfield',
     # Default django apps:
     'django.contrib.auth',
     'django.contrib.contenttypes',
