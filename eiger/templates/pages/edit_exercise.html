@@ -1,0 +1,51 @@
+{% extends 'pages/base.html' %}
+{% load i18n static %}
+
+{% block title %}{{ _('Climb Hard - Edit Exercise') }}{% endblock %}
+
+{% block style %}
+    <style>
+        .alert {
+            margin-top: 0.5rem;
+        }
+
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.25rem;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Edit Exercise</h1>
+        <form method="post" action="{% url 'update_exercise' exercise.id %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_exercise_type">Type:</label>
+                {{ form.exercise_type }}
+                {% if form.errors.exercise_type %}
+                    <div class="alert alert-danger">{{ form.errors.exercise_type }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="id_name">Name:</label>
+                {{ form.name }}
+                {% if form.errors.name %}
+                    <div class="alert alert-danger">{{ form.errors.name }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="id_description">Description:</label>
+                {{ form.description }}
+                {% if form.errors.description %}
+                    <div class="alert alert-danger">{{ form.errors.description }}</div>
+                {% endif %}
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+{% endblock %}

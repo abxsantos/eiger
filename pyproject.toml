@@ -95,7 +95,7 @@ preview = true
 DJANGO_SETTINGS_MODULE = "eiger.settings"
 
 # Timeout for tests, in seconds
-timeout = 30
+#timeout = 30
 
 # Strict `@xfail` by default
 xfail_strict = true
