@@ -68,7 +68,7 @@ class TestEditExerciseForm(TestCase):
         name=strategies.one_of(strategies.none(), strategies.text(max_size=0))
     )
     def test_name_required(self, name: Optional[str]) -> None:
-        exercise = baker.make(Exercise)
+        exercise = baker.prepare(Exercise)
         form_data = {
             'name': name,
             'exercise_type': exercise.exercise_type,
@@ -83,7 +83,7 @@ class TestEditExerciseForm(TestCase):
 
     @given(name=strategies.text(min_size=51))
     def test_name_max_length_exceeded(self, name: str) -> None:
-        exercise = baker.make(Exercise)
+        exercise = baker.prepare(Exercise)
         form_data = {
             'name': name,
             'exercise_type': exercise.exercise_type,
@@ -102,7 +102,7 @@ class TestEditExerciseForm(TestCase):
         )
     )
     def test_description_required(self, description: Optional[str]) -> None:
-        exercise = baker.make(Exercise)
+        exercise = baker.prepare(Exercise)
         form_data = {
             'name': 'Test Required Description',
             'exercise_type': exercise.exercise_type,
@@ -128,7 +128,7 @@ class TestEditExerciseForm(TestCase):
     def test_exercise_type_must_return_error_given_invalid_choice(
         self, exercise_type: Optional[str | int]
     ) -> None:
-        exercise = baker.make(Exercise)
+        exercise = baker.prepare(Exercise)
         form_data = {
             'name': 'Test Required Type',
             'exercise_type': exercise_type,
@@ -154,7 +154,7 @@ class TestEditExerciseForm(TestCase):
     def test_exercise_type_required(
         self, exercise_type: Optional[str]
     ) -> None:
-        exercise = baker.make(Exercise)
+        exercise = baker.prepare(Exercise)
         form_data = {
             'name': 'Test Required Type',
             'exercise_type': exercise_type,

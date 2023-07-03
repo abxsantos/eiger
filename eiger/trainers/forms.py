@@ -54,6 +54,7 @@ class EditExerciseForm(forms.ModelForm[Exercise]):
         self.fields['exercise_type'].queryset = (  # type: ignore[attr-defined]
             ExerciseType.objects.select_related('category')
             .all()
+            .only('category__name', 'category_id', 'id', 'name')
             .order_by('category__name')
         )
 
@@ -63,9 +64,13 @@ class EditExerciseForm(forms.ModelForm[Exercise]):
             raise forms.ValidationError(
                 _('Please enter the name of the exercise.')
             )
-        if len(name) > 50:
+        elif len(name) > 50:
             forms.ValidationError(_('The name cannot exceed 50 characters.'))
-        if Exercise.objects.exclude(pk=self.instance.pk).filter(name=name):
+        elif (
+            Exercise.objects.exclude(pk=self.instance.pk)
+            .filter(name=name)
+            .exists()
+        ):
             raise forms.ValidationError(
                 _(
                     "There's already a registered or pending exercise with"
