@@ -1,4 +1,6 @@
-from django.contrib import admin
+from gettext import ngettext
+
+from django.contrib import admin, messages
 from django.db.models import QuerySet
 from django.http import HttpRequest
 
@@ -28,8 +30,38 @@ class ExerciseTypeAdmin(admin.ModelAdmin[ExerciseType]):
         return queryset
 
 
+class ReviewEntryAdminActionMixin(admin.ModelAdmin):  # type: ignore[type-arg]
+    review_entry_short_description = ''
+    actions = ['review_entry']
+
+    @admin.action(description=review_entry_short_description)
+    def review_entry(
+        self,
+        request: HttpRequest,
+        queryset: QuerySet[Exercise | ExerciseVariation],
+    ) -> None:
+        updated = queryset.filter(reviewed=False).update(reviewed=True)
+        if not updated:
+            message = 'Selected entries were already reviewed.'
+        else:
+            message = (
+                ngettext(
+                    '%d exercise was successfully marked as reviewed.',
+                    '%d exercises were successfully marked as reviewed.',
+                    updated,
+                )
+                % updated
+            )
+
+        self.message_user(
+            request=request,
+            message=message,
+            level=messages.SUCCESS,
+        )
+
+
 @admin.register(Exercise)
-class ExerciseAdmin(admin.ModelAdmin[Exercise]):
+class ExerciseAdmin(ReviewEntryAdminActionMixin):
     list_display = ['name', 'exercise_type', 'created_by', 'reviewed']
     list_filter = ['exercise_type', 'created_by', 'reviewed']
     search_fields = ['name', 'description']
@@ -39,9 +71,11 @@ class ExerciseAdmin(admin.ModelAdmin[Exercise]):
         queryset = queryset.select_related('exercise_type', 'created_by')
         return queryset
 
+    review_entry_short_description = 'Mark selected exercises as reviewed.'
+
 
 @admin.register(ExerciseVariation)
-class ExerciseVariationAdmin(admin.ModelAdmin[ExerciseVariation]):
+class ExerciseVariationAdmin(ReviewEntryAdminActionMixin):
     list_display = ['exercise', 'created_by', 'reviewed']
     list_filter = ['exercise', 'created_by', 'reviewed']
     search_fields = ['exercise__name']
@@ -52,3 +86,5 @@ class ExerciseVariationAdmin(admin.ModelAdmin[ExerciseVariation]):
         queryset = super().get_queryset(request)
         queryset = queryset.select_related('exercise', 'created_by')
         return queryset
+
+    review_entry_short_description = 'Mark selected variations as reviewed.'
