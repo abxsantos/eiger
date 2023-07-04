@@ -157,11 +157,19 @@ def home_view(request: HttpRequest) -> HttpResponse:
 def retrieve_exercise_view(
     request: HttpRequest, exercise_id: int
 ) -> HttpResponse:
+    user = request.user
+    logger.debug(
+        'Received the request from user %s to retrieve the exercise %s',
+        user,
+        exercise_id,
+    )
     exercise = get_object_or_404(
         Exercise.objects.select_related(
             'exercise_type', 'exercise_type__category'
         ),
         id=exercise_id,
+        created_by=user,
+        reviewed=False,
     )
 
     form = EditExerciseForm(exercise)
@@ -180,18 +188,35 @@ def retrieve_exercise_view(
 def update_exercise_view(
     request: HttpRequest, exercise_id: int
 ) -> HttpResponse:
+    user = request.user
+    logger.debug(
+        'Received the request from user %s to update the exercise %s',
+        user,
+        exercise_id,
+    )
     exercise = get_object_or_404(
         Exercise.objects.select_related(
             'exercise_type',
         ),
         id=exercise_id,
+        created_by=user,
+        reviewed=False,
     )
 
     form = EditExerciseForm(data=request.POST, instance=exercise)
     if not form.is_valid():
+        logger.debug('Form cleaned data %s.', form.cleaned_data)
+        template_name = 'pages/edit_exercise.html'
+        logger.info(
+            'Invalid form provided to create an exercise from user %s.'
+            ' Rendering the template %s with form errors %s.',
+            user,
+            template_name,
+            form.errors,
+        )
         return render(
             request=request,
-            template_name='pages/edit_exercise.html',
+            template_name=template_name,
             context={
                 'form': form,
                 'exercise': exercise,
@@ -200,6 +225,12 @@ def update_exercise_view(
         )
 
     form.save()
+    logger.info(
+        'Successfully updated the exercise %s from the user %s request.'
+        ' Redirecting it to the home page.',
+        exercise_id,
+        user,
+    )
     return redirect('/home/')
 
 

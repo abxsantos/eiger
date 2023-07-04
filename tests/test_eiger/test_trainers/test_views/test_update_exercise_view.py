@@ -15,13 +15,15 @@ from eiger.trainers.models import Exercise
 
 
 @pytest.fixture()
-def url(exercise: Exercise) -> str:
-    return reverse('update_exercise', args=[exercise.id])
+def url(exercise_from_authenticated_user: Exercise) -> str:
+    return reverse(
+        'update_exercise', args=[exercise_from_authenticated_user.id]
+    )
 
 
 @pytest.mark.django_db
 def test_must_update_exercise_given_valid_form(
-    authenticated_client: Client, exercise: Exercise, url: str
+    authenticated_client: Client, exercise, url: str
 ) -> None:
     response = authenticated_client.post(
         url,
@@ -67,7 +69,7 @@ def test_must_update_exercise_given_valid_form(
 )
 def test_must_not_update_exercise_given_invalid_name_in_form(
     authenticated_client: Client,
-    exercise: Exercise,
+    exercise_from_authenticated_user: Exercise,
     url: str,
     invalid_name: str,
     expected_errors: ErrorDict,
@@ -76,8 +78,8 @@ def test_must_not_update_exercise_given_invalid_name_in_form(
         url,
         {
             'name': invalid_name,
-            'exercise_type': exercise.exercise_type_id,
-            'description': exercise.description,
+            'exercise_type': exercise_from_authenticated_user.exercise_type_id,
+            'description': exercise_from_authenticated_user.description,
         },
     )
 
@@ -88,16 +90,16 @@ def test_must_not_update_exercise_given_invalid_name_in_form(
     )
     form = response.context['form']
     assert isinstance(form, EditExerciseForm)
-    assert form.instance == exercise
+    assert form.instance == exercise_from_authenticated_user
     assert form.errors == expected_errors
-    exercise.refresh_from_db()
-    assert exercise.name != invalid_name
+    exercise_from_authenticated_user.refresh_from_db()
+    assert exercise_from_authenticated_user.name != invalid_name
 
 
 @pytest.mark.django_db()
 def test_must_not_update_exercise_given_name_that_already_exists_in_form(
     authenticated_client: Client,
-    exercise: Exercise,
+    exercise_from_authenticated_user: Exercise,
     url: str,
 ) -> None:
     existing_exercise = baker.make(Exercise)
@@ -105,7 +107,7 @@ def test_must_not_update_exercise_given_name_that_already_exists_in_form(
         url,
         {
             'name': existing_exercise.name,
-            'exercise_type': exercise.exercise_type_id,
+            'exercise_type': exercise_from_authenticated_user.exercise_type_id,
             'description': 'Test Description',
         },
     )
@@ -117,7 +119,7 @@ def test_must_not_update_exercise_given_name_that_already_exists_in_form(
     )
     form = response.context['form']
     assert isinstance(form, EditExerciseForm)
-    assert form.instance == exercise
+    assert form.instance == exercise_from_authenticated_user
     assert form.errors == ErrorDict(
         {
             'name': ErrorList(
@@ -130,21 +132,21 @@ def test_must_not_update_exercise_given_name_that_already_exists_in_form(
             )
         }
     )
-    exercise.refresh_from_db()
-    assert exercise.name != existing_exercise.name
+    exercise_from_authenticated_user.refresh_from_db()
+    assert exercise_from_authenticated_user.name != existing_exercise.name
 
 
 @pytest.mark.django_db()
 def test_must_not_update_exercise_given_invalid_description_in_form(
     authenticated_client: Client,
-    exercise: Exercise,
+    exercise_from_authenticated_user: Exercise,
     url: str,
 ) -> None:
     response = authenticated_client.post(
         url,
         {
-            'name': exercise.name,
-            'exercise_type': exercise.exercise_type_id,
+            'name': exercise_from_authenticated_user.name,
+            'exercise_type': exercise_from_authenticated_user.exercise_type_id,
             'description': '',
         },
     )
@@ -156,7 +158,7 @@ def test_must_not_update_exercise_given_invalid_description_in_form(
     )
     form = response.context['form']
     assert isinstance(form, EditExerciseForm)
-    assert form.instance == exercise
+    assert form.instance == exercise_from_authenticated_user
     assert form.errors == ErrorDict(
         {
             'description': ErrorList(
@@ -164,8 +166,8 @@ def test_must_not_update_exercise_given_invalid_description_in_form(
             )
         }
     )
-    exercise.refresh_from_db()
-    assert exercise.description != ''
+    exercise_from_authenticated_user.refresh_from_db()
+    assert exercise_from_authenticated_user.description != ''
 
 
 @pytest.mark.django_db()
@@ -201,7 +203,7 @@ def test_must_not_update_exercise_given_invalid_description_in_form(
 )
 def test_must_not_update_exercise_given_invalid_exercise_type_in_form(
     authenticated_client: Client,
-    exercise: Exercise,
+    exercise_from_authenticated_user: Exercise,
     url: str,
     invalid_exercise_type: str | int,
     expected_errors: ErrorDict,
@@ -209,9 +211,9 @@ def test_must_not_update_exercise_given_invalid_exercise_type_in_form(
     response = authenticated_client.post(
         url,
         {
-            'name': exercise.name,
+            'name': exercise_from_authenticated_user.name,
             'exercise_type': invalid_exercise_type,
-            'description': exercise.description,
+            'description': exercise_from_authenticated_user.description,
         },
     )
 
@@ -222,17 +224,64 @@ def test_must_not_update_exercise_given_invalid_exercise_type_in_form(
     )
     form = response.context['form']
     assert isinstance(form, EditExerciseForm)
-    assert form.instance == exercise
+    assert form.instance == exercise_from_authenticated_user
     assert form.errors == expected_errors
-    exercise.refresh_from_db()
-    assert exercise.exercise_type.id != invalid_exercise_type
+    exercise_from_authenticated_user.refresh_from_db()
+    assert (
+        exercise_from_authenticated_user.exercise_type.id
+        != invalid_exercise_type
+    )
 
 
 @pytest.mark.django_db()
 def test_must_return_not_found_response_given_invalid_exercise_id(
-    authenticated_client: Client, exercise: Exercise, url: str
+    authenticated_client: Client, exercise_from_authenticated_user: Exercise
 ) -> None:
-    url = reverse('update_exercise', args=[exercise.id + 1])
+    url = reverse(
+        'update_exercise', args=[exercise_from_authenticated_user.id + 1]
+    )
+
+    response = authenticated_client.post(
+        url,
+        {
+            'name': 'Updated Exercise',
+            'exercise_type': 1,
+            'description': 'Updated Description',
+        },
+    )
+
+    assert response.status_code == HTTPStatus.NOT_FOUND
+    assert b'Not Found' in response.content
+
+
+@pytest.mark.django_db()
+def test_must_return_not_found_given_exercise_id_that_is_from_another_user(
+    authenticated_client: Client,
+):
+    other_user_exercise = baker.make(Exercise, reviewed=False)
+    url = reverse('update_exercise', args=[other_user_exercise.id + 1])
+
+    response = authenticated_client.post(
+        url,
+        {
+            'name': 'Updated Exercise',
+            'exercise_type': 1,
+            'description': 'Updated Description',
+        },
+    )
+
+    assert response.status_code == HTTPStatus.NOT_FOUND
+    assert b'Not Found' in response.content
+
+
+@pytest.mark.django_db()
+def test_must_return_not_found_given_exercise_id_that_is_reviewed(
+    authenticated_client: Client,
+    exercise_from_authenticated_user: Exercise,
+    url: str,
+):
+    exercise_from_authenticated_user.reviewed = True
+    exercise_from_authenticated_user.save()
 
     response = authenticated_client.post(
         url,
