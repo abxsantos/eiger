@@ -1,11 +1,12 @@
 {% extends 'pages/base.html' %}
+
 {% load i18n static %}
 
-
-{% block title %}{{ _('Climb Hard - Home') }}{% endblock %}
-
+{% block title %}
+  {{ _("Climb Hard - Home") }}
+{% endblock title %}
 {% block style %}
-    <style>
+  <style>
         .exercise-card {
             border: 1px solid #ccc;
             border-radius: 5px;
@@ -63,77 +64,82 @@
             margin-bottom: 4px;
         }
 
-    </style>
-{% endblock %}
-
+  </style>
+{% endblock style %}
 {% block content %}
-    <div class="container">
-        <h1>My Pending Review Exercises</h1>
-        <div class="row">
-            <div class="col-md-6">
-                <h2>Exercises</h2>
-                {% for exercise in pending_exercises %}
-                    <div class="exercise-card pending-exercises-card">
-                        <div class="exercise-header">
-                            <h4 class="exercise-name">
-                                {{ exercise.name }}
-                            </h4>
-                            <a href="{% url 'retrieve_exercise' exercise.id %}" class="edit-icon">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                        </div>
-                        <div class="exercise-tags">
-                            <span style="background-color: {{ exercise.exercise_type.category.color }}"
-                                  class="badge">{{ exercise.exercise_type }}</span>
-                        </div>
-                        <p class="exercise-description">{{ exercise.description }}</p>
-                        <p class="exercise-created-by">Created by: {{ exercise.created_by }}</p>
-                    </div>
-                {% endfor %}
+  <div class="container">
+    <h1>My Pending Review Exercises</h1>
+    <div class="row">
+      <div class="col-md-6">
+        <h2>Exercises</h2>
+        {% for exercise in pending_exercises %}
+          <div class="exercise-card pending-exercises-card">
+            <div class="exercise-header">
+              <h4 class="exercise-name">{{ exercise.name }}</h4>
+              <a href="{% url 'retrieve_exercise' exercise.id %}" class="edit-icon">
+                <i class="fas fa-edit"></i>
+              </a>
             </div>
-            <div class="col-md-6">
-                <h2>Exercise Variations</h2>
-                {% for variation in pending_variations %}
-                    <div class="exercise-card pending-variations-card">
-                        <div class="exercise-header">
-                            <h4 class="exercise-name">
-                                {{ variation.exercise.name }}
-                            </h4>
-                            <a href="#" class="edit-icon">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                        </div>
-                        <div class="exercise-tags">
-                            <span style="background-color: {{ variation.exercise.exercise_type.category.color }}"
-                                  class="badge">{{ variation.exercise.exercise_type }}</span>
-                        </div>
-                        <div class="exercise-details">
-                            <div class="exercise-description-row">
-                                <p class="exercise-description sets"><strong>Sets:</strong> {{ variation.sets }}</p>
-                                <p class="exercise-description repetitions">
-                                    <strong>Repetitions:</strong> {{ variation.repetitions }}</p>
-                            </div>
-                            <div class="exercise-description-row">
-                                <p class="exercise-description rest-between-sets"><strong>Rest between
-                                    Sets:</strong> {{ variation.rest_per_set_in_seconds }} seconds</p>
-                                <p class="exercise-description duration-per-repetition"><strong>Duration per
-                                    Repetition:</strong> {{ variation.seconds_per_repetition }} seconds</p>
-
-                            </div>
-                            <div class="exercise-description-row">
-                                {% if variation.exercise.should_add_weight %}
-                                    <p class="exercise-description weight">
-                                        <strong>Weight:</strong> {{ variation.weight_in_kilos }}
-                                        kg</p>
-                                {% endif %}
-                                <p class="exercise-description rest-between-repetitions"><strong>Rest between
-                                    Repetitions:</strong> {{ variation.rest_per_repetition_in_seconds }} seconds</p>
-                            </div>
-                        </div>
-                        <p class="exercise-created-by">Created by: {{ variation.created_by }}</p>
-                    </div>
-                {% endfor %}
+            <div class="exercise-tags">
+              <span style="background-color: {{ exercise.exercise_type.category.color }}"
+                    class="badge">{{ exercise.exercise_type }}</span>
             </div>
+            <p class="exercise-description">{{ exercise.description }}</p>
+            <p class="exercise-created-by">Created by: {{ exercise.created_by }}</p>
+          </div>
+        {% endfor %}
+      </div>
+      <div class="col-md-6">
+        <h2>Exercise Variations</h2>
+        {% for variation in pending_variations %}
+          <div class="exercise-card pending-variations-card">
+            <div class="exercise-header">
+              <h4 class="exercise-name">{{ variation.exercise.name }}</h4>
+              <a href="{% url 'retrieve_exercise_variation' variation.id %}"
+                 class="edit-icon">
+                <i class="fas fa-edit"></i>
+              </a>
+            </div>
+            <div class="exercise-tags">
+              <span style="background-color: {{ variation.exercise.exercise_type.category.color }}"
+                    class="badge">{{ variation.exercise.exercise_type }}</span>
+            </div>
+            <div class="exercise-details">
+              <div class="exercise-description-row">
+                <p class="exercise-description sets">
+                  <strong>Sets:</strong> {{ variation.sets }}
+                </p>
+                <p class="exercise-description repetitions">
+                  <strong>Repetitions:</strong> {{ variation.repetitions }}
+                </p>
+              </div>
+              <div class="exercise-description-row">
+                <p class="exercise-description rest-between-sets">
+                  <strong>Rest between
+                    Sets:</strong> {{ variation.rest_per_set_in_seconds }} seconds
+                  </p>
+                  <p class="exercise-description duration-per-repetition">
+                    <strong>Duration per
+                      Repetition:</strong> {{ variation.seconds_per_repetition }} seconds
+                    </p>
+                  </div>
+                  <div class="exercise-description-row">
+                    {% if variation.exercise.should_add_weight %}
+                      <p class="exercise-description weight">
+                        <strong>Weight:</strong> {{ variation.weight_in_kilos }}
+                        kg
+                      </p>
+                    {% endif %}
+                    <p class="exercise-description rest-between-repetitions">
+                      <strong>Rest between
+                        Repetitions:</strong> {{ variation.rest_per_repetition_in_seconds }} seconds
+                      </p>
+                    </div>
+                  </div>
+                  <p class="exercise-created-by">Created by: {{ variation.created_by }}</p>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
         </div>
-    </div>
-{% endblock %}
+      {% endblock content %}

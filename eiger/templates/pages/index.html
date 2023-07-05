@@ -1,109 +1,113 @@
 {% extends 'pages/base.html' %}
+
 {% load i18n static %}
 
-{% block title %}{{ _('Climb Hard - Trainers') }}{% endblock %}
+{% block title %}
+  {{ _("Climb Hard - Trainers") }}
+{% endblock title %}
+{% block style %}
+  <style>
+    small {
+        color: grey
+    }
 
+    .password-reset-link {
+        margin-top: 1em
+    }
+  </style>
+{% endblock style %}
 {% block content %}
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-6 col-md-8">
-                <div class="card border-0 shadow-lg my-5">
-                    <div class="card-body p-5">
-                        <h2 class="text-center mb-4">Climb Hard - Trainers</h2>
-                        <hr>
-                        <div class="row mt-4">
-                            <div id="login-component" class="col-md-6">
-                                {% if login_form.errors and not login_form.non_field_errors %}
-                                    <p class="errornote">
-                                        {% blocktranslate count counter=login_form.errors.items|length %}Please correct
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-6 col-md-8">
+        <div class="card border-0 shadow-lg my-5">
+          <div class="card-body p-5">
+            <h2 class="text-center mb-4">Climb Hard - Trainers</h2>
+            <hr />
+            <div class="row mt-4">
+              <div id="login-component" class="col-md-6">
+                {% if login_form.errors and not login_form.non_field_errors %}
+                  <p class="errornote">
+                    {% blocktranslate count counter=login_form.errors.items|length %}Please correct
                                             the
                                             error below.{% plural %}Please correct the errors
                                             below.{% endblocktranslate %}
-                                    </p>
-                                {% endif %}
-
-                                {% if login_form.non_field_errors %}
-                                    {% for error in login_form.non_field_errors %}
-                                        <p class="errornote">
-                                            {{ error }}
-                                        </p>
-                                    {% endfor %}
-                                {% endif %}
-                                <form method="post" id="login-form" action="{% url 'login' %}">
-                                    {% csrf_token %}
-                                    <h3 class="mb-3">Log In</h3>
-                                    <div class="form-row">
-                                        {{ login_form.username.errors }}
-                                        {{ login_form.username.label_tag }} {{ login_form.username }}
-                                    </div>
-                                    <div class="form-row">
-                                        {{ login_form.password.errors }}
-                                        {{ login_form.password.label_tag }} {{ login_form.password }}
-                                        <input type="hidden" name="next" value="{{ next }}">
-                                    </div>
-                                    <div class="password-reset-link" style="margin-top: 20px">
-                                        <a
-                                                href="{{ password_reset_url }}">{% translate 'Forgotten your password or username?' %}</a>
-                                    </div>
-                                    <div class="mb-3">
-                                        <button id="login-input" type="submit"
-                                                class="btn btn-primary">{% translate 'Log In' %}</button>
-                                    </div>
-                                </form>
-
-                            </div>
-                            <div id="register-component" class="col-md-6">
-
-                                {% if form.errors and not form.non_field_errors %}
-                                    <p class="errornote">
-                                        {% blocktranslate count counter=form.errors.items|length %}Please correct
+                  </p>
+                {% endif %}
+                {% if login_form.non_field_errors %}
+                  {% for error in login_form.non_field_errors %}
+                    <p class="errornote">{{ error }}</p>
+                  {% endfor %}
+                {% endif %}
+                <form method="post" id="login-form" action="{% url 'login' %}">
+                  {% csrf_token %}
+                  <h3 class="mb-3">Log In</h3>
+                  <div class="form-row">
+                    {{ login_form.username.errors }}
+                    {{ login_form.username.label_tag }} {{ login_form.username }}
+                  </div>
+                  <div class="form-row">
+                    {{ login_form.password.errors }}
+                    {{ login_form.password.label_tag }} {{ login_form.password }}
+                    <input type="hidden" name="next" value="{{ next }}" />
+                  </div>
+                  <div class="password-reset-link">
+                    <a href="{{ password_reset_url }}">{% translate 'Forgotten your password or username?' %}</a>
+                  </div>
+                  <div class="mb-3">
+                    <button id="login-input" type="submit" class="btn btn-primary">
+                      {% translate 'Log In' %}
+                    </button>
+                  </div>
+                </form>
+              </div>
+              <div id="register-component" class="col-md-6">
+                {% if form.errors and not form.non_field_errors %}
+                  <p class="errornote">
+                    {% blocktranslate count counter=form.errors.items|length %}Please correct
                                             the error below.{% plural %}Please correct the errors
                                             below.{% endblocktranslate %}
-                                    </p>
-                                {% endif %}
-
-                                {% if form.non_field_errors %}
-                                    {% for error in form.non_field_errors %}
-                                        <p class="errornote">
-                                            {{ error }}
-                                        </p>
-                                    {% endfor %}
-                                {% endif %}
-
-                                <form method="post" id="register-form" action="{% url 'register' %}">
-                                    {% csrf_token %}
-                                    <h3 class="mb-3">Sign Up</h3>
-                                    <div class="form-row">
-                                        {{ registration_form.username.errors }}
-                                        {{ registration_form.username.label_tag }} {{ registration_form.username }}
-                                        <br>
-                                        <small style="color: grey">{{ registration_form.username.help_text }}</small>
-                                    </div>
-                                    <div class="form-row">
-                                        {{ registration_form.password1.errors }}
-                                        {{ registration_form.password1.label_tag }} {{ registration_form.password1 }}
-                                        <br>
-                                        <small style="color: grey">{{ registration_form.password1.help_text }}</small>
-                                        <input type="hidden" name="next" value="{{ next }}">
-                                    </div>
-                                    <div class="form-row">
-                                        {{ registration_form.password2.errors }}
-                                        {{ registration_form.password2.label_tag }} {{ registration_form.password2 }}
-                                        <br>
-                                        <small style="color: grey">{{ registration_form.password2.help_text }}</small>
-                                        <input type="hidden" name="next" value="{{ next }}">
-                                    </div>
-                                    <div class="mb-3">
-                                        <button id="register-input" type="submit"
-                                                class="btn btn-primary">{% translate 'Register' %}</button>
-                                    </div>
-                                </form>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                  </p>
+                {% endif %}
+                {% if form.non_field_errors %}
+                  {% for error in form.non_field_errors %}
+                    <p class="errornote">{{ error }}</p>
+                  {% endfor %}
+                {% endif %}
+                <form method="post" id="register-form" action="{% url 'register' %}">
+                  {% csrf_token %}
+                  <h3 class="mb-3">Sign Up</h3>
+                  <div class="form-row">
+                    {{ registration_form.username.errors }}
+                    {{ registration_form.username.label_tag }} {{ registration_form.username }}
+                    <br />
+                    <small>{{ registration_form.username.help_text }}</small>
+                  </div>
+                  <div class="form-row">
+                    {{ registration_form.password1.errors }}
+                    {{ registration_form.password1.label_tag }} {{ registration_form.password1 }}
+                    <br />
+                    <small>{{ registration_form.password1.help_text }}</small>
+                    <input type="hidden" name="next" value="{{ next }}" />
+                  </div>
+                  <div class="form-row">
+                    {{ registration_form.password2.errors }}
+                    {{ registration_form.password2.label_tag }} {{ registration_form.password2 }}
+                    <br />
+                    <small>{{ registration_form.password2.help_text }}</small>
+                    <input type="hidden" name="next" value="{{ next }}" />
+                  </div>
+                  <div class="mb-3">
+                    <button id="register-input" type="submit" class="btn btn-primary">
+                      {% translate 'Register' %}
+                    </button>
+                  </div>
+                </form>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
-{% endblock %}
+  </div>
+{% endblock content %}
