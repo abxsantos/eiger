@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 
-from eiger.trainers.models import Exercise, ExerciseType
+from eiger.trainers.models import Exercise, ExerciseType, ExerciseVariation
 
 
 class TrainerLoginForm(AuthenticationForm):
@@ -86,3 +86,23 @@ class EditExerciseForm(forms.ModelForm[Exercise]):
                 _('Please provide a description for the exercise.')
             )
         return description
+
+
+class EditExerciseVariationForm(forms.ModelForm[ExerciseVariation]):
+    class Meta:
+        model = ExerciseVariation
+        fields = [
+            'sets',
+            'repetitions',
+            'seconds_per_repetition',
+            'rest_per_set_in_seconds',
+            'rest_per_repetition_in_seconds',
+            'weight_in_kilos',
+        ]
+
+    def __init__(self, instance: ExerciseVariation, *args, **kwargs) -> None:
+        kwargs.update({'instance': instance})
+        super().__init__(*args, **kwargs)
+        self.instance: ExerciseVariation = instance
+        if not self.instance.exercise.should_add_weight:
+            self.fields.pop('weight_in_kilos')
