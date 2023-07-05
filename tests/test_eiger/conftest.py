@@ -3,6 +3,7 @@ from unittest.mock import MagicMock
 import pytest
 from django.contrib.admin import AdminSite
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 from django.contrib.messages.middleware import MessageMiddleware
 from django.contrib.sessions.middleware import SessionMiddleware
 from django.http import HttpRequest
@@ -35,13 +36,22 @@ def client() -> Client:
     return Client()
 
 
-@pytest.fixture
-def authenticated_client() -> Client:
-    client = Client()
+@pytest.fixture()
+def trainer_raw_password() -> str:
+    return 'testpassword'
+
+
+@pytest.fixture()
+def trainer(trainer_raw_password) -> User:
     username = 'testuser'
-    raw_password = 'testpassword'
-    get_user_model().objects.create_user(
+    raw_password = trainer_raw_password
+    return get_user_model().objects.create_user(
         username=username, password=raw_password
     )
-    client.login(username=username, password=raw_password)
+
+
+@pytest.fixture
+def authenticated_client(trainer: User, trainer_raw_password: str) -> Client:
+    client = Client()
+    client.login(username=trainer.username, password=trainer_raw_password)
     return client

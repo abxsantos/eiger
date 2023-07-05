@@ -11,6 +11,7 @@ from django.views.decorators.http import require_GET, require_POST
 
 from eiger.trainers.forms import (
     EditExerciseForm,
+    EditExerciseVariationForm,
     TrainerCreationForm,
     TrainerLoginForm,
 )
@@ -246,4 +247,94 @@ def retrieve_category_exercise_types_view(
     return JsonResponse(
         data=tuple(queryset),
         safe=False,
+    )
+
+
+@login_required(login_url='/')
+@require_POST
+def update_exercise_variation_view(
+    request: HttpRequest, exercise_variation_id: int
+) -> HttpResponse:
+    user = request.user
+    logger.debug(
+        'Received the request from user %s to update the exercise'
+        ' variation %s',
+        user,
+        exercise_variation_id,
+    )
+    exercise_variation = get_object_or_404(
+        ExerciseVariation.objects.select_related(
+            'exercise',
+            'exercise__exercise_type',
+            'exercise__exercise_type__category',
+        ),
+        id=exercise_variation_id,
+        created_by=user,
+        reviewed=False,
+    )
+
+    form = EditExerciseVariationForm(
+        data=request.POST, instance=exercise_variation
+    )
+    if not form.is_valid():
+        logger.debug('Form cleaned data %s.', form.cleaned_data)
+        template_name = 'pages/edit_exercise_variation.html'
+        logger.info(
+            'Invalid form provided to create an exercise variation from user'
+            ' %s. Rendering the template %s with form errors %s.',
+            user,
+            template_name,
+            form.errors,
+        )
+        return render(
+            request=request,
+            template_name=template_name,
+            context={
+                'form': form,
+                'exercise_variation': exercise_variation,
+            },
+            status=HTTPStatus.BAD_REQUEST,
+        )
+
+    form.save()
+    logger.info(
+        'Successfully updated the exercise variation %s from the user %s'
+        ' request. Redirecting it to the home page.',
+        exercise_variation_id,
+        user,
+    )
+    return redirect('/home/')
+
+
+@login_required(login_url='/')
+@require_GET
+def retrieve_exercise_variation_view(
+    request: HttpRequest, exercise_variation_id: int
+) -> HttpResponse:
+    user = request.user
+    logger.debug(
+        'Received the request from user %s to retrieve the exercise'
+        ' variation %s',
+        user,
+        exercise_variation_id,
+    )
+    exercise_variation = get_object_or_404(
+        ExerciseVariation.objects.select_related(
+            'exercise',
+            'exercise__exercise_type',
+            'exercise__exercise_type__category',
+        ),
+        id=exercise_variation_id,
+        created_by=user,
+        reviewed=False,
+    )
+
+    form = EditExerciseVariationForm(exercise_variation)
+    return render(
+        request=request,
+        template_name='pages/edit_exercise_variation.html',
+        context={
+            'form': form,
+            'exercise_variation': exercise_variation,
+        },
     )
