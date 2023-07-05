@@ -11,6 +11,7 @@ pyclean
 isort .
 blue .
 ruff --fix .
+djlint --lint --reformat eiger
 mypy manage.py eiger
 mypy tests
 

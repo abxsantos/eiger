@@ -28,6 +28,7 @@ run_ci () {
   blue . --diff
   # Running linting for all python files in the project:
   ruff .
+  djlint --check eiger
 
   # Running type checking, see https://github.com/typeddjango/django-stubs
   # shellcheck disable=SC2046

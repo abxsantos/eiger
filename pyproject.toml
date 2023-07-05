@@ -48,6 +48,7 @@ ipython = "^8.14.0"
 commitizen = "^3.5.0"
 django-stubs = "^4.2.1"
 pytest-xdist = "^3.3.1"
+djlint = "^1.31.1"
 
 
 [tool.commitizen]
@@ -213,3 +214,13 @@ ignore_errors = true
 module = "eiger.*.models"
 # Allow usage of `Any` type inside models
 disallow_any_explicit = false
+
+
+[tool.djlint]
+ignore = "H006,H030,H031,T002"
+include = "H017,H035"
+indent = 2
+blank_line_after_tag = "load,extends"
+profile = "django"
+max_line_length = 80
+format_attribute_template_tags = true
