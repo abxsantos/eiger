@@ -1,3 +1,10 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+
 pyclean () {
   # Cleaning cache:
   find . \
