@@ -45,7 +45,7 @@ jobs:
 
       - name: Push image to registry
         run: |
-          docker tag "${{ env.PROJECT_NAME }}:${{ steps.prep.outputs.tag }}" "${{ env.IMAGE_FULL_NAME }}:${{ steps.prep.outputs.tag }}"
+          docker tag "${{ env.PROJECT_NAME }}:latest" "${{ env.IMAGE_FULL_NAME }}:${{ steps.prep.outputs.tag }}"
           docker push "${{ env.IMAGE_FULL_NAME }}:${{ steps.prep.outputs.tag }}"
 
       - uses: superfly/flyctl-actions@master
