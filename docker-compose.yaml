@@ -38,7 +38,6 @@ services:
           - GID=${GID:-1000}
         cache_from:
           - "eiger:dev"
-          - "eiger:latest"
       ports:
         # We only bind ports directly in development:
         - "8000:8000"
@@ -122,6 +121,13 @@ services:
     <<: *web
     ports: [ ]
     command: ./scripts/formatter.sh
+    stdin_open: true
+    tty: true
+
+  update:
+    <<: *web
+    ports: [ ]
+    command: bash -c "poetry update"
     stdin_open: true
     tty: true
 
