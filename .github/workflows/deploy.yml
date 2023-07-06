@@ -35,9 +35,13 @@ jobs:
         run: |
           docker login -u "${{ secrets.REGISTRY_USER }}" -p "${{ secrets.REGISTRY_PASSWORD }}" "cloud.canister.io:5000"
 
+      - name: Build web-prd service
+        run: |
+          docker-compose build --build-arg BUILDKIT_INLINE_CACHE=1 --progress=plain web-prd
+
       - name: Check image size
         run: |
-          docker image inspect "${{ env.PROJECT_NAME }}:dev" --format='{{.Size}}'
+          docker image inspect "${{ env.PROJECT_NAME }}:latest" --format='{{.Size}}'
 
       - name: Push image to registry
         run: |
