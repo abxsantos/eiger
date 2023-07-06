@@ -13,6 +13,8 @@ if [ "$DJANGO_ENV" != 'development' ]; then
   exit 1
 fi
 
+mkdir -p reports
+
 cosmic-ray init cosmic-ray.config.ini reports/cosmic-ray-session.sqlite
 cosmic-ray --verbosity=INFO baseline cosmic-ray.config.ini
 cosmic-ray --verbosity=INFO exec cosmic-ray.config.ini reports/cosmic-ray-session.sqlite

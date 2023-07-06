@@ -29,8 +29,9 @@ def test_exercise_type_admin_get_queryset(
         ' "trainers_exercisetype"."category_id",'
         ' "trainers_exercisetype"."name", "trainers_category"."id",'
         ' "trainers_category"."created_at",'
-        ' "trainers_category"."updated_at", "trainers_category"."name"'
-        ' FROM "trainers_exercisetype" INNER JOIN "trainers_category" ON'
+        ' "trainers_category"."updated_at", "trainers_category"."name",'
+        ' "trainers_category"."color" FROM "trainers_exercisetype"'
+        ' INNER JOIN "trainers_category" ON'
         ' ("trainers_exercisetype"."category_id" ='
         ' "trainers_category"."id")'
     )

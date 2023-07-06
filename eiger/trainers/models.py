@@ -1,3 +1,4 @@
+from colorfield.fields import ColorField
 from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -18,10 +19,21 @@ class BaseModel(models.Model):
 
 
 class Category(BaseModel):
+    COLOR_PALETTE = [
+        ('#FF5722', 'deep orange'),
+        ('#5BC0EB', 'teal'),
+        ('#FFB33A', 'light yellow'),
+        ('#4CAF50', 'lime'),
+    ]
+
     name = models.CharField(
         max_length=30,
         unique=True,
         help_text=_('The name of the category.'),
+    )
+    color = ColorField(
+        samples=COLOR_PALETTE,
+        help_text=_('The color that represents the category.'),
     )
 
     def __str__(self) -> str:
@@ -46,7 +58,7 @@ class ExerciseType(BaseModel):
     )
 
     def __str__(self) -> str:
-        return self.name
+        return f'{self.category.name} - {self.name}'
 
     class Meta:
         verbose_name = _('Exercise Type')

@@ -22,8 +22,8 @@ def test_category_admin_get_queryset(
         str(queryset.query)
         == 'SELECT "trainers_category"."id",'
         ' "trainers_category"."created_at", '
-        '"trainers_category"."updated_at", "trainers_category"."name" FROM '
-        '"trainers_category"'
+        '"trainers_category"."updated_at", "trainers_category"."name", '
+        '"trainers_category"."color" FROM "trainers_category"'
     )
     assert list(queryset) == list(categories)
 

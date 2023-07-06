@@ -43,6 +43,7 @@ DEBUG = False if config('DJANGO_ENV') == 'production' else True
 
 INSTALLED_APPS: Tuple[str, ...] = (
     TrainersConfig.name,
+    'colorfield',
     # Default django apps:
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -65,10 +66,10 @@ MIDDLEWARE: Tuple[str, ...] = (
     # Django
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
