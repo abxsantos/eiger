@@ -12,8 +12,8 @@ on:
 env:
   REGISTRY: "cloud.canister.io:5000"
   PROJECT_NAME: "eiger"
-  GROUP_NAME: "climb-hard.services"
-  IMAGE_FULL_NAME: "${REGISTRY}/${GROUP_NAME}.${PROJECT_NAME}"
+  GROUP_NAME: "abxsantos"
+  IMAGE_FULL_NAME: "${REGISTRY}/${GROUP_NAME}/${PROJECT_NAME}"
 
 jobs:
   test:
@@ -27,7 +27,7 @@ jobs:
 
       - name: Log in to Docker registry
         run: |
-          docker login --username=${{ secrets.REGISTRY_USER }} --password=${{ secrets.REGISTRY_PASSWORD }} cloud.canister.io:5000
+          docker login -u "${{ secrets.REGISTRY_USER }}" -p "${{ secrets.REGISTRY_PASSWORD }}" "cloud.canister.io:5000"
 
       - name: Build and run tests
         run: |
