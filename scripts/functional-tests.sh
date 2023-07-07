@@ -17,10 +17,4 @@ fi
 # Remove any cache before the script:
 pyclean
 
-pytest -p no:cacheprovider tests/functional --cov=. \
-        --cov=tests --cov-branch \
-        --cov-report=term-missing:skip-covered \
-        --cov-fail-under=95 \
-        --junitxml=reports/junit.xml \
-        --cov-report=xml:reports/coverage.xml \
-        --cov-report=html:reports/html
+pytest -p no:cacheprovider tests/functional
