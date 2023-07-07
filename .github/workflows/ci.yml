@@ -71,11 +71,11 @@ jobs:
         run: |
           docker-compose up functional-tests
 
-      - name: Annotate test results
-        uses: actions/annotate@v1
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v2
         with:
-          file: reports/junit.xml
-          type: junit
+          name: coverage_report
+          path: reports/coverage.xml
 
   unit-tests:
     runs-on: ubuntu-latest
@@ -91,8 +91,8 @@ jobs:
         run: |
           docker-compose up tests
 
-      - name: Annotate test results
-        uses: actions/annotate@v1
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v2
         with:
-          file: reports/junit.xml
-          type: junit
+          name: coverage_report
+          path: reports/coverage.xml

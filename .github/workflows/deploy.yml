@@ -5,8 +5,10 @@ on:
     workflows: ["CI"]
     types:
       - completed
+  push:
     branches:
       - main
+
 
 env:
   REGISTRY: "cloud.canister.io:5000"
