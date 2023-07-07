@@ -84,3 +84,7 @@ RUN chmod -R 755 /var/www/django/static
 
 # Running as non-root user:
 USER web
+
+CMD [ "./scripts/gunicorn.sh" ]
+
+EXPOSE 8080
