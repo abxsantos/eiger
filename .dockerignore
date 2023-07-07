@@ -3,7 +3,7 @@
 !eiger
 !tests
 !.dockerignore
-!.env
+!.env.local
 !.gitignore
 !.pre-commit-config.yaml
 !Dockerfile

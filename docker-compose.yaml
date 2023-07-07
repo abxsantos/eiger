@@ -14,7 +14,7 @@ services:
     restart: unless-stopped
     ports:
       - "5432:5432"
-    env_file: .env
+    env_file: .env.local
     healthcheck:
       test:
         [
@@ -43,7 +43,7 @@ services:
         - "8000:8000"
       volumes:
         - .:/code
-      env_file: .env
+      env_file: .env.local
       environment:
         DJANGO_DATABASE_HOST: db
     depends_on:

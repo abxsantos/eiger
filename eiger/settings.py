@@ -25,7 +25,7 @@ django_stubs_ext.monkeypatch()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Loading `.env` files
+# Loading `.env.local` files
 # See docs: https://gitlab.com/mkleehammer/autoconfig
 config = AutoConfig(search_path=BASE_DIR)
 
