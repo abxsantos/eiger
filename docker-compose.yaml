@@ -15,7 +15,7 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - web-prd-network
+      - web-network
     env_file: .env.local
     healthcheck:
       test:
@@ -46,11 +46,14 @@ services:
       volumes:
         - .:/code
       env_file: .env.local
+      networks:
+        - web-network
     depends_on:
       db:
         condition: service_healthy
       selenium:
         condition: service_healthy
+
     command: bash -c "python manage.py makemigrations &&
       python manage.py migrate &&
       python manage.py loaddata initial.json &&
@@ -155,7 +158,7 @@ services:
     command: ./scripts/gunicorn.sh
     restart: unless-stopped
     networks:
-      - web-prd-network
+      - web-network
     healthcheck:
       # We use `$$` here because:
       # one `$` goes to shell,
@@ -182,7 +185,7 @@ services:
       - "8080:80"
       - "443:443"
     networks:
-      - web-prd-network
+      - web-network
 
   functional-tests:
     <<: *web
@@ -211,8 +214,8 @@ services:
   selenium:
     image: selenium/standalone-firefox
     ports:
-      - 4444:4444
-      - 7900:7900
+      - "4444:4444"
+      - "7900:7900"
     healthcheck:
       test: [ "CMD", "wget", "--spider", "http://localhost:4444/ui" ]
       interval: 10s
@@ -220,7 +223,7 @@ services:
       retries: 3
 
 networks:
-  web-prd-network:
+  web-network:
 volumes:
   media_volume:
   static_volume:
