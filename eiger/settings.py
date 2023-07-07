@@ -194,7 +194,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 if DEBUG:
     STATIC_ROOT = '.static'
     ALLOWED_HOSTS = [
-        config('DOMAIN_NAME'),
+        *config('DOMAIN_NAME', cast=Csv()),
         'localhost',
         '0.0.0.0',  # noqa: S104
         '127.0.0.1',
