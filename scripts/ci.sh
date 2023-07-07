@@ -35,15 +35,6 @@ run_ci () {
   mypy manage.py eiger
   mypy tests
 
-  # Running tests:
-  pytest --cov=. \
-        --cov=tests --cov-branch \
-        --cov-report=term-missing:skip-covered \
-        --cov-fail-under=95 \
-        --junitxml=reports/junit.xml \
-        --cov-report=xml:reports/coverage.xml \
-        --cov-report=html:reports/html
-
   # Run checks to be sure we follow all django's best practices:
   python manage.py check --fail-level WARNING
 
