@@ -8,10 +8,19 @@ from eiger.trainers.models import Exercise, ExerciseType, ExerciseVariation
 
 
 class TrainerLoginForm(AuthenticationForm):
-    pass
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs['class'] = 'form-control'
+        self.fields['password'].widget.attrs['class'] = 'form-control'
 
 
 class TrainerCreationForm(UserCreationForm[User]):
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs['class'] = 'form-control'
+        self.fields['password1'].widget.attrs['class'] = 'form-control'
+        self.fields['password2'].widget.attrs['class'] = 'form-control'
+
     def save(self, commit: bool = True) -> User:
         user = super().save(commit=False)
         with transaction.atomic():
@@ -106,3 +115,6 @@ class EditExerciseVariationForm(forms.ModelForm[ExerciseVariation]):
         self.instance: ExerciseVariation = instance
         if not self.instance.exercise.should_add_weight:
             self.fields.pop('weight_in_kilos')
+
+        for field_name in self.fields.keys():
+            self.fields[field_name].widget.attrs['class'] = 'form-control'
