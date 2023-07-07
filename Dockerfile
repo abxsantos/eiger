@@ -2,7 +2,7 @@
 # This Dockerfile uses multi-stage build to customize DEV and PROD images:
 # https://docs.docker.com/develop/develop-images/multistage-build/
 
-FROM python:3.11.4-slim-buster AS development_build
+FROM python:3.11.4-slim-bookworm AS development_build
 
 LABEL maintainer="abxsantos"
 LABEL vendor="abxsantos"
@@ -37,13 +37,10 @@ SHELL ["/bin/bash", "-eo", "pipefail", "-c"]
 # hadolint ignore=DL3008
 RUN apt-get update && apt-get upgrade -y \
   && apt-get install --no-install-recommends -y \
-    bash \
     brotli \
-    build-essential \
     curl \
     gettext \
     git \
-    libpq-dev \
   # Installing `poetry` package manager:
   # https://github.com/python-poetry/poetry
   && curl -sSL 'https://install.python-poetry.org' | python - \
