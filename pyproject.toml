@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "eiger"
-version = "0.1.0"
+version = "0.0.0"
 description = ""
 authors = ["Alexandre Xavier <ale.bxsantos@gmail.com>"]
 readme = "README.md"
