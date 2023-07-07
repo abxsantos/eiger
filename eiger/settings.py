@@ -14,7 +14,7 @@ from typing import Tuple
 
 import django_stubs_ext
 import structlog
-from decouple import AutoConfig
+from decouple import AutoConfig, Csv
 
 from eiger.trainers.apps import TrainersConfig
 
@@ -217,7 +217,7 @@ else:
         '.static' if _COLLECTSTATIC_DRYRUN else '/var/www/django/static'
     )
     ALLOWED_HOSTS = [
-        config('DOMAIN_NAME'),
+        *config('DOMAIN_NAME', cast=Csv()),
         # We need this value for `healthcheck` to work:
         'localhost',
         '0.0.0.0',

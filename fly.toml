@@ -6,7 +6,7 @@ kill_timeout = 5
 processes = []
 
 [env]
-  DOMAIN_NAME = "eiger.fly.dev"
+  DOMAIN_NAME = "eiger.fly.dev, 172.19.132.34"
 
 [experimental]
   auto_rollback = true
