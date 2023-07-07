@@ -2,10 +2,11 @@ name: Release
 run-name: ${{ github.actor }} is Running Release
 on:
   workflow_run:
-    workflows: ["Deploy"]
+    workflows: ["CI"]
     types:
       - completed
-
+    branches:
+      - main
 jobs:
   release:
     runs-on: ubuntu-latest
