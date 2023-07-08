@@ -19,7 +19,7 @@ fi
 pyclean
 
 pytest tests/test_eiger \
-        -n auto --dist loadscope \
+        -n auto --dist worksteal \
         --cov=. \
         --cov=tests --cov-branch \
         --cov-report=term-missing:skip-covered \

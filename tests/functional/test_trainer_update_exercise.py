@@ -78,7 +78,8 @@ def fill_in_exercise_input(
 
 def click_on_save_button(authenticated_browser: webdriver.Remote) -> None:
     save_button = authenticated_browser.find_element(
-        by=By.CSS_SELECTOR, value='body > main > div > div > form > button'
+        by=By.CSS_SELECTOR,
+        value='body > div > main > div > div > form > button',
     )
     save_button.click()
 
@@ -117,7 +118,7 @@ def assert_pending_review_exercise_must_be_updated(
         name_text = authenticated_browser.find_element(
             by=By.CSS_SELECTOR,
             value=(
-                'body > main > div > div > div > div:nth-child(1) >'
+                'body > div > main > div > div > div > div:nth-child(1) >'
                 ' div:nth-child(2) > div.exercise-header > h4'
             ),
         ).text
@@ -127,7 +128,7 @@ def assert_pending_review_exercise_must_be_updated(
         exercise_type_text = authenticated_browser.find_element(
             by=By.CSS_SELECTOR,
             value=(
-                'body > main > div > div > div > div:nth-child(1) >'
+                'body > div > main > div > div > div > div:nth-child(1) >'
                 ' div:nth-child(2) > div.exercise-tags > span'
             ),
         ).text
@@ -137,7 +138,7 @@ def assert_pending_review_exercise_must_be_updated(
         description_text = authenticated_browser.find_element(
             by=By.CSS_SELECTOR,
             value=(
-                'body > main > div > div > div > div:nth-child(1) >'
+                'body > div > main > div > div > div > div:nth-child(1) >'
                 ' div:nth-child(2) > p.exercise-description'
             ),
         ).text

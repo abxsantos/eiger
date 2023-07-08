@@ -18,18 +18,30 @@
       {% block title %}
       {% endblock title %}
     </title>
+    <style>
+        #page-container {
+            position: relative;
+            min-height: 100vh;
+        }
+
+        #content-wrap {
+            padding-bottom: 2.5rem; /* Footer height */
+        }
+    </style>
     {% block style %}
     {% endblock style %}
   </head>
   <body>
-    {% include 'components/navbar.html' %}
-    <main class="bg-white">
-      <div class="container my-4">
-        {% block content %}
-        {% endblock content %}
-      </div>
-    </main>
-    {% include 'components/footer.html' %}
+    <div id="page-container">
+      {% include 'components/navbar.html' %}
+      <main id="content-wrap" class="bg-white">
+        <div class="container my-4">
+          {% block content %}
+          {% endblock content %}
+        </div>
+      </main>
+      {% include 'components/footer.html' %}
+    </div>
     <!-- Optional JavaScript -->
     <!-- Popper.js first, then Bootstrap JS -->
     <script src="https://unpkg.com/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
