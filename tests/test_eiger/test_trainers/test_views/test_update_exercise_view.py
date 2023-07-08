@@ -55,7 +55,7 @@ def test_must_update_exercise_given_valid_form(
             ),
         ),
         (
-            "a"*51,
+            'a' * 51,
             ErrorDict(
                 {
                     'name': ErrorList(
