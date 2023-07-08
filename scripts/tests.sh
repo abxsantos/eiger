@@ -18,7 +18,9 @@ fi
 # Remove any cache before the script:
 pyclean
 
-pytest tests/test_eiger --cov=. \
+pytest tests/test_eiger \
+        -n auto --dist loadscope \
+        --cov=. \
         --cov=tests --cov-branch \
         --cov-report=term-missing:skip-covered \
         --cov-fail-under=95 \

@@ -5,7 +5,6 @@ import pytest
 from django.forms.utils import ErrorDict, ErrorList
 from django.test import Client
 from django.urls import reverse
-from django.utils.crypto import get_random_string
 from django.utils.translation import gettext_lazy as _
 from model_bakery import baker
 from pytest_django.asserts import assertTemplateUsed
@@ -56,7 +55,7 @@ def test_must_update_exercise_given_valid_form(
             ),
         ),
         (
-            get_random_string(51),
+            "a"*51,
             ErrorDict(
                 {
                     'name': ErrorList(
