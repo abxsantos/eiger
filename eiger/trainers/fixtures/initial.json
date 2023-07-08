@@ -1,0 +1,1456 @@
+[
+  {
+    "model": "trainers.category",
+    "pk": 1,
+    "fields": {
+      "created_at": "2023-07-01T21:59:55.448Z",
+      "updated_at": "2023-07-01T23:23:00.316Z",
+      "name": "Endurance",
+      "color": "#5BC0EB"
+    }
+  },
+  {
+    "model": "trainers.category",
+    "pk": 2,
+    "fields": {
+      "created_at": "2023-07-01T22:00:05.265Z",
+      "updated_at": "2023-07-01T23:31:44.413Z",
+      "name": "Power Endurance",
+      "color": "#FFB33A"
+    }
+  },
+  {
+    "model": "trainers.category",
+    "pk": 3,
+    "fields": {
+      "created_at": "2023-07-01T22:00:25.061Z",
+      "updated_at": "2023-07-01T23:22:02.448Z",
+      "name": "Strength",
+      "color": "#FF5722"
+    }
+  },
+  {
+    "model": "trainers.category",
+    "pk": 4,
+    "fields": {
+      "created_at": "2023-07-01T22:00:39.709Z",
+      "updated_at": "2023-07-01T23:23:03.213Z",
+      "name": "Conditioning",
+      "color": "#4CAF50"
+    }
+  },
+  {
+    "model": "trainers.exercisetype",
+    "pk": 1,
+    "fields": {
+      "created_at": "2023-07-01T22:01:07.075Z",
+      "updated_at": "2023-07-01T22:01:07.075Z",
+      "category": 1,
+      "name": "Aerobic Capacity"
+    }
+  },
+  {
+    "model": "trainers.exercisetype",
+    "pk": 2,
+    "fields": {
+      "created_at": "2023-07-01T22:01:24.270Z",
+      "updated_at": "2023-07-01T22:01:24.270Z",
+      "category": 1,
+      "name": "Regeneration"
+    }
+  },
+  {
+    "model": "trainers.exercisetype",
+    "pk": 3,
+    "fields": {
+      "created_at": "2023-07-01T22:01:35.814Z",
+      "updated_at": "2023-07-01T22:01:35.814Z",
+      "category": 2,
+      "name": "Aerobic Power"
+    }
+  },
+  {
+    "model": "trainers.exercisetype",
+    "pk": 4,
+    "fields": {
+      "created_at": "2023-07-01T22:01:49.774Z",
+      "updated_at": "2023-07-01T22:01:49.774Z",
+      "category": 2,
+      "name": "Anaerobic Capacity"
+    }
+  },
+  {
+    "model": "trainers.exercisetype",
+    "pk": 5,
+    "fields": {
+      "created_at": "2023-07-01T22:02:01.167Z",
+      "updated_at": "2023-07-01T22:02:01.167Z",
+      "category": 3,
+      "name": "Bouldering"
+    }
+  },
+  {
+    "model": "trainers.exercisetype",
+    "pk": 6,
+    "fields": {
+      "created_at": "2023-07-01T22:02:19.421Z",
+      "updated_at": "2023-07-01T22:02:19.421Z",
+      "category": 3,
+      "name": "Finger Strength"
+    }
+  },
+  {
+    "model": "trainers.exercisetype",
+    "pk": 7,
+    "fields": {
+      "created_at": "2023-07-01T22:02:30.228Z",
+      "updated_at": "2023-07-01T22:02:30.228Z",
+      "category": 3,
+      "name": "Power"
+    }
+  },
+  {
+    "model": "trainers.exercisetype",
+    "pk": 8,
+    "fields": {
+      "created_at": "2023-07-01T22:02:45.656Z",
+      "updated_at": "2023-07-01T22:02:45.656Z",
+      "category": 4,
+      "name": "Antagonist Muscles"
+    }
+  },
+  {
+    "model": "trainers.exercisetype",
+    "pk": 9,
+    "fields": {
+      "created_at": "2023-07-01T22:02:55.756Z",
+      "updated_at": "2023-07-01T22:02:55.756Z",
+      "category": 4,
+      "name": "Core"
+    }
+  },
+  {
+    "model": "trainers.exercisetype",
+    "pk": 10,
+    "fields": {
+      "created_at": "2023-07-01T22:03:12.957Z",
+      "updated_at": "2023-07-01T22:03:12.957Z",
+      "category": 4,
+      "name": "Mobility"
+    }
+  },
+  {
+    "model": "trainers.exercisetype",
+    "pk": 11,
+    "fields": {
+      "created_at": "2023-07-01T22:03:24.422Z",
+      "updated_at": "2023-07-01T22:03:24.422Z",
+      "category": 4,
+      "name": "Upper Body"
+    }
+  },
+  {
+    "model": "trainers.exercise",
+    "pk": 1,
+    "fields": {
+      "created_at": "2023-07-01T22:06:59.564Z",
+      "updated_at": "2023-07-01T23:30:28.071Z",
+      "name": "1 on 1 off",
+      "description": "Moderate/pumpy climbing 2 grades below onsight.",
+      "exercise_type": 1,
+      "created_by": 1,
+      "reviewed": false,
+      "should_add_weight": false
+    }
+  },
+  {
+    "model": "trainers.exercise",
+    "pk": 2,
+    "fields": {
+      "created_at": "2023-07-01T22:07:53.061Z",
+      "updated_at": "2023-07-01T22:07:53.061Z",
+      "name": "Project Boulders",
+      "description": "At limit level bouldering with 1 or 3 moves.",
+      "exercise_type": 5,
+      "created_by": 1,
+      "reviewed": true,
+      "should_add_weight": false
+    }
+  },
+  {
+    "model": "trainers.exercise",
+    "pk": 3,
+    "fields": {
+      "created_at": "2023-07-01T22:08:44.875Z",
+      "updated_at": "2023-07-01T23:30:21.262Z",
+      "name": "Short boulders",
+      "description": "Moderate difficulty boulders with 6 to 8 movements.",
+      "exercise_type": 5,
+      "created_by": 1,
+      "reviewed": false,
+      "should_add_weight": false
+    }
+  },
+  {
+    "model": "trainers.exercise",
+    "pk": 4,
+    "fields": {
+      "created_at": "2023-07-01T22:10:16.444Z",
+      "updated_at": "2023-07-01T22:10:16.444Z",
+      "name": "Boulder Intervals",
+      "description": "Boulder circuit, aiming to climb as efficiently as possible.",
+      "exercise_type": 3,
+      "created_by": 1,
+      "reviewed": false,
+      "should_add_weight": false
+    }
+  },
+  {
+    "model": "trainers.exercise",
+    "pk": 5,
+    "fields": {
+      "created_at": "2023-07-01T22:12:16.513Z",
+      "updated_at": "2023-07-01T22:12:16.513Z",
+      "name": "Cat stretch",
+      "description": "",
+      "exercise_type": 10,
+      "created_by": 2,
+      "reviewed": true,
+      "should_add_weight": false
+    }
+  },
+  {
+    "model": "trainers.exercise",
+    "pk": 6,
+    "fields": {
+      "created_at": "2023-07-01T22:13:11.775Z",
+      "updated_at": "2023-07-01T23:30:15.931Z",
+      "name": "90/90",
+      "description": "",
+      "exercise_type": 10,
+      "created_by": 1,
+      "reviewed": false,
+      "should_add_weight": false
+    }
+  },
+  {
+    "model": "trainers.exercise",
+    "pk": 7,
+    "fields": {
+      "created_at": "2023-07-01T22:14:57.661Z",
+      "updated_at": "2023-07-01T23:30:11.527Z",
+      "name": "Fingerboard 7 / 53",
+      "description": "Fingerboard exercise at a 15mm edge with 80% max weight added.",
+      "exercise_type": 6,
+      "created_by": 1,
+      "reviewed": false,
+      "should_add_weight": true
+    }
+  },
+  {
+    "model": "trainers.exercisevariation",
+    "pk": 1,
+    "fields": {
+      "created_at": "2023-07-01T22:15:52.874Z",
+      "updated_at": "2023-07-01T23:32:28.658Z",
+      "exercise": 7,
+      "sets": 3,
+      "repetitions": 4,
+      "seconds_per_repetition": 7,
+      "rest_per_set_in_seconds": 120,
+      "rest_per_repetition_in_seconds": 53,
+      "weight_in_kilos": 0,
+      "created_by": 1,
+      "reviewed": false
+    }
+  },
+  {
+    "model": "trainers.exercisevariation",
+    "pk": 2,
+    "fields": {
+      "created_at": "2023-07-01T22:16:29.460Z",
+      "updated_at": "2023-07-01T23:32:25.477Z",
+      "exercise": 7,
+      "sets": 4,
+      "repetitions": 4,
+      "seconds_per_repetition": 7,
+      "rest_per_set_in_seconds": 120,
+      "rest_per_repetition_in_seconds": 53,
+      "weight_in_kilos": 0,
+      "created_by": 1,
+      "reviewed": false
+    }
+  },
+  {
+    "model": "trainers.exercisevariation",
+    "pk": 3,
+    "fields": {
+      "created_at": "2023-07-01T22:17:38.894Z",
+      "updated_at": "2023-07-01T23:32:22.379Z",
+      "exercise": 5,
+      "sets": 1,
+      "repetitions": 10,
+      "seconds_per_repetition": 20,
+      "rest_per_set_in_seconds": 0,
+      "rest_per_repetition_in_seconds": 0,
+      "weight_in_kilos": 0,
+      "created_by": 1,
+      "reviewed": false
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 1,
+    "fields": {
+      "name": "Can add Category",
+      "content_type": 1,
+      "codename": "add_category"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 2,
+    "fields": {
+      "name": "Can change Category",
+      "content_type": 1,
+      "codename": "change_category"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 3,
+    "fields": {
+      "name": "Can delete Category",
+      "content_type": 1,
+      "codename": "delete_category"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 4,
+    "fields": {
+      "name": "Can view Category",
+      "content_type": 1,
+      "codename": "view_category"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 5,
+    "fields": {
+      "name": "Can add Exercise Type",
+      "content_type": 2,
+      "codename": "add_exercisetype"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 6,
+    "fields": {
+      "name": "Can change Exercise Type",
+      "content_type": 2,
+      "codename": "change_exercisetype"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 7,
+    "fields": {
+      "name": "Can delete Exercise Type",
+      "content_type": 2,
+      "codename": "delete_exercisetype"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 8,
+    "fields": {
+      "name": "Can view Exercise Type",
+      "content_type": 2,
+      "codename": "view_exercisetype"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 9,
+    "fields": {
+      "name": "Can add Exercise",
+      "content_type": 3,
+      "codename": "add_exercise"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 10,
+    "fields": {
+      "name": "Can change Exercise",
+      "content_type": 3,
+      "codename": "change_exercise"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 11,
+    "fields": {
+      "name": "Can delete Exercise",
+      "content_type": 3,
+      "codename": "delete_exercise"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 12,
+    "fields": {
+      "name": "Can view Exercise",
+      "content_type": 3,
+      "codename": "view_exercise"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 13,
+    "fields": {
+      "name": "Can add Exercise Variation",
+      "content_type": 4,
+      "codename": "add_exercisevariation"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 14,
+    "fields": {
+      "name": "Can change Exercise Variation",
+      "content_type": 4,
+      "codename": "change_exercisevariation"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 15,
+    "fields": {
+      "name": "Can delete Exercise Variation",
+      "content_type": 4,
+      "codename": "delete_exercisevariation"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 16,
+    "fields": {
+      "name": "Can view Exercise Variation",
+      "content_type": 4,
+      "codename": "view_exercisevariation"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 17,
+    "fields": {
+      "name": "Can add permission",
+      "content_type": 5,
+      "codename": "add_permission"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 18,
+    "fields": {
+      "name": "Can change permission",
+      "content_type": 5,
+      "codename": "change_permission"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 19,
+    "fields": {
+      "name": "Can delete permission",
+      "content_type": 5,
+      "codename": "delete_permission"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 20,
+    "fields": {
+      "name": "Can view permission",
+      "content_type": 5,
+      "codename": "view_permission"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 21,
+    "fields": {
+      "name": "Can add group",
+      "content_type": 6,
+      "codename": "add_group"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 22,
+    "fields": {
+      "name": "Can change group",
+      "content_type": 6,
+      "codename": "change_group"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 23,
+    "fields": {
+      "name": "Can delete group",
+      "content_type": 6,
+      "codename": "delete_group"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 24,
+    "fields": {
+      "name": "Can view group",
+      "content_type": 6,
+      "codename": "view_group"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 25,
+    "fields": {
+      "name": "Can add user",
+      "content_type": 7,
+      "codename": "add_user"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 26,
+    "fields": {
+      "name": "Can change user",
+      "content_type": 7,
+      "codename": "change_user"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 27,
+    "fields": {
+      "name": "Can delete user",
+      "content_type": 7,
+      "codename": "delete_user"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 28,
+    "fields": {
+      "name": "Can view user",
+      "content_type": 7,
+      "codename": "view_user"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 29,
+    "fields": {
+      "name": "Can add content type",
+      "content_type": 8,
+      "codename": "add_contenttype"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 30,
+    "fields": {
+      "name": "Can change content type",
+      "content_type": 8,
+      "codename": "change_contenttype"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 31,
+    "fields": {
+      "name": "Can delete content type",
+      "content_type": 8,
+      "codename": "delete_contenttype"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 32,
+    "fields": {
+      "name": "Can view content type",
+      "content_type": 8,
+      "codename": "view_contenttype"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 33,
+    "fields": {
+      "name": "Can add session",
+      "content_type": 9,
+      "codename": "add_session"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 34,
+    "fields": {
+      "name": "Can change session",
+      "content_type": 9,
+      "codename": "change_session"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 35,
+    "fields": {
+      "name": "Can delete session",
+      "content_type": 9,
+      "codename": "delete_session"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 36,
+    "fields": {
+      "name": "Can view session",
+      "content_type": 9,
+      "codename": "view_session"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 37,
+    "fields": {
+      "name": "Can add log entry",
+      "content_type": 10,
+      "codename": "add_logentry"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 38,
+    "fields": {
+      "name": "Can change log entry",
+      "content_type": 10,
+      "codename": "change_logentry"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 39,
+    "fields": {
+      "name": "Can delete log entry",
+      "content_type": 10,
+      "codename": "delete_logentry"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 40,
+    "fields": {
+      "name": "Can view log entry",
+      "content_type": 10,
+      "codename": "view_logentry"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 41,
+    "fields": {
+      "name": "Can add test model",
+      "content_type": 11,
+      "codename": "add_testmodel"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 42,
+    "fields": {
+      "name": "Can change test model",
+      "content_type": 11,
+      "codename": "change_testmodel"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 43,
+    "fields": {
+      "name": "Can delete test model",
+      "content_type": 11,
+      "codename": "delete_testmodel"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 44,
+    "fields": {
+      "name": "Can view test model",
+      "content_type": 11,
+      "codename": "view_testmodel"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$OAQ5x7moSIQyYTsHpj8Bz2$avNpD/+85R6qmSHLcIJNdgAKaVKB5we95Y/SoKLMArw=",
+      "last_login": "2023-07-01T21:53:24.385Z",
+      "is_superuser": false,
+      "username": "trainer",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2023-07-01T21:53:24.037Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$pJkOQ1uO3cDW9rigl4E5il$qELug1Kzvj55mfjDnE72fhFhLYDY2yexTNTxNYWLWQw=",
+      "last_login": "2023-07-01T21:54:47.125Z",
+      "is_superuser": true,
+      "username": "admin",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2023-07-01T21:54:16.309Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 1,
+    "fields": {
+      "app_label": "trainers",
+      "model": "category"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 2,
+    "fields": {
+      "app_label": "trainers",
+      "model": "exercisetype"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 3,
+    "fields": {
+      "app_label": "trainers",
+      "model": "exercise"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 4,
+    "fields": {
+      "app_label": "trainers",
+      "model": "exercisevariation"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 5,
+    "fields": {
+      "app_label": "auth",
+      "model": "permission"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 6,
+    "fields": {
+      "app_label": "auth",
+      "model": "group"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 7,
+    "fields": {
+      "app_label": "auth",
+      "model": "user"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 8,
+    "fields": {
+      "app_label": "contenttypes",
+      "model": "contenttype"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 9,
+    "fields": {
+      "app_label": "sessions",
+      "model": "session"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 10,
+    "fields": {
+      "app_label": "admin",
+      "model": "logentry"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 11,
+    "fields": {
+      "app_label": "db",
+      "model": "testmodel"
+    }
+  },
+  {
+    "model": "sessions.session",
+    "pk": "x5v2q2itkibd8xyzzvc1kl2hsu41wxts",
+    "fields": {
+      "session_data": ".eJxVjLEOAiEQRP-F2pAAImBp7zeQZZeVUwPJcVcZ__2O5Aptppj3Zj4iwrqUuPY8x4nEVShx-u0S4CvXAegJ9dEktrrMU5JDkQft8t4ov2-H-3dQoJexRlIEnFUAn9B5w94oMHsEDEqTAUfggMm6ZO3Zo_ZwoaQN66wts_huCqc4xg:1qFizG:uRXnHkuF4wx_rnHtDtUerSpiahvaFqCaQu4G10fw-gY",
+      "expire_date": "2023-07-15T22:22:38.555Z"
+    }
+  },
+  {
+    "model": "sessions.session",
+    "pk": "xqqqyx6thd4jzo77mnxuo9to44lgzuka",
+    "fields": {
+      "session_data": ".eJxVjLEOAiEQRP-F2pAAImBp7zeQZZeVUwPJcVcZ__2O5Aptppj3Zj4iwrqUuPY8x4nEVShx-u0S4CvXAegJ9dEktrrMU5JDkQft8t4ov2-H-3dQoJexRlIEnFUAn9B5w94oMHsEDEqTAUfggMm6ZO3Zo_ZwoaQN66wts_huCqc4xg:1qFj4O:98CKXMUty2bDAVzT7akdyn9tFUg2NK59Q9fd11mdUKM",
+      "expire_date": "2023-07-15T22:27:56.878Z"
+    }
+  },
+  {
+    "model": "sessions.session",
+    "pk": "y7yxbnl5vqamwx9wsxpbd7t5kl95u1ze",
+    "fields": {
+      "session_data": ".eJxVjEEOwiAQRe_C2hChjB1cuu8ZmhkYpGogKe3KeHfbpAvdvvf-f6uR1iWPa5N5nKK6KqtOv4wpPKXsIj6o3KsOtSzzxHpP9GGbHmqU1-1o_w4ytbytkc5s8GIdYBKPEsGzYQedE_SCne-TsWSBpPe8kdBjiBASAXlO4NTnC9rlODA:1qFj36:AwbsUCrTf8zU5-4YhnQ9xguEdB3HWWKSTmNHVaX_Ubs",
+      "expire_date": "2023-07-15T22:26:36.163Z"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 1,
+    "fields": {
+      "action_time": "2023-07-01T21:59:55.449Z",
+      "user": 2,
+      "content_type": 1,
+      "object_id": "1",
+      "object_repr": "Endurance",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 2,
+    "fields": {
+      "action_time": "2023-07-01T22:00:05.266Z",
+      "user": 2,
+      "content_type": 1,
+      "object_id": "2",
+      "object_repr": "Power Endurance",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 3,
+    "fields": {
+      "action_time": "2023-07-01T22:00:25.063Z",
+      "user": 2,
+      "content_type": 1,
+      "object_id": "3",
+      "object_repr": "Strength",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 4,
+    "fields": {
+      "action_time": "2023-07-01T22:00:39.710Z",
+      "user": 2,
+      "content_type": 1,
+      "object_id": "4",
+      "object_repr": "Conditioning",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 5,
+    "fields": {
+      "action_time": "2023-07-01T22:01:07.077Z",
+      "user": 2,
+      "content_type": 2,
+      "object_id": "1",
+      "object_repr": "Aerobic Capacity",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 6,
+    "fields": {
+      "action_time": "2023-07-01T22:01:24.270Z",
+      "user": 2,
+      "content_type": 2,
+      "object_id": "2",
+      "object_repr": "Regeneration",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 7,
+    "fields": {
+      "action_time": "2023-07-01T22:01:35.815Z",
+      "user": 2,
+      "content_type": 2,
+      "object_id": "3",
+      "object_repr": "Aerobic Power",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 8,
+    "fields": {
+      "action_time": "2023-07-01T22:01:49.775Z",
+      "user": 2,
+      "content_type": 2,
+      "object_id": "4",
+      "object_repr": "Anaerobic Capacity",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 9,
+    "fields": {
+      "action_time": "2023-07-01T22:02:01.168Z",
+      "user": 2,
+      "content_type": 2,
+      "object_id": "5",
+      "object_repr": "Bouldering",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 10,
+    "fields": {
+      "action_time": "2023-07-01T22:02:19.421Z",
+      "user": 2,
+      "content_type": 2,
+      "object_id": "6",
+      "object_repr": "Finger Strength",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 11,
+    "fields": {
+      "action_time": "2023-07-01T22:02:30.229Z",
+      "user": 2,
+      "content_type": 2,
+      "object_id": "7",
+      "object_repr": "Power",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 12,
+    "fields": {
+      "action_time": "2023-07-01T22:02:45.657Z",
+      "user": 2,
+      "content_type": 2,
+      "object_id": "8",
+      "object_repr": "Antagonist Muscles",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 13,
+    "fields": {
+      "action_time": "2023-07-01T22:02:55.757Z",
+      "user": 2,
+      "content_type": 2,
+      "object_id": "9",
+      "object_repr": "Core",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 14,
+    "fields": {
+      "action_time": "2023-07-01T22:03:12.958Z",
+      "user": 2,
+      "content_type": 2,
+      "object_id": "10",
+      "object_repr": "Mobility",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 15,
+    "fields": {
+      "action_time": "2023-07-01T22:03:24.422Z",
+      "user": 2,
+      "content_type": 2,
+      "object_id": "11",
+      "object_repr": "Upper Body",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 16,
+    "fields": {
+      "action_time": "2023-07-01T22:06:59.565Z",
+      "user": 2,
+      "content_type": 3,
+      "object_id": "1",
+      "object_repr": "1 on 1 off",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 17,
+    "fields": {
+      "action_time": "2023-07-01T22:07:53.062Z",
+      "user": 2,
+      "content_type": 3,
+      "object_id": "2",
+      "object_repr": "Project Boulders",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 18,
+    "fields": {
+      "action_time": "2023-07-01T22:08:44.876Z",
+      "user": 2,
+      "content_type": 3,
+      "object_id": "3",
+      "object_repr": "Short boulders",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 19,
+    "fields": {
+      "action_time": "2023-07-01T22:10:16.445Z",
+      "user": 2,
+      "content_type": 3,
+      "object_id": "4",
+      "object_repr": "Boulder Intervals",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 20,
+    "fields": {
+      "action_time": "2023-07-01T22:12:16.514Z",
+      "user": 2,
+      "content_type": 3,
+      "object_id": "5",
+      "object_repr": "Cat stretch",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 21,
+    "fields": {
+      "action_time": "2023-07-01T22:13:11.776Z",
+      "user": 2,
+      "content_type": 3,
+      "object_id": "6",
+      "object_repr": "90/90",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 22,
+    "fields": {
+      "action_time": "2023-07-01T22:14:57.661Z",
+      "user": 2,
+      "content_type": 3,
+      "object_id": "7",
+      "object_repr": "Fingerboard 7 / 53",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 23,
+    "fields": {
+      "action_time": "2023-07-01T22:15:52.876Z",
+      "user": 2,
+      "content_type": 4,
+      "object_id": "1",
+      "object_repr": "Variation of Fingerboard 7 / 53",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 24,
+    "fields": {
+      "action_time": "2023-07-01T22:16:29.461Z",
+      "user": 2,
+      "content_type": 4,
+      "object_id": "2",
+      "object_repr": "Variation of Fingerboard 7 / 53",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 25,
+    "fields": {
+      "action_time": "2023-07-01T22:17:38.895Z",
+      "user": 2,
+      "content_type": 4,
+      "object_id": "3",
+      "object_repr": "Variation of Cat stretch",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 26,
+    "fields": {
+      "action_time": "2023-07-01T22:26:59.292Z",
+      "user": 2,
+      "content_type": 3,
+      "object_id": "3",
+      "object_repr": "Short boulders",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Reviewed\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 27,
+    "fields": {
+      "action_time": "2023-07-01T22:27:03.809Z",
+      "user": 2,
+      "content_type": 3,
+      "object_id": "2",
+      "object_repr": "Project Boulders",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Reviewed\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 28,
+    "fields": {
+      "action_time": "2023-07-01T22:27:07.815Z",
+      "user": 2,
+      "content_type": 3,
+      "object_id": "1",
+      "object_repr": "1 on 1 off",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Reviewed\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 29,
+    "fields": {
+      "action_time": "2023-07-01T22:27:14.819Z",
+      "user": 2,
+      "content_type": 3,
+      "object_id": "6",
+      "object_repr": "90/90",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Reviewed\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 30,
+    "fields": {
+      "action_time": "2023-07-01T22:27:18.990Z",
+      "user": 2,
+      "content_type": 3,
+      "object_id": "7",
+      "object_repr": "Fingerboard 7 / 53",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Reviewed\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 31,
+    "fields": {
+      "action_time": "2023-07-01T22:27:25.429Z",
+      "user": 2,
+      "content_type": 4,
+      "object_id": "3",
+      "object_repr": "Variation of Cat stretch",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Reviewed\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 32,
+    "fields": {
+      "action_time": "2023-07-01T22:27:28.443Z",
+      "user": 2,
+      "content_type": 4,
+      "object_id": "2",
+      "object_repr": "Variation of Fingerboard 7 / 53",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Reviewed\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 33,
+    "fields": {
+      "action_time": "2023-07-01T22:27:31.049Z",
+      "user": 2,
+      "content_type": 4,
+      "object_id": "1",
+      "object_repr": "Variation of Fingerboard 7 / 53",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Reviewed\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 34,
+    "fields": {
+      "action_time": "2023-07-01T23:21:51.150Z",
+      "user": 2,
+      "content_type": 1,
+      "object_id": "4",
+      "object_repr": "Conditioning",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Category color\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 35,
+    "fields": {
+      "action_time": "2023-07-01T23:22:02.449Z",
+      "user": 2,
+      "content_type": 1,
+      "object_id": "3",
+      "object_repr": "Strength",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Category color\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 36,
+    "fields": {
+      "action_time": "2023-07-01T23:22:52.679Z",
+      "user": 2,
+      "content_type": 1,
+      "object_id": "2",
+      "object_repr": "Power Endurance",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Category color\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 37,
+    "fields": {
+      "action_time": "2023-07-01T23:23:00.317Z",
+      "user": 2,
+      "content_type": 1,
+      "object_id": "1",
+      "object_repr": "Endurance",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Category color\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 38,
+    "fields": {
+      "action_time": "2023-07-01T23:23:03.214Z",
+      "user": 2,
+      "content_type": 1,
+      "object_id": "4",
+      "object_repr": "Conditioning",
+      "action_flag": 2,
+      "change_message": "[]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 39,
+    "fields": {
+      "action_time": "2023-07-01T23:25:41.586Z",
+      "user": 2,
+      "content_type": 1,
+      "object_id": "2",
+      "object_repr": "Power Endurance",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Category color\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 40,
+    "fields": {
+      "action_time": "2023-07-01T23:30:11.528Z",
+      "user": 2,
+      "content_type": 3,
+      "object_id": "7",
+      "object_repr": "Fingerboard 7 / 53",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Reviewed\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 41,
+    "fields": {
+      "action_time": "2023-07-01T23:30:15.932Z",
+      "user": 2,
+      "content_type": 3,
+      "object_id": "6",
+      "object_repr": "90/90",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Reviewed\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 42,
+    "fields": {
+      "action_time": "2023-07-01T23:30:21.263Z",
+      "user": 2,
+      "content_type": 3,
+      "object_id": "3",
+      "object_repr": "Short boulders",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Reviewed\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 43,
+    "fields": {
+      "action_time": "2023-07-01T23:30:28.072Z",
+      "user": 2,
+      "content_type": 3,
+      "object_id": "1",
+      "object_repr": "1 on 1 off",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Reviewed\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 44,
+    "fields": {
+      "action_time": "2023-07-01T23:31:44.414Z",
+      "user": 2,
+      "content_type": 1,
+      "object_id": "2",
+      "object_repr": "Power Endurance",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Category color\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 45,
+    "fields": {
+      "action_time": "2023-07-01T23:32:22.379Z",
+      "user": 2,
+      "content_type": 4,
+      "object_id": "3",
+      "object_repr": "Variation of Cat stretch",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Reviewed\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 46,
+    "fields": {
+      "action_time": "2023-07-01T23:32:25.478Z",
+      "user": 2,
+      "content_type": 4,
+      "object_id": "2",
+      "object_repr": "Variation of Fingerboard 7 / 53",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Reviewed\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 47,
+    "fields": {
+      "action_time": "2023-07-01T23:32:28.659Z",
+      "user": 2,
+      "content_type": 4,
+      "object_id": "1",
+      "object_repr": "Variation of Fingerboard 7 / 53",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Reviewed\"]}}]"
+    }
+  }
+]

@@ -1,0 +1,232 @@
+---
+
+# Default compose file for development and production.
+# Should be used directly in development.
+# Automatically loads `docker-compose.override.yml` if it exists.
+# No extra steps required.
+# Should be used together with `docker/docker-compose.prod.yml`
+# in production.
+
+version: "3.8"
+services:
+  db:
+    image: "postgres:14-alpine"
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    networks:
+      - web-network
+    env_file: .env.local
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    <<: &web
+      image: "eiger:dev"
+      build:
+        target: development_build
+        context: .
+        dockerfile: Dockerfile
+        args:
+          - DJANGO_ENV=development
+          - UID=${UID:-1000}
+          - GID=${GID:-1000}
+        cache_from:
+          - "eiger:dev"
+      ports:
+        # We only bind ports directly in development:
+        - "8000:8000"
+      volumes:
+        - .:/code
+      env_file: .env.local
+      networks:
+        - web-network
+    depends_on:
+      db:
+        condition: service_healthy
+      selenium:
+        condition: service_healthy
+
+    command: bash -c "python manage.py makemigrations &&
+      python manage.py migrate &&
+      python manage.py loaddata initial.json &&
+      python -Wd manage.py runserver 0.0.0.0:8000"
+    container_name: web
+    healthcheck:
+      # We use `$$` here because:
+      # one `$` goes to shell,
+      # one `$` goes to `docker-compose.yaml` escaping
+      test: |
+        /usr/bin/test $$(
+          /usr/bin/curl --fail http://localhost:8000/healthcheck/?format=json
+          --write-out "%{http_code}" --silent --output /dev/null
+        ) -eq 200
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  ci:
+    <<: *web
+    build:
+      target: production_build
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - DJANGO_ENV=development
+        - LOCAL_SELENIUM=true
+      cache_from:
+        - "eiger:latest"
+    depends_on:
+      db:
+        condition: service_healthy
+      selenium:
+        condition: service_healthy
+    command: ./scripts/ci.sh
+    container_name: ci
+    environment:
+      - LIVE_SERVER_HOST=ci
+    stdin_open: true
+    tty: true
+
+  tests:
+    <<: *web
+    depends_on:
+      db:
+        condition: service_healthy
+    ports: [ ]
+    command: ./scripts/tests.sh
+    stdin_open: true
+    tty: true
+
+  mutation-tests:
+    <<: *web
+    volumes:
+      - ./reports:/code/reports
+    depends_on:
+      db:
+        condition: service_healthy
+      selenium:
+        condition: service_healthy
+    ports: [ ]
+    command: ./scripts/mutation-tests.sh
+    stdin_open: true
+    tty: true
+
+  formatter:
+    <<: *web
+    ports: [ ]
+    command: ./scripts/formatter.sh
+    stdin_open: true
+    tty: true
+
+  update:
+    <<: *web
+    ports: [ ]
+    command: bash -c "poetry update"
+    stdin_open: true
+    tty: true
+
+  web-prd:
+    <<: *web
+    image: "eiger:latest"
+    depends_on:
+      nginx:
+        condition: service_started
+      db:
+        condition: service_healthy
+    build:
+      target: production_build
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - DJANGO_ENV=production
+      cache_from:
+        - "eiger:dev"
+        - "eiger:latest"
+    volumes:
+      - static_volume:/var/www/django/static
+      - media_volume:/var/www/django/media
+    env_file: .env.local
+    command: ./scripts/gunicorn.sh
+    restart: unless-stopped
+    networks:
+      - web-network
+    healthcheck:
+      # We use `$$` here because:
+      # one `$` goes to shell,
+      # one `$` goes to `docker-compose.yaml` escaping
+      test: |
+        /usr/bin/test $$(
+          /usr/bin/curl --fail http://localhost:8000/healthcheck/?format=json
+          --write-out "%{http_code}" --silent --output /dev/null
+        ) -eq 200
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+
+  nginx:
+    build:
+      context: nginx
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - static_volume:/var/www/django/static
+      - media_volume:/var/www/django/media
+    ports:
+      - "8080:80"
+      - "443:443"
+    networks:
+      - web-network
+
+  functional-tests:
+    <<: *web
+    image: "eiger:latest"
+    env_file: .env.local
+    environment:
+      - LIVE_SERVER_HOST=functional-tests
+    build:
+      target: production_build
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - DJANGO_ENV=development
+      cache_from:
+        - "eiger:latest"
+    depends_on:
+      db:
+        condition: service_healthy
+      selenium:
+        condition: service_healthy
+    container_name: functional-tests
+    command: ./scripts/functional-tests.sh
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+
+  selenium:
+    image: selenium/standalone-firefox
+    ports:
+      - "4444:4444"
+      - "7900:7900"
+    networks:
+      - web-network
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "http://localhost:4444/ui" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+networks:
+  web-network:
+volumes:
+  media_volume:
+  static_volume:

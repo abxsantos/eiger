@@ -9,53 +9,76 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
 from pathlib import Path
+from typing import Tuple
+
+import django_stubs_ext
+import structlog
+from decouple import AutoConfig, Csv
+
+from eiger.trainers.apps import TrainersConfig
+
+# Monkeypatching Django, so stubs will work for all generics,
+# see: https://github.com/typeddjango/django-stubs
+django_stubs_ext.monkeypatch()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Loading `.env.local` files
+# See docs: https://gitlab.com/mkleehammer/autoconfig
+config = AutoConfig(search_path=BASE_DIR)
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-d_obcyd8rw6p)#wd*p#x6&8c$4shs8z-2^$n3!!125th&xbfek'
+SECRET_KEY = config('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
+DEBUG = False if config('DJANGO_ENV') == 'production' else True
 
 # Application definition
 
-INSTALLED_APPS = [
-    'django.contrib.admin',
+INSTALLED_APPS: Tuple[str, ...] = (
+    TrainersConfig.name,
+    'colorfield',
+    # Default django apps:
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-]
+    # django-admin:
+    'django.contrib.admindocs',
+    'django.contrib.admin',
+    # Health checks:
+    # You may want to enable other checks as well,
+    # see: https://github.com/KristianOellegaard/django-health-check
+    'health_check',
+    'health_check.db',
+)
 
-MIDDLEWARE = [
+MIDDLEWARE: Tuple[str, ...] = (
+    # Logging:
+    'eiger.logging.LoggingContextVarsMiddleware',
+    # Django
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
+)
 
 ROOT_URLCONF = 'eiger.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR.joinpath('eiger', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -76,30 +99,75 @@ WSGI_APPLICATION = 'eiger.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('POSTGRES_DB'),
+        'USER': config('POSTGRES_USER'),
+        'PASSWORD': config('POSTGRES_PASSWORD'),
+        'HOST': config('DJANGO_DATABASE_HOST'),
+        'PORT': config('DJANGO_DATABASE_PORT', cast=int),
+        'CONN_MAX_AGE': config('CONN_MAX_AGE', cast=int, default=60),
+        'OPTIONS': {
+            'connect_timeout': 10,
+            'options': '-c statement_timeout=15000ms',
+        },
+    },
 }
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    # We use these formatters in our `'handlers'` configuration.
+    # Probably, you won't need to modify these lines.
+    # Unless, you know what you are doing.
+    'formatters': {
+        'json_formatter': {
+            '()': structlog.stdlib.ProcessorFormatter,
+            'processor': structlog.processors.JSONRenderer(),
+        },
+        'console': {
+            '()': structlog.stdlib.ProcessorFormatter,
+            'processor': structlog.processors.KeyValueRenderer(
+                key_order=['timestamp', 'level', 'event', 'logger'],
+            ),
+        },
+    },
+    # You can easily swap `key/value` (default) output and `json` ones.
+    # Use `'json_console'` if you need `json` logs.
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'console',
+        },
+        'json_console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'json_formatter',
+        },
+    },
+    # These loggers are required by our app:
+    # - django is required when using `logger.getLogger('django')`
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'propagate': True,
+            'level': 'INFO',
+        },
+        'security': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+    },
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
-
+_PASS = 'django.contrib.auth.password_validation'
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': '{0}.UserAttributeSimilarityValidator'.format(_PASS)},
+    {'NAME': '{0}.MinimumLengthValidator'.format(_PASS)},
+    {'NAME': '{0}.CommonPasswordValidator'.format(_PASS)},
+    {'NAME': '{0}.NumericPasswordValidator'.format(_PASS)},
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -122,3 +190,48 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+if DEBUG:
+    STATIC_ROOT = '.static'
+    ALLOWED_HOSTS = [
+        *config('DOMAIN_NAME', cast=Csv()),
+        'localhost',
+        '0.0.0.0',  # noqa: S104
+        '127.0.0.1',
+        '[::1]',
+        'web',
+        'functional-tests',
+        'ci',
+    ]
+    SELENIUM_HUB_URL = config('SELENIUM_HUB_URL')
+    LIVE_SERVER_HOST = config('LIVE_SERVER_HOST')
+else:
+    _COLLECTSTATIC_DRYRUN = config(
+        'DJANGO_COLLECTSTATIC_DRYRUN',
+        cast=bool,
+        default=False,
+    )
+
+    # Adding STATIC_ROOT to collect static files via 'collectstatic':
+    STATIC_ROOT = (
+        '.static' if _COLLECTSTATIC_DRYRUN else '/var/www/django/static'
+    )
+    ALLOWED_HOSTS = [
+        *config('DOMAIN_NAME', cast=Csv()),
+        # We need this value for `healthcheck` to work:
+        'localhost',
+        '0.0.0.0',
+    ]
+
+    # Security
+    SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_REDIRECT_EXEMPT = [
+        # This is required for healthcheck to work:
+        '^healthcheck/',
+    ]
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 31536000
