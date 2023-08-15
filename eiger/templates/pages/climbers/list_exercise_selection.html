@@ -1,0 +1,21 @@
+{% extends 'pages/base.html' %}
+
+{% load i18n static %}
+
+{% block title %}
+    {{ _("Climb Hard - Edit Exercise") }}
+{% endblock title %}
+{% block content %}
+    <div class="container">
+        <h1>Add exercises to day</h1>
+        <h4>Day: {{ day.date }} - {{ day.day_of_the_week }}</h4>
+        <form method="post" action="{% url 'create-selected-exercises' day.id %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <br>
+            <div class="d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+{% endblock content %}

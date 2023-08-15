@@ -3,19 +3,7 @@ from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-
-class BaseModel(models.Model):
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        help_text=_('The timestamp when the object was created.'),
-    )
-    updated_at = models.DateTimeField(
-        auto_now=True,
-        help_text=_('The timestamp when the object was last updated.'),
-    )
-
-    class Meta:
-        abstract = True
+from eiger.core.models import BaseModel
 
 
 class Category(BaseModel):
@@ -96,10 +84,29 @@ class Exercise(BaseModel):
         default=False,
         help_text=_('Indicates whether the exercise has been reviewed.'),
     )
+    should_have_time = models.BooleanField(
+        default=False,
+        help_text=_(
+            'Indicates whether time under effort should be added to this'
+            ' exercise.'
+        ),
+    )
+    should_have_repetition = models.BooleanField(
+        default=False,
+        help_text=_(
+            'Indicates whether repetitions should be added to this exercise.'
+        ),
+    )
     should_add_weight = models.BooleanField(
         default=False,
         help_text=_(
             'Indicates whether weight should be added to this exercise.'
+        ),
+    )
+    is_test = models.BooleanField(
+        default=False,
+        help_text=_(
+            'Indicates whether this exercise is a test for a specific metric.'
         ),
     )
 

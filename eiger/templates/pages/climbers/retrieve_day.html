@@ -1,0 +1,75 @@
+{% extends 'pages/base.html' %}
+
+{% load i18n static %}
+
+{% block title %}
+    {{ _("Climb Hard - Edit Exercise") }}
+{% endblock title %}
+
+{% block style %}
+    <style>
+        label {
+            font-size: 0.8rem;
+        }
+    </style>
+{% endblock style %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="mt-4">Edit Day Workouts</h1>
+        <div class="d-flex justify-content-between align-items-center mt-3">
+            <h4>Day: {{ day.date }} - {{ day.day_of_the_week }}</h4>
+            <a class="btn btn-primary" href="{% url 'exercises-selection' day.id %}">
+                Add exercises
+            </a>
+        </div>
+
+        <form id="update-form" method="post" action="{% url 'workouts-for-day' day.id %}" class="mt-4">
+            {% csrf_token %}
+            {% for form in forms %}
+                <div class="border p-3 mb-4">
+                    <h5>{{ form.instance.exercise.name }}</h5>
+                    <div class="mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="me-3">
+                                {{ form.target_rpe.label_tag }}
+                                {{ form.target_rpe }}
+                            </div>
+                            <div class="me-3">
+                                {{ form.sets.label_tag }}
+                                {{ form.sets }}
+                            </div>
+                            <div class="me-3">
+                                {{ form.target_repetitions.label_tag }}
+                                {{ form.target_repetitions }}
+                            </div>
+                        </div>
+                    </div>
+
+
+                    {% if form.instance.exercise.should_have_time %}
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3">
+                                    {{ form.target_weight.label_tag }}
+                                    {{ form.target_weight }}
+                                </div>
+                                <div class="me-3">
+                                    {{ form.target_time_in_seconds.label_tag }}
+                                    {{ form.target_time_in_seconds }}
+                                </div>
+                                <div>
+                                    {{ form.target_time_unit.label_tag }}
+                                    {{ form.target_time_unit }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+{% endblock content %}

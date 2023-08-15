@@ -16,7 +16,11 @@ import django_stubs_ext
 import structlog
 from decouple import AutoConfig, Csv
 
+from eiger.metric.apps import MetricConfig
+from eiger.moonboard.apps import MoonboardConfig
 from eiger.trainers.apps import TrainersConfig
+from eiger.training_plan.apps import TrainingPlanConfig
+from eiger.workout.apps import WorkoutConfig
 
 # Monkeypatching Django, so stubs will work for all generics,
 # see: https://github.com/typeddjango/django-stubs
@@ -43,6 +47,10 @@ DEBUG = False if config('DJANGO_ENV') == 'production' else True
 
 INSTALLED_APPS: Tuple[str, ...] = (
     TrainersConfig.name,
+    MetricConfig.name,
+    TrainingPlanConfig.name,
+    MoonboardConfig.name,
+    WorkoutConfig.name,
     'colorfield',
     # Default django apps:
     'django.contrib.auth',
@@ -58,6 +66,8 @@ INSTALLED_APPS: Tuple[str, ...] = (
     # see: https://github.com/KristianOellegaard/django-health-check
     'health_check',
     'health_check.db',
+    'rest_framework',
+    'django_q',
 )
 
 MIDDLEWARE: Tuple[str, ...] = (
@@ -112,6 +122,19 @@ DATABASES = {
         },
     },
 }
+
+Q_CLUSTER = {
+    'name': 'eiger',
+    'workers': 3,
+    'recycle': 500,
+    'timeout': 6000,
+    'retry': 6001,
+    'save_limit': 250,
+    'label': 'Django Q',
+    'bulk': 10,
+    'orm': 'default',
+}
+
 
 LOGGING = {
     'version': 1,

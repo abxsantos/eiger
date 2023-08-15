@@ -3,7 +3,10 @@
 app = "eiger"
 kill_signal = "SIGINT"
 kill_timeout = 5
-processes = []
+
+[processes]
+  app = "./scripts/gunicorn.sh"
+  django_q = "python manage.py qcluster"
 
 [env]
   DOMAIN_NAME = "eiger.fly.dev, 172.19.132.34"

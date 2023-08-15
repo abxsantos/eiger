@@ -70,7 +70,7 @@ def index_view(request: HttpRequest) -> HttpResponse:
 
     return render(
         request=request,
-        template_name='pages/index.html',
+        template_name='pages/trainers/index.html',
         context={
             'registration_form': registration_form,
             'login_form': login_form,
@@ -145,7 +145,7 @@ def home_view(request: HttpRequest) -> HttpResponse:
 
     return render(
         request=request,
-        template_name='pages/home.html',
+        template_name='pages/trainers/home.html',
         context={
             'pending_exercises': pending_exercises,
             'pending_variations': pending_exercise_variations,
@@ -176,7 +176,7 @@ def retrieve_exercise_view(
     form = EditExerciseForm(exercise)
     return render(
         request=request,
-        template_name='pages/edit_exercise.html',
+        template_name='pages/trainers/edit_exercise.html',
         context={
             'form': form,
             'exercise': exercise,
@@ -332,7 +332,7 @@ def retrieve_exercise_variation_view(
     form = EditExerciseVariationForm(exercise_variation)
     return render(
         request=request,
-        template_name='pages/edit_exercise_variation.html',
+        template_name='pages/trainers/edit_exercise_variation.html',
         context={
             'form': form,
             'exercise_variation': exercise_variation,

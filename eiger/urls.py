@@ -20,9 +20,11 @@ from django.urls import URLPattern, URLResolver, include, path
 from health_check import urls as health_urls
 
 from eiger.trainers import urls as trainers_urls
+from eiger.training_plan import urls as training_plan_urls
 
 urlpatterns: list[URLPattern | URLResolver] = [
     path('', include(trainers_urls)),
+    path('training-plan/', include(training_plan_urls)),
     path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),
     # Health checks:

@@ -1,0 +1,169 @@
+{% extends 'pages/base.html' %}
+
+{% load i18n static %}
+
+{% block title %}
+    {{ _("Climb Hard - Home") }}
+{% endblock title %}
+{% block style %}
+    <style>
+        #planned-for-today {
+            margin-top: 48px;
+        }
+
+        .training-plan-card {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 12px 12px 6px;
+            margin: 12px;
+        }
+
+        .training-plan-card .training-plan-name {
+            font-size: 1rem;
+            margin-top: 0;
+            margin-bottom: 4px;
+        }
+
+        .training-plan-card .training-plan-details {
+            font-size: 0.8rem;
+        }
+
+        .training-plan-card .training-plan-progress {
+            font-size: 0.8rem;
+        }
+
+        .exercise-card {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 12px 12px 6px;
+            margin-bottom: 12px;
+        }
+
+        .exercise-card .exercise-header {
+            display: flex;
+        }
+
+        .exercise-card .exercise-header .edit-icon {
+            font-size: 1.4rem; /* Adjust the font size as desired */
+            color: #333; /* Adjust the color of the icon */
+            margin-right: 5px; /* Adjust the spacing between the icon and the exercise name */
+        }
+
+        .exercise-card .exercise-name {
+            font-size: 1rem;
+            margin-top: 0;
+        }
+
+        .exercise-card .exercise-tags {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+            margin-left: 12px;
+        }
+
+        .exercise-card .exercise-tags .badge {
+            font-size: 0.8rem;
+            margin-right: 4px;
+            padding: 4px 8px;
+        }
+
+        .exercise-card .exercise-details {
+            font-size: 0.8rem;
+        }
+
+    </style>
+{% endblock style %}
+{% block content %}
+    <div class="container">
+        <h1>Training Plans</h1>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam lacinia neque sed ligula pellentesque, quis
+            venenatis nulla auctor.</p>
+
+        <ul class="nav nav-tabs" id="training-plan-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="in-progress-tab" data-bs-toggle="tab" href="#in-progress-content"
+                   role="tab" aria-controls="in-progress-content" aria-selected="true">In Progress</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="upcoming-tab" data-bs-toggle="tab" href="#upcoming-content" role="tab"
+                   aria-controls="upcoming-content" aria-selected="false">Upcoming</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="completed-tab" data-bs-toggle="tab" href="#completed-content" role="tab"
+                   aria-controls="completed-content" aria-selected="false">Completed</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="training-plan-tab-content">
+            <div class="tab-pane fade show active" id="in-progress-content" role="tabpanel"
+                 aria-labelledby="in-progress-tab">
+                <!-- Display active training plans with progress bars -->
+                <section id="in-progress-training-plans">
+                    {% if in_progress_training_plans %}
+                        {% for training_plan in in_progress_training_plans %}
+                            <a class="no-styling" href="{% url 'retrieve-training-plan' training_plan.id %}">
+                                <div class="training-plan-card">
+                                    <div class="training-plan-header">
+                                        <h5 class="training-plan-name">{{ training_plan.name }}</h5>
+                                        <div class="training-plan-details">
+                                            <p>{{ training_plan.starting_date }}
+                                                until {{ training_plan.training_end_date }}</p>
+                                        </div>
+                                        <div class="training-plan-progress">
+                                            Week {{ training_plan.current_week }}/{{ training_plan.total_weeks_count }}
+                                            <div class="progress">
+                                                <div class="progress-bar" role="progressbar"
+                                                     style="width: {{ training_plan.progress_percentage }}%;"
+                                                     aria-valuenow="{{ training_plan.progress_percentage }}"
+                                                     aria-valuemin="0"
+                                                     aria-valuemax="100"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    {% else %}
+                        <a class="btn btn-primary" href="{% url 'training-plan-creation' %}">
+                            Create a Training Plan
+                        </a>
+                    {% endif %}
+                </section>
+                <section id="planned-for-today">
+                    <h1>Planned for Today</h1>
+                    <div class="container">
+                        {% if planned_workouts_for_today %}
+                            <!-- Display planned for today exercises -->
+                            {% for planned_workout in planned_workouts_for_today %}
+                                <a class="no-styling" href="{% url 'complete-workout' planned_workout.id %}">
+                                    <div class="exercise-card pending-variations-card">
+                                        <div class="exercise-header">
+                                            <h4 class="exercise-name">{{ planned_workout.exercise.name }}</h4>
+                                            <div class="exercise-tags">
+              <span style="background-color: {{ planned_workout.exercise.exercise_type.category.color }}"
+                    class="badge">{{ planned_workout.exercise.exercise_type }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="exercise-details">
+                                            <p><strong>{{ planned_workout.sets }}</strong> sets
+                                                × <strong>{{ planned_workout.target_repetitions }}</strong> target
+                                                reps at <strong>{{ planned_workout.target_rpe.display_text }}</strong>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        {% else %}
+                            <p>No exercises planned for today!</p>
+                        {% endif %}
+                    </div>
+                </section>
+            </div>
+            <div class="tab-pane fade" id="upcoming-content" role="tabpanel" aria-labelledby="upcoming-tab">
+                <!-- Display upcoming training plans -->
+            </div>
+            <div class="tab-pane fade" id="completed-content" role="tabpanel" aria-labelledby="completed-tab">
+                <!-- Display completed training plans -->
+            </div>
+        </div>
+    </div>
+{% endblock content %}

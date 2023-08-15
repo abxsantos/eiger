@@ -1,0 +1,60 @@
+{% extends 'pages/base.html' %}
+
+{% load i18n static %}
+
+{% block title %}
+    {{ _("Climb Hard - Complete Workout") }}
+{% endblock title %}
+{% block style %}
+    <style>
+        .alert {
+            margin-top: 0.5rem;
+        }
+
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.25rem;
+        }
+    </style>
+
+{% endblock style %}
+{% block content %}
+    <div class="container">
+        <h1>Complete a Workout</h1>
+        <div>
+            <h4>{{ workout.exercise.name }}</h4>
+            <p>Fill in additional information about the
+                completed workout.</p>
+        </div>
+        <form id="complete-workout-form" method="post" action="{% url 'complete-workout' workout.id %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.completed_level.id_for_label }}">{{ form.completed_level.label }}</label>
+                <input type="range" class="form-range bar"
+                       id="{{ form.completed_level.id_for_label }}"
+                       name="{{ form.completed_level.name }}" min="{{ form.completed_level.field.widget.attrs.min }}"
+                       max="{{ form.completed_level.field.widget.attrs.max }}" value="{{ form.completed_level.value }}"
+                       step="{{ form.completed_level.field.widget.attrs.step }}" required>
+                <small class="form-text text-muted">{{ form.completed_level.help_text }}</small>
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.intensity.id_for_label }}">{{ form.intensity.label }}</label>
+                {{ form.intensity }}
+                <small class="form-text text-muted">{{ form.intensity.help_text }}</small>
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.notes.id_for_label }}">{{ form.notes.label }}</label>
+                {{ form.notes }}
+                <small class="form-text text-muted">{{ form.notes.help_text }}</small>
+            </div>
+            <div class="d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+{% endblock content %}
