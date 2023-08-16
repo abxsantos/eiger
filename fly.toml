@@ -3,16 +3,21 @@
 app = "eiger"
 kill_signal = "SIGINT"
 kill_timeout = 5
+processes = []
 
 [processes]
   app = "./scripts/gunicorn.sh"
-  django_q = "python manage.py qcluster"
+  worker = "python manage.py qcluster"
 
 [env]
   DOMAIN_NAME = "eiger.fly.dev, 172.19.132.34"
 
 [experimental]
   auto_rollback = true
+
+[[statics]]
+  guest_path = "/var/www/django/static"
+  url_prefix = "/static"
 
 [[services]]
   internal_port = 8080

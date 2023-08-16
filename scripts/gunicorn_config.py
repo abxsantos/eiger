@@ -7,7 +7,7 @@ import multiprocessing
 bind = '0.0.0.0:8080'
 # Concerning `workers` setting see:
 # https://github.com/wemake-services/wemake-django-template/issues/1022
-workers = multiprocessing.cpu_count() * 2 + 1
+workers = 2  # multiprocessing.cpu_count() * 2 + 1
 
 max_requests = 2000
 max_requests_jitter = 400

@@ -21,10 +21,10 @@ def convert_number_of_tries(number_of_tries: str, attempts: int) -> int:
         return attempts
 
 
-def import_logbook(account_data: AccountData) -> None:
-    logger.info('Importing logbook entries for user: %s', account_data.user_id)
+def import_logbook(payload: dict) -> None:
+    logger.info('Importing logbook entries for user: %s', payload['user_id'])
     moonboard_logbook_entries = MoonBoardAPI(
-        username=account_data.username, password=account_data.password
+        username=payload['username'], password=payload['password']
     ).get_logbook()
 
     logbook_entries_to_create = []
@@ -44,7 +44,7 @@ def import_logbook(account_data: AccountData) -> None:
         logbook_entry = LogbookEntry(
             id=api_id,
             boulder=boulder,
-            user=account_data.user,
+            user_id=payload['user_id'],
             date_climbed=moonboard_logbook_entry['dateClimbed'],
             comment=comment if comment else '',
             attempts=convert_number_of_tries(
@@ -65,4 +65,6 @@ def import_logbook(account_data: AccountData) -> None:
 class Command(BaseCommand):
     def handle(self, *args: Any, **options: Any) -> None:
         for account_data in AccountData.objects.all().iterator():
-            async_task(func=import_logbook, account_data=account_data)
+            async_task(func=import_logbook,
+                       payload={'user_id': account_data.user_id, 'username': account_data.username,
+                                     'password': account_data.password})

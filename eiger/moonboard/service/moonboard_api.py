@@ -118,7 +118,7 @@ class MoonBoardAPI:
             logger.info('Returning final moonboard data from moonboard api.')
             return result_data
 
-    def get_logbook(self):
+    def get_logbook(self) -> list:
         response = requests.get(
             url=f'{self.base_url}/v1/_moonapi/Logbook/0?v=8.3.4',
             headers=self.get_access_headers(),

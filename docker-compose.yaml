@@ -56,7 +56,6 @@ services:
 
     command: bash -c "python manage.py makemigrations &&
       python manage.py migrate &&
-      python manage.py loaddata initial.json &&
       python -Wd manage.py runserver 0.0.0.0:8000"
     container_name: web
     healthcheck:

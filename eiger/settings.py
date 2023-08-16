@@ -33,7 +33,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See docs: https://gitlab.com/mkleehammer/autoconfig
 config = AutoConfig(search_path=BASE_DIR)
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -66,7 +65,6 @@ INSTALLED_APPS: Tuple[str, ...] = (
     # see: https://github.com/KristianOellegaard/django-health-check
     'health_check',
     'health_check.db',
-    'rest_framework',
     'django_q',
 )
 
@@ -82,6 +80,11 @@ MIDDLEWARE: Tuple[str, ...] = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
+
+HEALTH_CHECK = {
+    "DISK_USAGE_MAX": 90,  # percent
+    "MEMORY_MIN": 5,  # in MB
+}
 
 ROOT_URLCONF = 'eiger.urls'
 
@@ -102,7 +105,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'eiger.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -134,7 +136,6 @@ Q_CLUSTER = {
     'bulk': 10,
     'orm': 'default',
 }
-
 
 LOGGING = {
     'version': 1,
@@ -169,6 +170,11 @@ LOGGING = {
     # These loggers are required by our app:
     # - django is required when using `logger.getLogger('django')`
     'loggers': {
+        'eiger': {
+            'handlers': ['console'],
+            'propagate': True,
+            'level': 'INFO',
+        },
         'django': {
             'handlers': ['console'],
             'propagate': True,
@@ -202,7 +208,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/

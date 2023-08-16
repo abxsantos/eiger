@@ -19,9 +19,9 @@ def import_data():
         # ("MoonBoard Masters 2019", "25"),
         # ("Mini MoonBoard 2020", "40"),
     ]:
-        print('Starting to import moonboard data...')
+        logger.info('Starting to import moonboard data...')
         hold_setup = HoldSetup.objects.get(description=hold_set, angle=angle)
-        account_data = AccountData.objects.get(user_id=1)
+        account_data = AccountData.objects.get(user_id=2)
         json_data = MoonBoardAPI(
             username=account_data.username, password=account_data.password
         ).get_problems(hold_set=hold_set, angle=angle, problem_number=0)
@@ -29,10 +29,12 @@ def import_data():
         request_data = json_data['data']
         boulders_to_create = []
         moves_to_create = []
+        logger.info(f'Preparing to create {len(request_data)} boulders')
         for request_boulder in request_data:
             if Boulder.objects.filter(
                 api_id=request_boulder['apiId']
             ).exists():
+                logger.info('Boulder already exists')
                 continue
 
             boulder = Boulder(
@@ -55,6 +57,7 @@ def import_data():
                 date_deleted=request_boulder['dateDeleted'],
             )
             boulders_to_create.append(boulder)
+            logger.info('Added boulder for creation')
             for request_move in request_boulder['moves']:
                 move = Move(
                     is_start=request_move['isStart'],
@@ -63,17 +66,19 @@ def import_data():
                     boulder=boulder,
                 )
                 moves_to_create.append(move)
+                logger.info('Added Move for creation')
 
         with transaction.atomic():
-            created_boulders = Boulder.objects.bulk_create(
-                objs=boulders_to_create, batch_size=500
+            logger.info('Starting to create boulders')
+            Boulder.objects.bulk_create(
+                objs=boulders_to_create
             )
-            created_moves = Move.objects.bulk_create(
-                objs=moves_to_create, batch_size=500
+            logger.info('Starting to create moves')
+            Move.objects.bulk_create(
+                objs=moves_to_create
             )
-        print(
-            f'Created {created_boulders} Boulder entries and'
-            f' {created_moves} Move entries.'
+        logger.info(
+            f'Created Boulder entries and Move entries.'
         )
 
 
