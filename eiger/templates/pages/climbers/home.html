@@ -75,22 +75,20 @@
 {% endblock style %}
 {% block content %}
     <div class="container">
-        <h1>Training Plans</h1>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam lacinia neque sed ligula pellentesque, quis
-            venenatis nulla auctor.</p>
-
+        <h1>{{ _("Training Plans") }}</h1>
+        <p>{{ _("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam lacinia neque sed ligula pellentesque, quis venenatis nulla auctor.") }}</p>
         <ul class="nav nav-tabs" id="training-plan-tabs" role="tablist">
             <li class="nav-item">
                 <a class="nav-link active" id="in-progress-tab" data-bs-toggle="tab" href="#in-progress-content"
-                   role="tab" aria-controls="in-progress-content" aria-selected="true">In Progress</a>
+                   role="tab" aria-controls="in-progress-content" aria-selected="true">{{ _("In Progress") }}</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="upcoming-tab" data-bs-toggle="tab" href="#upcoming-content" role="tab"
-                   aria-controls="upcoming-content" aria-selected="false">Upcoming</a>
+                   aria-controls="upcoming-content" aria-selected="false">{{ _("Upcoming") }}</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="completed-tab" data-bs-toggle="tab" href="#completed-content" role="tab"
-                   aria-controls="completed-content" aria-selected="false">Completed</a>
+                   aria-controls="completed-content" aria-selected="false">{{ _("Completed") }}</a>
             </li>
         </ul>
         <div class="tab-content" id="training-plan-tab-content">
@@ -106,10 +104,10 @@
                                         <h5 class="training-plan-name">{{ training_plan.name }}</h5>
                                         <div class="training-plan-details">
                                             <p>{{ training_plan.starting_date }}
-                                                until {{ training_plan.training_end_date }}</p>
+                                                {{ _("until") }} {{ training_plan.training_end_date }}</p>
                                         </div>
                                         <div class="training-plan-progress">
-                                            Week {{ training_plan.current_week }}/{{ training_plan.total_weeks_count }}
+                                            {{ _("Week") }} {{ training_plan.current_week }}/{{ training_plan.total_weeks_count }}
                                             <div class="progress">
                                                 <div class="progress-bar" role="progressbar"
                                                      style="width: {{ training_plan.progress_percentage }}%;"
@@ -124,12 +122,12 @@
                         {% endfor %}
                     {% else %}
                         <a class="btn btn-primary" href="{% url 'training-plan-creation' %}">
-                            Create a Training Plan
+                            _("Create a Training Plan")
                         </a>
                     {% endif %}
                 </section>
                 <section id="planned-for-today">
-                    <h1>Planned for Today</h1>
+                    <h1>{{ _("Planned for Today") }}</h1>
                     <div class="container">
                         {% if planned_workouts_for_today %}
                             <!-- Display planned for today exercises -->
@@ -153,7 +151,7 @@
                                 </a>
                             {% endfor %}
                         {% else %}
-                            <p>No exercises planned for today!</p>
+                            <p>{{ _("No exercises planned for today!") }}</p>
                         {% endif %}
                     </div>
                 </section>

@@ -11,7 +11,7 @@ from eiger.training_plan.views import (
 )
 
 urlpatterns: list[URLPattern | URLResolver] = [
-    path('home', list_training_plans_view, name='list-training-plans'),
+    path('home', list_training_plans_view, name='home'),
     path(
         '',
         TrainingPlanView.as_view(),

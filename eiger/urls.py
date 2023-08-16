@@ -19,11 +19,27 @@ from django.contrib import admin
 from django.urls import URLPattern, URLResolver, include, path
 from health_check import urls as health_urls
 
+from eiger.authentication.views import (
+    index_view,
+    login_view,
+    registration_view,
+)
 from eiger.trainers import urls as trainers_urls
 from eiger.training_plan import urls as training_plan_urls
 
 urlpatterns: list[URLPattern | URLResolver] = [
-    path('', include(trainers_urls)),
+    path('', index_view, name='index'),
+    path(
+        'login/',
+        login_view,
+        name='login',
+    ),
+    path(
+        'register/',
+        registration_view,
+        name='register',
+    ),
+    path('trainers/', include(trainers_urls)),
     path('training-plan/', include(training_plan_urls)),
     path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),

@@ -16,6 +16,7 @@ import django_stubs_ext
 import structlog
 from decouple import AutoConfig, Csv
 
+from eiger.authentication.apps import AuthenticationConfig
 from eiger.metric.apps import MetricConfig
 from eiger.moonboard.apps import MoonboardConfig
 from eiger.trainers.apps import TrainersConfig
@@ -45,6 +46,7 @@ DEBUG = False if config('DJANGO_ENV') == 'production' else True
 # Application definition
 
 INSTALLED_APPS: Tuple[str, ...] = (
+    AuthenticationConfig.name,
     TrainersConfig.name,
     MetricConfig.name,
     TrainingPlanConfig.name,

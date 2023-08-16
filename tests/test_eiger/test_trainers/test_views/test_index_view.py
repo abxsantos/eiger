@@ -5,8 +5,8 @@ from django.test import Client
 from django.urls import reverse
 from pytest_django.asserts import assertInHTML, assertTemplateUsed
 
+from eiger.authentication.views import Context
 from eiger.trainers.forms import TrainerCreationForm, TrainerLoginForm
-from eiger.trainers.views import Context
 
 
 @pytest.fixture()

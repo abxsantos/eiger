@@ -2,9 +2,6 @@ from django.urls import URLPattern, URLResolver, path
 
 from eiger.trainers.views import (
     home_view,
-    index_view,
-    login_view,
-    registration_view,
     retrieve_category_exercise_types_view,
     retrieve_exercise_variation_view,
     retrieve_exercise_view,
@@ -13,17 +10,6 @@ from eiger.trainers.views import (
 )
 
 urlpatterns: list[URLPattern | URLResolver] = [
-    path('', index_view, name='index'),
-    path(
-        'login/',
-        login_view,
-        name='login',
-    ),
-    path(
-        'register/',
-        registration_view,
-        name='register',
-    ),
     path('home/', home_view, name='home'),
     path(
         'exercises/<int:exercise_id>',
