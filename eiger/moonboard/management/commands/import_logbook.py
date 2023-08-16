@@ -65,6 +65,11 @@ def import_logbook(payload: dict) -> None:
 class Command(BaseCommand):
     def handle(self, *args: Any, **options: Any) -> None:
         for account_data in AccountData.objects.all().iterator():
-            async_task(func=import_logbook,
-                       payload={'user_id': account_data.user_id, 'username': account_data.username,
-                                     'password': account_data.password})
+            async_task(
+                func=import_logbook,
+                payload={
+                    'user_id': account_data.user_id,
+                    'username': account_data.username,
+                    'password': account_data.password,
+                },
+            )

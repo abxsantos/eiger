@@ -26,7 +26,6 @@ class Workout(BaseModel):
     day = models.ForeignKey(Day, on_delete=models.CASCADE)
     sets = models.PositiveSmallIntegerField(default=1)
     exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
-    target_rpe = models.ForeignKey(RPE, on_delete=models.CASCADE, null=True)
     target_repetitions = models.PositiveSmallIntegerField(null=True)
     target_time_in_seconds = models.PositiveSmallIntegerField(null=True)
     target_time_unit = models.CharField(

@@ -43,7 +43,6 @@ class WorkoutForm(forms.ModelForm):
         model = Workout
         fields = [
             'sets',
-            'target_rpe',
             'target_weight',
             'target_time_in_seconds',
             'target_time_unit',
@@ -51,7 +50,6 @@ class WorkoutForm(forms.ModelForm):
         ]
         labels = {
             'sets': 'Sets',
-            'target_rpe': 'Intensity',
             'target_weight': 'Target Weight',
             'target_time_in_seconds': 'Target Time',
             'target_time_unit': 'Time Unit',
@@ -61,15 +59,7 @@ class WorkoutForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.prefix = f'workout-{self.instance.id}'
-        self.fields['target_rpe'].queryset = RPE.objects.all().order_by(
-            'scale'
-        )
 
-        self.fields['target_rpe'].choices = [
-            choice
-            for choice in self.fields['target_rpe'].choices
-            if choice[0] != ''
-        ]
         self.fields['target_time_unit'].choices = [
             choice
             for choice in self.fields['target_time_unit'].choices

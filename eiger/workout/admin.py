@@ -17,7 +17,6 @@ class WorkoutAdmin(admin.ModelAdmin[Workout]):
         'day',
         'sets',
         'exercise',
-        'target_rpe',
         'target_repetitions',
         'target_time',
         'target_weight',
@@ -26,5 +25,5 @@ class WorkoutAdmin(admin.ModelAdmin[Workout]):
 
     def get_queryset(self, request: HttpRequest) -> QuerySet[Workout]:
         queryset = super().get_queryset(request)
-        queryset = queryset.select_related('day', 'exercise', 'target_rpe')
+        queryset = queryset.select_related('day', 'exercise')
         return queryset

@@ -70,16 +70,10 @@ def import_data():
 
         with transaction.atomic():
             logger.info('Starting to create boulders')
-            Boulder.objects.bulk_create(
-                objs=boulders_to_create
-            )
+            Boulder.objects.bulk_create(objs=boulders_to_create)
             logger.info('Starting to create moves')
-            Move.objects.bulk_create(
-                objs=moves_to_create
-            )
-        logger.info(
-            f'Created Boulder entries and Move entries.'
-        )
+            Move.objects.bulk_create(objs=moves_to_create)
+        logger.info('Created Boulder entries and Move entries.')
 
 
 class Command(BaseCommand):

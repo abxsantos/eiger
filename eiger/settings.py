@@ -82,8 +82,8 @@ MIDDLEWARE: Tuple[str, ...] = (
 )
 
 HEALTH_CHECK = {
-    "DISK_USAGE_MAX": 90,  # percent
-    "MEMORY_MIN": 5,  # in MB
+    'DISK_USAGE_MAX': 90,  # percent
+    'MEMORY_MIN': 5,  # in MB
 }
 
 ROOT_URLCONF = 'eiger.urls'
