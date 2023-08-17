@@ -68,6 +68,7 @@ INSTALLED_APPS: Tuple[str, ...] = (
     'health_check',
     'health_check.db',
     'django_q',
+    'django.contrib.postgres',
 )
 
 MIDDLEWARE: Tuple[str, ...] = (

@@ -2,6 +2,7 @@ import logging
 from typing import Any
 
 from django.core.management import BaseCommand
+from django.utils.text import slugify
 from django_q.tasks import async_task
 
 from eiger.moonboard.models import AccountData, Boulder, LogbookEntry
@@ -46,7 +47,7 @@ def import_logbook(payload: dict) -> None:
             boulder=boulder,
             user_id=payload['user_id'],
             date_climbed=moonboard_logbook_entry['dateClimbed'],
-            comment=comment if comment else '',
+            comment=slugify(comment) if comment else '',
             attempts=convert_number_of_tries(
                 attempts=moonboard_logbook_entry['attempts'],
                 number_of_tries=moonboard_logbook_entry['numberOfTries'],
