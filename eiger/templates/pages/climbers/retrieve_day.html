@@ -1,9 +1,9 @@
-{% extends 'pages/base.html' %}
+{% extends 'pages/climbers/base.html' %}
 
 {% load i18n static %}
 
 {% block title %}
-    {{ _("Climb Hard - Edit Exercise") }}
+    {{ _("Climb Hard - Day") }}
 {% endblock title %}
 
 {% block style %}
@@ -11,16 +11,35 @@
         label {
             font-size: 0.8rem;
         }
+
+        .border {
+            border: 1px solid #ccc; /* Add desired border style */
+            padding: 1rem; /* Adjust as needed */
+        }
+
+        .mb-4 {
+            margin-bottom: 1rem; /* Adjust as needed */
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Two columns */
+            gap: 1rem; /* Adjust as needed */
+        }
+
+        .time-unit label {
+            font-size: 0.625rem;
+        }
     </style>
 {% endblock style %}
 
 {% block content %}
     <div class="container">
-        <h1 class="mt-4">Edit Day Workouts</h1>
+        <h1 class="mt-4">{{ _("Edit Day Workouts")}}</h1>
         <div class="d-flex justify-content-between align-items-center mt-3">
-            <h4>Day: {{ day.date }} - {{ day.day_of_the_week }}</h4>
+            <strong>{{ day.date }} - {{ day.day_of_the_week }}</strong>
             <a class="btn btn-primary" href="{% url 'exercises-selection' day.id %}">
-                Add exercises
+                {{ _("Add exercises")}}
             </a>
         </div>
 
@@ -28,44 +47,44 @@
             {% csrf_token %}
             {% for form in forms %}
                 <div class="border p-3 mb-4">
-                    <h5>{{ form.instance.exercise.name }}</h5>
-                    <div class="mb-3">
-                        <div class="d-flex align-items-center">
-                            <div class="me-3">
-                                {{ form.sets.label_tag }}
-                                {{ form.sets }}
-                            </div>
-                            <div class="me-3">
+                    <div class="d-flex justify-content-between">
+                        <h5>{{ form.instance.exercise.name }}</h5>
+                        {% if form.instance.exercise.is_test %}
+                            <i class="fas fa-dumbbell fa-xs"></i>
+                        {% endif %}
+                        <div class="ms-2 time-unit">
+                            {{ form.target_time_unit.label_tag }}
+                            {{ form.target_time_unit }}
+                        </div>
+                    </div>
+                    <div class="grid-container">
+                        <div class="grid-item">
+                            {{ form.sets.label_tag }}
+                            {{ form.sets }}
+                        </div>
+                        {% if form.instance.exercise.should_have_repetition %}
+                            <div class="grid-item">
                                 {{ form.target_repetitions.label_tag }}
                                 {{ form.target_repetitions }}
                             </div>
-                        </div>
-                    </div>
-
-
-                    {% if form.instance.exercise.should_have_time %}
-                        <div class="mb-3">
-                            <div class="d-flex align-items-center">
-                                <div class="me-3">
-                                    {{ form.target_weight.label_tag }}
-                                    {{ form.target_weight }}
-                                </div>
-                                <div class="me-3">
-                                    {{ form.target_time_in_seconds.label_tag }}
-                                    {{ form.target_time_in_seconds }}
-                                </div>
-                                <div>
-                                    {{ form.target_time_unit.label_tag }}
-                                    {{ form.target_time_unit }}
-                                </div>
+                        {% endif %}
+                        {% if form.instance.exercise.should_have_time %}
+                            <div class="grid-item">
+                                {{ form.target_time_in_seconds.label_tag }}
+                                {{ form.target_time_in_seconds }}
                             </div>
-                        </div>
-                    {% endif %}
+                        {% endif %}
+                        {% if form.instance.exercise.should_add_weight %}
+                            <div class="grid-item">
+                                {{ form.target_weight.label_tag }}
+                                {{ form.target_weight }}
+                            </div>
+                        {% endif %}
+
+                    </div>
                 </div>
             {% endfor %}
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary">Save</button>
-            </div>
+            {% include 'components/climbers/save_button.html' %}
         </form>
     </div>
 {% endblock content %}

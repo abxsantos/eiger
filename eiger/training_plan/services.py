@@ -156,6 +156,7 @@ def retrieve_training_plan(
 class ListExercisesForSelectionResult(TypedDict):
     day: Day
     form: ExerciseSelectionForm
+    initial_selected_exercises: QuerySet[UUID]
 
 
 def list_exercises_for_selection(
@@ -174,7 +175,11 @@ def list_exercises_for_selection(
     initial_data = {'exercises': initial_selected_exercises}
     form = ExerciseSelectionForm(initial=initial_data)
 
-    return ListExercisesForSelectionResult(day=day, form=form)
+    return ListExercisesForSelectionResult(
+        day=day,
+        form=form,
+        initial_selected_exercises=initial_selected_exercises,
+    )
 
 
 def create_selected_exercises(day_id: UUID, data) -> str:
@@ -293,23 +298,18 @@ def create_complete_workout(data, user: User, workout_id: UUID) -> str:
 class RenderCreateWorkoutCompletionResult(TypedDict):
     form: CompleteWorkoutForm
     workout: Workout
-    step_values: list[int]
 
 
 def render_create_workout_completion(
     workout_id: UUID,
 ) -> RenderCreateWorkoutCompletionResult:
     workout: Workout = get_object_or_404(
-        Workout.objects.select_related('day__week'), id=workout_id
+        Workout.objects.select_related('day__week', 'exercise'), id=workout_id
     )
-    form = CompleteWorkoutForm()
-    step_values = list(
-        range(
-            form.fields['completed_level'].widget.attrs['min'],
-            form.fields['completed_level'].widget.attrs['max'] + 1,
-            form.fields['completed_level'].widget.attrs['step'],
-        )
+    form = CompleteWorkoutForm(
+        initial={
+            'is_test': workout.exercise.is_test,
+            'should_add_weight': workout.exercise.should_add_weight,
+        }
     )
-    return RenderCreateWorkoutCompletionResult(
-        form=form, workout=workout, step_values=step_values
-    )
+    return RenderCreateWorkoutCompletionResult(form=form, workout=workout)

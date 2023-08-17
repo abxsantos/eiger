@@ -1,4 +1,4 @@
-{% extends 'pages/base.html' %}
+{% extends 'pages/climbers/base.html' %}
 
 {% load i18n static %}
 
@@ -18,33 +18,43 @@
             padding: 0.75rem 1.25rem;
             border-radius: 0.25rem;
         }
-    </style>
 
+        div .form-group {
+            margin-bottom: 12px;
+        }
+
+    </style>
 {% endblock style %}
 {% block content %}
     <div class="container">
-        <h1>Complete a Workout</h1>
+        <h1>{{ _("Complete a Workout") }}</h1>
         <div>
             <h4>{{ workout.exercise.name }}</h4>
-            <p>Fill in additional information about the
-                completed workout.</p>
+            <p>{{ _("Fill in additional information about the completed workout.") }}</p>
         </div>
         <form id="complete-workout-form" method="post" action="{% url 'complete-workout' workout.id %}">
             {% csrf_token %}
             <div class="form-group">
-                <label for="{{ form.completed_level.id_for_label }}">{{ form.completed_level.label }}</label>
-                <input type="range" class="form-range bar"
-                       id="{{ form.completed_level.id_for_label }}"
-                       name="{{ form.completed_level.name }}" min="{{ form.completed_level.field.widget.attrs.min }}"
-                       max="{{ form.completed_level.field.widget.attrs.max }}" value="{{ form.completed_level.value }}"
-                       step="{{ form.completed_level.field.widget.attrs.step }}" required>
-                <small class="form-text text-muted">{{ form.completed_level.help_text }}</small>
+                <div class="btn-group-label">
+                    <label>{{ form.completed_level.label }}</label>
+                </div>
+                <div class="btn-group btn-group-toggle" role="group">
+                    {% for value, label in form.completed_level.field.choices %}
+                        <input id="{{ forloop.counter }}" autocomplete="off" type="radio" class="btn-check"
+                               name="{{ form.completed_level.name }}"
+                               id="id_{{ form.completed_level.id_for_label }}_{{ value }}" value="{{ value }}"
+                               {% if form.completed_level.value == value %}checked{% endif %}>
+                        <label for="{{ forloop.counter }}"
+                               class="btn btn-outline-primary {% if form.completed_level.value == value %}active{% endif %}">
+                            {{ label }}
+                        </label>
+                    {% endfor %}
+                </div>
             </div>
 
             <div class="form-group">
                 <label for="{{ form.intensity.id_for_label }}">{{ form.intensity.label }}</label>
                 {{ form.intensity }}
-                <small class="form-text text-muted">{{ form.intensity.help_text }}</small>
             </div>
 
             <div class="form-group">
@@ -52,9 +62,13 @@
                 {{ form.notes }}
                 <small class="form-text text-muted">{{ form.notes.help_text }}</small>
             </div>
-            <div class="d-flex justify-content-center">
-                <button type="submit" class="btn btn-primary">Save</button>
+
+            <div class="form-group">
+                <label for="{{ form.test_value.id_for_label }}">{{ form.test_value.label }}</label>
+                {{ form.test_value }}
+                <small class="form-text text-muted">{{ form.test_value.help_text }}</small>
             </div>
+            {% include 'components/climbers/save_button.html' %}
         </form>
     </div>
 {% endblock content %}

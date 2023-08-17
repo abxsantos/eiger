@@ -104,18 +104,19 @@ class ExerciseSelectionForm(forms.Form):
 
 
 class CompleteWorkoutForm(forms.Form):
-    completed_level = forms.IntegerField(
+    COMPLETED_LEVEL_CHOICES = (
+        (0, '0%'),
+        (25, '25%'),
+        (50, '50%'),
+        (75, '75%'),
+        (100, '100%'),
+    )
+
+    completed_level = forms.ChoiceField(
         label='What percentage of the workout was completed?',
-        widget=forms.NumberInput(
-            attrs={
-                'type': 'range',
-                'min': 0,
-                'max': 100,
-                'step': 25,
-                'class': 'form-control',
-            }
-        ),
-        help_text='Slide to indicate the completed level.',
+        choices=COMPLETED_LEVEL_CHOICES,
+        widget=forms.RadioSelect(attrs={'class': 'btn-group-toggle'}),
+        help_text='Select the completed level.',
     )
     intensity = forms.ModelChoiceField(
         queryset=RPE.objects.all(),
@@ -130,3 +131,11 @@ class CompleteWorkoutForm(forms.Form):
         required=False,
         help_text='Add any additional notes about your exercise completion.',
     )
+
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        if self.initial['is_test'] and self.initial['should_add_weight']:
+            self.fields['test_value'] = forms.IntegerField(
+                label='How much weight was added?',
+                widget=forms.NumberInput(attrs={'class': 'form-control'}),
+            )

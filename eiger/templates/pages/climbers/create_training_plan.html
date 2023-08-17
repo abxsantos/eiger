@@ -1,9 +1,9 @@
-{% extends 'pages/base.html' %}
+{% extends 'pages/climbers/base.html' %}
 
 {% load i18n static %}
 
 {% block title %}
-    {{ _("Climb Hard - Edit Exercise") }}
+    {{ _("Climb Hard - Create Training Plan") }}
 {% endblock title %}
 {% block style %}
     <style>
@@ -60,9 +60,7 @@
                     <div class="alert alert-danger">{{ form.errors.starting_date }}</div>
                 {% endif %}
             </div>
-            <div class="d-flex justify-content-center">
-                <button type="submit" class="btn btn-primary">Save</button>
-            </div>
+            {% include 'components/climbers/save_button.html' %}
         </form>
     </div>
 {% endblock content %}
