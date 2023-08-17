@@ -118,7 +118,7 @@ class CompleteWorkoutForm(forms.Form):
         (100, '100%'),
     )
 
-    completed_level = forms.ChoiceField(
+    completed_percentage = forms.ChoiceField(
         label='What percentage of the workout was completed?',
         choices=COMPLETED_LEVEL_CHOICES,
         widget=forms.RadioSelect(attrs={'class': 'btn-group-toggle'}),
@@ -140,7 +140,9 @@ class CompleteWorkoutForm(forms.Form):
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        if self.initial['is_test'] and self.initial['should_add_weight']:
+        if self.initial.get('is_test') and self.initial.get(
+            'should_add_weight'
+        ):
             self.fields['test_value'] = forms.IntegerField(
                 label='How much weight was added?',
                 widget=forms.NumberInput(attrs={'class': 'form-control'}),

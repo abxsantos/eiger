@@ -36,16 +36,16 @@
             {% csrf_token %}
             <div class="form-group">
                 <div class="btn-group-label">
-                    <label>{{ form.completed_level.label }}</label>
+                    <label>{{ form.completed_percentage.label }}</label>
                 </div>
                 <div class="btn-group btn-group-toggle" role="group">
-                    {% for value, label in form.completed_level.field.choices %}
+                    {% for value, label in form.completed_percentage.field.choices %}
                         <input id="{{ forloop.counter }}" autocomplete="off" type="radio" class="btn-check"
-                               name="{{ form.completed_level.name }}"
-                               id="id_{{ form.completed_level.id_for_label }}_{{ value }}" value="{{ value }}"
-                               {% if form.completed_level.value == value %}checked{% endif %}>
+                               name="{{ form.completed_percentage.name }}"
+                               id="id_{{ form.completed_percentage.id_for_label }}_{{ value }}" value="{{ value }}"
+                               {% if form.completed_percentage.value == value %}checked{% endif %}>
                         <label for="{{ forloop.counter }}"
-                               class="btn btn-outline-primary {% if form.completed_level.value == value %}active{% endif %}">
+                               class="btn btn-outline-primary {% if form.completed_percentage.value == value %}active{% endif %}">
                             {{ label }}
                         </label>
                     {% endfor %}

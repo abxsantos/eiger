@@ -1,0 +1,15 @@
+{% extends 'pages/climbers/base.html' %}
+
+{% block content %}
+    <h1>Data Analytics Graph</h1>
+    <div class="graph-container">
+        {{ date_count_graph_html|safe }}
+    </div>
+    <div class="graph-container">
+        {{ scatter_data_graph_html|safe }}
+    </div>
+    <div class="graph-container">
+        {{ completed_workouts_by_category_graph|safe }}
+    </div>
+
+{% endblock %}
