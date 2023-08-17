@@ -4,7 +4,7 @@ from uuid import UUID
 
 from django.contrib.auth.models import User
 from django.db import transaction
-from django.db.models import F, Max, QuerySet
+from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django_q.tasks import async_task
@@ -32,17 +32,10 @@ def list_training_plans(user: User) -> ListTrainingPlansResult:
     today = timezone.now().date()
     today_week_number = today.isocalendar()[1]
     training_plans: QuerySet[TrainingPlan] = (
-        TrainingPlan.objects.filter(
+        TrainingPlan.objects.prefetch_related('week_set')
+        .filter(
             created_by=user,
             starting_date__lte=today,
-        )
-        .annotate(
-            maximum_week_position=Max(
-                'week__number',
-                filter=Week.objects.filter(
-                    training_plan=F('pk'), number__lte=today_week_number
-                ),
-            )
         )
         .iterator()
     )
@@ -53,7 +46,7 @@ def list_training_plans(user: User) -> ListTrainingPlansResult:
         training_plan_start_date: date = training_plan.starting_date
         training_plan.training_end_date = (
             training_plan.starting_date
-            + timedelta(weeks=training_plan.maximum_week_position)
+            + timedelta(weeks=training_plan.week_set.count())
         )
         # in progress training plans
         if (

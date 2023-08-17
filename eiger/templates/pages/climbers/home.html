@@ -76,7 +76,7 @@
 {% block content %}
     <div class="container">
         <h1>{{ _("Training Plans") }}</h1>
-        <p>{{ _("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam lacinia neque sed ligula pellentesque, quis venenatis nulla auctor.") }}</p>
+        <p>{{ _("Use this app to create and manage your own customized training plans.") }}</p>
         <ul class="nav nav-tabs" id="training-plan-tabs" role="tablist">
             <li class="nav-item">
                 <a class="nav-link active" id="in-progress-tab" data-bs-toggle="tab" href="#in-progress-content"
@@ -94,7 +94,6 @@
         <div class="tab-content" id="training-plan-tab-content">
             <div class="tab-pane fade show active" id="in-progress-content" role="tabpanel"
                  aria-labelledby="in-progress-tab">
-                <!-- Display active training plans with progress bars -->
                 <section id="in-progress-training-plans">
                     {% if in_progress_training_plans %}
                         {% for training_plan in in_progress_training_plans %}
@@ -122,7 +121,7 @@
                         {% endfor %}
                     {% else %}
                         <a class="btn btn-primary" href="{% url 'training-plan-creation' %}">
-                            _("Create a Training Plan")
+                            {{ _("Create a Training Plan") }}
                         </a>
                     {% endif %}
                 </section>
@@ -142,9 +141,20 @@
                                             </div>
                                         </div>
                                         <div class="exercise-details">
-                                            <p><strong>{{ planned_workout.sets }}</strong> sets
-                                                × <strong>{{ planned_workout.target_repetitions }}</strong> target
-                                                reps.
+                                            <p>
+                                                <strong>{{ planned_workout.sets }}</strong>
+                                                sets
+                                                {% if planned_workout.exercise.should_have_repetition %}
+                                                    × <strong>{{ planned_workout.target_repetitions }}</strong> target
+                                                    reps
+                                                {% endif %}
+                                                {% if planned_workout.exercise.should_have_time %}
+                                                    | <strong>{{ planned_workout.target_time_in_seconds }}</strong>
+                                                    {{ planned_workout.target_time_unit }}
+                                                {% endif %}
+                                                {% if planned_workout.exercise.should_add_weight %}
+                                                    @ <strong>{{ planned_workout.target_weight }}</strong> kg
+                                                {% endif %}
                                             </p>
                                         </div>
                                     </div>
@@ -157,10 +167,54 @@
                 </section>
             </div>
             <div class="tab-pane fade" id="upcoming-content" role="tabpanel" aria-labelledby="upcoming-tab">
-                <!-- Display upcoming training plans -->
+                {% if upcoming_training_plans %}
+                    {% for training_plan in upcoming_training_plans %}
+                        <a class="no-styling" href="{% url 'retrieve-training-plan' training_plan.id %}">
+                            <div class="training-plan-card">
+                                <div class="training-plan-header">
+                                    <h5 class="training-plan-name">{{ training_plan.name }}</h5>
+                                    <div class="training-plan-details">
+                                        <p>{{ training_plan.starting_date }}
+                                            {{ _("until") }} {{ training_plan.training_end_date }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    {% endfor %}
+                {% else %}
+                    <div class="d-flex flex-column justify-content-center mt-3">
+                        <p>{{ _("You do not have any upcoming training plans. Get started by creating a training plan.") }}</p>
+                        <a class="btn btn-primary"
+                           href="{% url 'training-plan-creation' %}">
+                            {{ _("Create a Training Plan") }}
+                        </a>
+                    </div>
+                {% endif %}
             </div>
             <div class="tab-pane fade" id="completed-content" role="tabpanel" aria-labelledby="completed-tab">
-                <!-- Display completed training plans -->
+                {% if completed_training_plans %}
+                    {% for training_plan in completed_training_plans %}
+                        <a class="no-styling" href="{% url 'retrieve-training-plan' training_plan.id %}">
+                            <div class="training-plan-card">
+                                <div class="training-plan-header">
+                                    <h5 class="training-plan-name">{{ training_plan.name }}</h5>
+                                    <div class="training-plan-details">
+                                        <p>{{ training_plan.starting_date }}
+                                            {{ _("until") }} {{ training_plan.training_end_date }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    {% endfor %}
+                {% else %}
+                    <div class="d-flex flex-column justify-content-center mt-3">
+                        <p>{{ _("You do not have any completed training plans. Get started by creating a training plan.") }}</p>
+                        <a class="btn btn-primary"
+                           href="{% url 'training-plan-creation' %}">
+                            {{ _("Create a Training Plan") }}
+                        </a>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>

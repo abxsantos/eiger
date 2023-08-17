@@ -19,7 +19,7 @@
                                name="{{ exercise.name }}"
                                value="{{ exercise.value }}"
                                id="{{ exercise.id_for_label }}"
-                               {% if exercise.id in initial_selected_exercises %}checked{% endif %}>
+                               {% if exercise.data.value.value in initial_selected_exercises %}checked{% endif %}>
                         <label class="form-check-label" for="{{ exercise.id_for_label }}">
                             {{ exercise.choice_label }}
                         </label>

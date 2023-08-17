@@ -17,24 +17,30 @@ class CreateTrainingPlanForm(forms.Form):
     ]
 
     name = forms.CharField(
-        required=True, widget=forms.TextInput(attrs={'class': 'form-control'})
+        label='What is the name of your Training Plan?',
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
     )
     description = forms.CharField(
-        widget=forms.Textarea(attrs={'class': 'form-control'})
+        label='What is the purpose of your Training Plan?',
+        widget=forms.Textarea(attrs={'class': 'form-control'}),
     )
 
     starting_date = forms.DateField(
-        label='Select a Date',
+        label='Select the starting date of your Training Plan.',
         widget=forms.DateInput(
             attrs={'type': 'date', 'class': 'form-control'}
         ),
     )
     number_of_weeks = forms.IntegerField(
+        label='How many weeks do you want in your Training Plan?',
         required=True,
         widget=forms.NumberInput(attrs={'class': 'form-control'}),
     )
     training_days_of_the_week = forms.MultipleChoiceField(
-        widget=forms.CheckboxSelectMultiple, choices=day_of_the_week_choices
+        label='In which days of the week do you want to train?',
+        widget=forms.CheckboxSelectMultiple,
+        choices=day_of_the_week_choices,
     )
 
 
