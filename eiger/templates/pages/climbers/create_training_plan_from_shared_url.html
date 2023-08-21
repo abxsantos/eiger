@@ -1,0 +1,39 @@
+{% extends 'pages/climbers/base.html' %}
+
+{% load i18n static %}
+{% load custom_filters %}
+
+{% block title %}
+    {{ _("Climb Hard - Create Training Plan") }}
+{% endblock title %}
+{% block style %}
+    <style>
+        .alert {
+            margin-top: 0.5rem;
+        }
+
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.25rem;
+        }
+    </style>
+{% endblock style %}
+{% block content %}
+    <div class="container">
+        <h1>{{ _("Create a Training Plan") }}</h1>
+        <form method="post" action="{% url 'share-training-plan' training_plan_id%}">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.starting_date.label }}
+                {{ form.starting_date }}
+                {% if form.errors.starting_date %}
+                    <div class="alert alert-danger">{{ form.errors.starting_date }}</div>
+                {% endif %}
+            </div>
+            {% include 'components/climbers/save_button.html' %}
+        </form>
+    </div>
+{% endblock content %}

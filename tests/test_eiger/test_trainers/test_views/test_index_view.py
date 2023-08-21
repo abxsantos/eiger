@@ -5,8 +5,8 @@ from django.test import Client
 from django.urls import reverse
 from pytest_django.asserts import assertInHTML, assertTemplateUsed
 
+from eiger.authentication.forms import CreateUserForm, LoginForm
 from eiger.authentication.views import Context
-from eiger.trainers.forms import TrainerCreationForm, TrainerLoginForm
 
 
 @pytest.fixture()
@@ -33,8 +33,8 @@ def test_must_render_template_passing_empty_forms(
     response = client.get(path=index_url)
 
     assert response.status_code == HTTPStatus.OK
-    assert response.context['registration_form'] == TrainerCreationForm
-    assert response.context['login_form'] == TrainerLoginForm
+    assert response.context['registration_form'] == CreateUserForm
+    assert response.context['login_form'] == LoginForm
     assertTemplateUsed(response, 'pages/index.html')  # type: ignore[arg-type]
 
 
@@ -114,9 +114,9 @@ def test_must_render_html_passing_registration_form_with_errors_given_request_se
     assert response.status_code == HTTPStatus.OK
     assertTemplateUsed(response, 'pages/index.html')  # type: ignore[arg-type]
     registration_form = response.context['registration_form']
-    assert isinstance(registration_form, TrainerCreationForm)
+    assert isinstance(registration_form, CreateUserForm)
     assert registration_form.errors == context_data['registration']['errors']  # type: ignore[comparison-overlap]
-    assert response.context['login_form'] == TrainerLoginForm
+    assert response.context['login_form'] == LoginForm
     assertInHTML(
         expected_html,
         response.content.decode(),
@@ -156,14 +156,14 @@ def test_must_render_html_passing_login_form_with_errors_given_request_session_c
     assert response.status_code == HTTPStatus.OK
     assertTemplateUsed(response, 'pages/index.html')  # type: ignore[arg-type]
     login_form = response.context['login_form']
-    assert isinstance(login_form, TrainerLoginForm)
+    assert isinstance(login_form, LoginForm)
     assert login_form._errors == {  # type: ignore[attr-defined]
         '__all__': [
             'Please enter a correct username and password. Note that both '
             'fields may be case-sensitive.'
         ]
     }
-    assert response.context['registration_form'] == TrainerCreationForm
+    assert response.context['registration_form'] == CreateUserForm
     assertInHTML(
         '<p class="errornote">Please enter a correct username and password.'
         ' Note that both fields may be case-sensitive.</p>',

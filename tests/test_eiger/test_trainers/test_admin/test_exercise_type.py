@@ -5,21 +5,21 @@ from django.contrib.admin import AdminSite
 from model_bakery import baker
 
 from eiger.trainers.admin import ExerciseTypeAdmin
-from eiger.trainers.models import ExerciseType
+from eiger.trainers.models import SubCategory
 
 
 @pytest.fixture()
-def exercise_type_admin(admin_site: AdminSite) -> ExerciseTypeAdmin:
-    return ExerciseTypeAdmin(ExerciseType, admin_site)
+def sub_categories_admin(admin_site: AdminSite) -> ExerciseTypeAdmin:
+    return ExerciseTypeAdmin(SubCategory, admin_site)
 
 
 @pytest.mark.django_db()
-def test_exercise_type_admin_get_queryset(
-    exercise_type_admin: ExerciseTypeAdmin, mocked_request: MagicMock
+def test_sub_categories_admin_get_queryset(
+    sub_categories_admin: ExerciseTypeAdmin, mocked_request: MagicMock
 ):
-    exercise_types = baker.make(ExerciseType, _quantity=5)
+    sub_categories = baker.make(SubCategory, _quantity=5)
 
-    queryset = exercise_type_admin.get_queryset(mocked_request)
+    queryset = sub_categories_admin.get_queryset(mocked_request)
 
     assert (
         str(queryset.query)
@@ -35,27 +35,27 @@ def test_exercise_type_admin_get_queryset(
         ' ("trainers_exercisetype"."category_id" ='
         ' "trainers_category"."id")'
     )
-    assert list(queryset) == list(exercise_types)
+    assert list(queryset) == list(sub_categories)
 
 
-def test_exercise_type_admin_required_list_display_fields(
-    exercise_type_admin: ExerciseTypeAdmin, mocked_request: MagicMock
+def test_sub_categories_admin_required_list_display_fields(
+    sub_categories_admin: ExerciseTypeAdmin, mocked_request: MagicMock
 ) -> None:
-    list_display = exercise_type_admin.get_list_display(mocked_request)
+    list_display = sub_categories_admin.get_list_display(mocked_request)
 
     assert list_display == ['name', 'category']
 
 
-def test_exercise_type_admin_required_list_filter(
-    exercise_type_admin: ExerciseTypeAdmin, mocked_request: MagicMock
+def test_sub_categories_admin_required_list_filter(
+    sub_categories_admin: ExerciseTypeAdmin, mocked_request: MagicMock
 ) -> None:
-    list_filter = exercise_type_admin.get_list_filter(mocked_request)
+    list_filter = sub_categories_admin.get_list_filter(mocked_request)
     assert list_filter == ['category']
 
 
-def test_exercise_type_admin_required_search_fields(
-    exercise_type_admin: ExerciseTypeAdmin, mocked_request: MagicMock
+def test_sub_categories_admin_required_search_fields(
+    sub_categories_admin: ExerciseTypeAdmin, mocked_request: MagicMock
 ) -> None:
-    search_fields = exercise_type_admin.get_search_fields(mocked_request)
+    search_fields = sub_categories_admin.get_search_fields(mocked_request)
 
     assert search_fields == ['name']

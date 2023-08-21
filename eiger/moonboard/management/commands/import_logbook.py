@@ -1,6 +1,6 @@
-import logging
 from typing import Any
 
+import structlog
 from django.core.management import BaseCommand
 from django.utils.text import slugify
 from django_q.tasks import async_task
@@ -8,7 +8,7 @@ from django_q.tasks import async_task
 from eiger.moonboard.models import AccountData, Boulder, LogbookEntry
 from eiger.moonboard.service.moonboard_api import MoonBoardAPI
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 
 def convert_number_of_tries(number_of_tries: str, attempts: int) -> int:

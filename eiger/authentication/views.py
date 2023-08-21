@@ -6,7 +6,7 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_GET, require_POST
 
-from eiger.trainers.forms import TrainerCreationForm, TrainerLoginForm
+from eiger.authentication.forms import CreateClimberForm, LoginClimberForm
 
 logger = structlog.get_logger()
 
@@ -23,14 +23,14 @@ class Context(TypedDict):
 
 # Create your views here.
 @require_GET
-def index_view(request: HttpRequest) -> HttpResponse:
+def climber_index_view(request: HttpRequest) -> HttpResponse:
     logger.debug('Received a request for a user accessing the index view.')
-    registration_form: Type[TrainerCreationForm] = TrainerCreationForm
-    login_form: Type[TrainerLoginForm] = TrainerLoginForm
+    registration_form: Type[CreateClimberForm] = CreateClimberForm
+    login_form: Type[LoginClimberForm] = LoginClimberForm
 
     context: Context = request.session.get('context', {})
     if registration_data := context.get('registration'):
-        registration_form: TrainerCreationForm = (  # type: ignore[no-redef]
+        registration_form: CreateClimberForm = (  # type: ignore[no-redef]
             registration_form()
         )
         registration_form.cleaned_data = registration_data.get(
@@ -46,7 +46,7 @@ def index_view(request: HttpRequest) -> HttpResponse:
         )
 
     if login_data := context.get('login'):
-        login_form: TrainerLoginForm = login_form()  # type: ignore[no-redef]
+        login_form: LoginClimberForm = login_form()  # type: ignore[no-redef]
         login_form.cleaned_data = login_data.get('cleaned_data', {})
         login_form._errors = login_data.get(  # type: ignore[attr-defined]
             'errors'
@@ -70,9 +70,9 @@ def index_view(request: HttpRequest) -> HttpResponse:
 
 
 @require_POST
-def registration_view(request: HttpRequest) -> HttpResponse:
+def climber_registration_view(request: HttpRequest) -> HttpResponse:
     logger.debug('Received a request for a user sending registration data.')
-    form = TrainerCreationForm(request.POST)
+    form = CreateClimberForm(request.POST)
     if not form.is_valid():
         request.session['context'] = {
             'registration': {
@@ -94,9 +94,12 @@ def registration_view(request: HttpRequest) -> HttpResponse:
 
 
 @require_POST
-def login_view(request: HttpRequest) -> HttpResponse:
+def climber_login_view(request: HttpRequest) -> HttpResponse:
     logger.debug('Received a request for a user sending login data.')
-    form = TrainerLoginForm(request, data=request.POST)
+    form = LoginClimberForm(
+        request,
+        data=request.POST,
+    )
     if not form.is_valid():
         request.session['context'] = {
             'registration': None,

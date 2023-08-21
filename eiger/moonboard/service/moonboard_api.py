@@ -1,9 +1,9 @@
-import logging
 from typing import Optional
 
 import requests
+import structlog
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 
 class MoonBoardAPI:

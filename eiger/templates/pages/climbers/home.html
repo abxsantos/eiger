@@ -71,6 +71,15 @@
             font-size: 0.8rem;
         }
 
+        .tab-text {
+            font-size: 0.8rem;
+        }
+
+        p {
+            font-size: 0.8rem;
+            color: grey;
+        }
+
     </style>
 {% endblock style %}
 {% block content %}
@@ -79,15 +88,17 @@
         <p>{{ _("Use this app to create and manage your own customized training plans.") }}</p>
         <ul class="nav nav-tabs" id="training-plan-tabs" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" id="in-progress-tab" data-bs-toggle="tab" href="#in-progress-content"
+                <a class="nav-link active tab-text" id="in-progress-tab" data-bs-toggle="tab"
+                   href="#in-progress-content"
                    role="tab" aria-controls="in-progress-content" aria-selected="true">{{ _("In Progress") }}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="upcoming-tab" data-bs-toggle="tab" href="#upcoming-content" role="tab"
+                <a class="nav-link tab-text" id="upcoming-tab" data-bs-toggle="tab" href="#upcoming-content" role="tab"
                    aria-controls="upcoming-content" aria-selected="false">{{ _("Upcoming") }}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="completed-tab" data-bs-toggle="tab" href="#completed-content" role="tab"
+                <a class="nav-link tab-text" id="completed-tab" data-bs-toggle="tab" href="#completed-content"
+                   role="tab"
                    aria-controls="completed-content" aria-selected="false">{{ _("Completed") }}</a>
             </li>
         </ul>
@@ -100,7 +111,10 @@
                             <a class="no-styling" href="{% url 'retrieve-training-plan' training_plan.id %}">
                                 <div class="training-plan-card">
                                     <div class="training-plan-header">
-                                        <h5 class="training-plan-name">{{ training_plan.name }}</h5>
+                                        <h5 class="training-plan-name">
+                                            {{ training_plan.name }}
+                                            <a><i class="fas fa-share share-icon" data-id="{{ training_plan.id }}"></i></a>
+                                        </h5>
                                         <div class="training-plan-details">
                                             <p>{{ training_plan.starting_date }}
                                                 {{ _("until") }} {{ training_plan.training_end_date }}</p>
@@ -120,25 +134,32 @@
                             </a>
                         {% endfor %}
                     {% else %}
-                        <a class="btn btn-primary" href="{% url 'training-plan-creation' %}">
+                    <div class="d-flex flex-column justify-content-center mt-3">
+                        <p>{{ _("You do not have any in progress training plans. Get started by creating a training plan.") }}</p>
+                        <a class="btn btn-primary"
+                           href="{% url 'training-plan-creation' %}">
                             {{ _("Create a Training Plan") }}
                         </a>
+                    </div>
                     {% endif %}
                 </section>
                 <section id="planned-for-today">
                     <h1>{{ _("Planned for Today") }}</h1>
                     <div class="container">
                         {% if planned_workouts_for_today %}
-                            <!-- Display planned for today exercises -->
                             {% for planned_workout in planned_workouts_for_today %}
-                                <a class="no-styling" href="{% url 'complete-workout' planned_workout.id %}">
+                                <a class="no-styling"
+                                   {% if not planned_workout.completedworkout %}href="{% url 'complete-workout' planned_workout.id %}{% endif %}">
                                     <div class="exercise-card pending-variations-card">
                                         <div class="exercise-header">
                                             <h4 class="exercise-name">{{ planned_workout.exercise.name }}</h4>
                                             <div class="exercise-tags">
-              <span style="background-color: {{ planned_workout.exercise.exercise_type.category.color }}"
-                    class="badge">{{ planned_workout.exercise.exercise_type }}</span>
+              <span style="background-color: {{ planned_workout.exercise.sub_category.category.color }}"
+                    class="badge">{{ planned_workout.exercise.sub_category }}</span>
                                             </div>
+                                            {% if planned_workout.completedworkout %}
+                                                <i class="fas fa-check fa-s"></i>
+                                            {% endif %}
                                         </div>
                                         <div class="exercise-details">
                                             <p>
@@ -153,7 +174,7 @@
                                                     {{ planned_workout.target_time_unit }}
                                                 {% endif %}
                                                 {% if planned_workout.exercise.should_add_weight %}
-                                                    @ <strong>{{ planned_workout.target_weight }}</strong> kg
+                                                    @ <strong>{{ planned_workout.target_weight_in_kilos }}</strong> kg
                                                 {% endif %}
                                             </p>
                                         </div>
@@ -219,3 +240,34 @@
         </div>
     </div>
 {% endblock content %}
+{% block scripts %}
+    <script>
+        $(document).ready(function () {
+            $('.share-icon').click(function () {
+                var trainingPlanId = $(this).data('id');
+                var shareUrl = window.location.origin + '/training-plan/share/' + trainingPlanId;
+
+                // Create a temporary textarea for copying to clipboard
+                var $tempTextArea = $('<textarea>');
+                $tempTextArea.val(shareUrl);
+                $('body').append($tempTextArea);
+                $tempTextArea[0].select();
+                document.execCommand('copy');
+                $tempTextArea.remove();
+
+                // Display popover
+                $(this).popover({
+                    content: 'URL copied to clipboard!',
+                    placement: 'bottom',
+                    trigger: 'manual',
+                });
+                $(this).popover('show');
+                setTimeout(function () {
+                    $('.popover').fadeOut('slow', function () {
+                        $(this).remove();
+                    });
+                }, 3000);  // Hide after 3 seconds
+            });
+        });
+    </script>
+{% endblock %}

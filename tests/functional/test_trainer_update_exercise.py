@@ -7,7 +7,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
 
-from eiger.trainers.models import Category, Exercise, ExerciseType
+from eiger.trainers.models import Category, Exercise, SubCategory
 
 
 @pytest.fixture()
@@ -16,21 +16,21 @@ def strength_category() -> Category:
 
 
 @pytest.fixture()
-def finger_strength_exercise_type(strength_category: Category) -> ExerciseType:
+def finger_strength_sub_categories(strength_category: Category) -> SubCategory:
     return baker.make(
-        ExerciseType, name='Finger strength', category=strength_category
+        SubCategory, name='Finger strength', category=strength_category
     )
 
 
 @pytest.fixture()
 def pending_review_exercise(
-    finger_strength_exercise_type: ExerciseType,
+    finger_strength_sub_categories: SubCategory,
 ) -> Exercise:
     return baker.make(
         Exercise,
         name='Bouldering circuit',
         description='Bouldering circuit at 2 grades bellow onsight level.',
-        exercise_type=finger_strength_exercise_type,
+        sub_category=finger_strength_sub_categories,
         created_by=get_user_model().objects.get(),
         reviewed=False,
     )
@@ -52,7 +52,7 @@ def already_existing_exercise() -> Exercise:
 def fill_in_exercise_input(
     authenticated_browser: webdriver.Remote,
     name: Optional[str] = None,
-    exercise_type: Optional[str] = None,
+    sub_category: Optional[str] = None,
     description: Optional[str] = None,
 ) -> None:
     if name:
@@ -61,13 +61,13 @@ def fill_in_exercise_input(
         )
         name_input.clear()
         name_input.send_keys(name)
-    if exercise_type:
+    if sub_category:
         select = Select(
             authenticated_browser.find_element(
-                by=By.ID, value='id_exercise_type'
+                by=By.ID, value='id_sub_categories'
             )
         )
-        select.select_by_visible_text(exercise_type)
+        select.select_by_visible_text(sub_category)
     if description:
         description_input = authenticated_browser.find_element(
             by=By.ID, value='id_description'
@@ -88,7 +88,7 @@ def assert_that_has_displayed_a_successful_update_message(
     authenticated_browser: webdriver.Remote,
     message: str,
     name: Optional[str] = None,
-    exercise_type: Optional[str] = None,
+    sub_category: Optional[str] = None,
     description: Optional[str] = None,
 ) -> None:
     """
@@ -110,7 +110,7 @@ def assert_pending_review_exercise_must_be_updated(
     authenticated_browser: webdriver.Remote,
     exercise: Exercise,
     name: Optional[str] = None,
-    exercise_type: Optional[str] = None,
+    sub_category: Optional[str] = None,
     description: Optional[str] = None,
 ) -> None:
     exercise.refresh_from_db()
@@ -124,16 +124,16 @@ def assert_pending_review_exercise_must_be_updated(
         ).text
         assert name_text == exercise.name
         assert name_text == name
-    if exercise_type:
-        exercise_type_text = authenticated_browser.find_element(
+    if sub_category:
+        sub_categories_text = authenticated_browser.find_element(
             by=By.CSS_SELECTOR,
             value=(
                 'body > div > main > div > div > div > div:nth-child(1) >'
                 ' div:nth-child(2) > div.exercise-tags > span'
             ),
         ).text
-        assert exercise_type_text == str(exercise.exercise_type)
-        assert exercise_type_text == exercise_type
+        assert sub_categories_text == str(exercise.sub_category)
+        assert sub_categories_text == sub_category
     if description:
         description_text = authenticated_browser.find_element(
             by=By.CSS_SELECTOR,
@@ -149,11 +149,11 @@ def assert_pending_review_exercise_must_be_updated(
 def assert_pending_exercise_was_not_updated(
     exercise: Exercise,
     old_name: str,
-    old_exercise_type: str,
+    old_sub_categories: str,
     old_description: str,
 ) -> None:
     assert old_name == exercise.name
-    assert old_exercise_type == str(exercise.exercise_type)
+    assert old_sub_categories == str(exercise.sub_category)
     assert old_description == exercise.description
 
 
@@ -224,7 +224,7 @@ def test_trainer_tries_to_update_exercise_name(
 
 @pytest.mark.ignore_template_errors()
 @pytest.mark.django_db(transaction=True)
-def test_trainer_tries_to_update_exercise_type(
+def test_trainer_tries_to_update_sub_categories(
     live_server_url: str,
     authenticated_browser: webdriver.Remote,
     pending_review_exercise: Exercise,
@@ -233,9 +233,9 @@ def test_trainer_tries_to_update_exercise_type(
     Feature: Trainer editing an exercise
     Scenario: Trainer tries to update the exercise type
     """
-    new_exercise_type = str(
+    new_sub_categories = str(
         baker.make(
-            ExerciseType,
+            SubCategory,
             name='Mobility',
             category=baker.make(Category, name='Conditioning'),
         )
@@ -248,7 +248,7 @@ def test_trainer_tries_to_update_exercise_type(
     # When I fill in the following details:
     # | Exercise Type             | Conditioning - Mobility |
     fill_in_exercise_input(
-        exercise_type=new_exercise_type,
+        sub_category=new_sub_categories,
         authenticated_browser=authenticated_browser,
     )
     # And I click on the save button
@@ -258,13 +258,13 @@ def test_trainer_tries_to_update_exercise_type(
     assert authenticated_browser.title == 'Climb Hard - Home'
     # And I should receive a successful exercise update message
     assert_that_has_displayed_a_successful_update_message(
-        exercise_type=new_exercise_type,
+        sub_category=new_sub_categories,
         message='Success',
         authenticated_browser=authenticated_browser,
     )
-    # And the pending review exercise must be displayed with the updated exercise_type
+    # And the pending review exercise must be displayed with the updated sub_category
     assert_pending_review_exercise_must_be_updated(
-        exercise_type=new_exercise_type,
+        sub_category=new_sub_categories,
         exercise=pending_review_exercise,
         authenticated_browser=authenticated_browser,
     )
@@ -304,7 +304,7 @@ def test_trainer_tries_to_update_exercise_description(
         message='Success',
         authenticated_browser=authenticated_browser,
     )
-    # And the pending review exercise must be displayed with the updated exercise_type
+    # And the pending review exercise must be displayed with the updated sub_category
     assert_pending_review_exercise_must_be_updated(
         description=new_description,
         exercise=pending_review_exercise,
@@ -326,9 +326,9 @@ def test_trainer_tries_to_update_exercise_name_with_already_existing_name(
     """
     # Given I'm a logged-in user
     # And I'm at the edit exercise page
-    old_name, old_exercise_type, old_description = (
+    old_name, old_sub_categories, old_description = (
         pending_review_exercise.name,
-        str(pending_review_exercise.exercise_type),
+        str(pending_review_exercise.sub_category),
         pending_review_exercise.description,
     )
     authenticated_browser.get(
@@ -354,7 +354,7 @@ def test_trainer_tries_to_update_exercise_name_with_already_existing_name(
     assert_pending_exercise_was_not_updated(
         exercise=pending_review_exercise,
         old_name=old_name,
-        old_exercise_type=old_exercise_type,
+        old_sub_categories=old_sub_categories,
         old_description=old_description,
     )
     # And I should keep at the exercise update page

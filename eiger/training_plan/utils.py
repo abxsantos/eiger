@@ -1,6 +1,18 @@
 from datetime import date, datetime, timedelta
 
 
+def get_dates_in_week(year, week_number):
+    # Calculate the start date of the week
+    start_date = datetime.strptime(
+        f'{year}-{week_number}-1', '%Y-%W-%w'
+    ).date()
+
+    # Create a list of dates for the entire week
+    dates_in_week = [start_date + timedelta(days=i) for i in range(7)]
+
+    return dates_in_week
+
+
 def get_specific_date(week_number: int, day_of_week: str) -> date:
     days_of_week_map = {
         'monday': 0,

@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.db.models import QuerySet
 from django.http import HttpRequest
 
-from eiger.workout.models import RPE, Workout
+from eiger.workout.models import RPE, CompletedWorkout, Workout
 
 
 @admin.register(RPE)
@@ -19,7 +19,9 @@ class WorkoutAdmin(admin.ModelAdmin[Workout]):
         'exercise',
         'target_repetitions',
         'target_time',
-        'target_weight',
+        'target_weight_in_kilos',
+        'created_at',
+        'updated_at',
     ]
     search_fields = ['week']
 
@@ -27,3 +29,8 @@ class WorkoutAdmin(admin.ModelAdmin[Workout]):
         queryset = super().get_queryset(request)
         queryset = queryset.select_related('day', 'exercise')
         return queryset
+
+
+@admin.register(CompletedWorkout)
+class CompletedWorkoutAdmin(admin.ModelAdmin[CompletedWorkout]):
+    ...

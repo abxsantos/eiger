@@ -7,20 +7,25 @@
 {% endblock title %}
 {% block style %}
     <style>
-        .alert {
-            margin-top: 0.5rem;
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Two columns */
+            gap: 1rem; /* Adjust as needed */
         }
 
-        .alert-danger {
-            color: #721c24;
-            background-color: #f8d7da;
-            border-color: #f5c6cb;
-            padding: 0.75rem 1.25rem;
-            border-radius: 0.25rem;
+        .occupy-frame {
+            grid-area: 1 / 1 / 2 / 3;
+            align-items: center;
+            justify-content: center;
         }
 
         div .form-group {
             margin-bottom: 12px;
+        }
+
+        p {
+            font-size: 0.8rem;
+            color: grey;
         }
 
     </style>
@@ -34,7 +39,7 @@
         </div>
         <form id="complete-workout-form" method="post" action="{% url 'complete-workout' workout.id %}">
             {% csrf_token %}
-            <div class="form-group">
+            <div id="completed-percentage" class="form-group">
                 <div class="btn-group-label">
                     <label>{{ form.completed_percentage.label }}</label>
                 </div>
@@ -52,22 +57,68 @@
                 </div>
             </div>
 
-            <div class="form-group">
+            <div id="intensity" class="form-group">
                 <label for="{{ form.intensity.id_for_label }}">{{ form.intensity.label }}</label>
                 {{ form.intensity }}
             </div>
 
-            <div class="form-group">
+            {% if workout.exercise.is_test %}
+                <div class="grid-container">
+                    {% if workout.exercise.should_add_weight %}
+                        <div id="test-weight-in-kilos" class="form-group">
+                            <label for="{{ form.weight_in_kilos.id_for_label }}">{{ form.weight_in_kilos.label }}</label>
+                            {{ form.weight_in_kilos }}
+                            <small class="form-text text-muted">{{ form.weight_in_kilos.help_text }}</small>
+                        </div>
+                    {% endif %}
+                    {% if workout.exercise.finger_strength_metric_configuration %}
+                        <div id="test-edge-size-in-millimeters" class="form-group">
+                            <label for="{{ form.edge_size_in_millimeters.id_for_label }}">{{ form.edge_size_in_millimeters.label }}</label>
+                            {{ form.edge_size_in_millimeters }}
+                            <small class="form-text text-muted">{{ form.edge_size_in_millimeters.help_text }}</small>
+                        </div>
+                        <div id="test-arm-protocol" class="form-group">
+                            <label for="{{ form.arm_protocol.id_for_label }}">{{ form.arm_protocol.label }}</label>
+                            {{ form.arm_protocol }}
+                            <small class="form-text text-muted">{{ form.arm_protocol.help_text }}</small>
+                        </div>
+                        <div id="test-grip-type" class="form-group">
+                            <label for="{{ form.grip_type.id_for_label }}">{{ form.grip_type.label }}</label>
+                            {{ form.grip_type }}
+                            <small class="form-text text-muted">{{ form.grip_type.help_text }}</small>
+                        </div>
+                    {% endif %}
+                    {% if workout.exercise.time_under_effort_metric_configuration %}
+                        {% with ''|center:workout.sets as range %}
+                            <div class="d-flex flex-column occupy-frame mt-3">
+                                <label><strong>{{ _("Timer summary") }}</strong></label>
+                                <p class="mb-1">{{ _("Add in the total recorded time under effort and the rest times for each set. The values must be recorded in seconds.") }}</p>
+                            </div>
+                            {% for _ in range %}
+                                <div id="test-time-under-effort" class="form-group">
+                                    <label for="{{ form.time_under_effort.id_for_label }}">{{ form.time_under_effort.label }}</label>
+                                    {{ form.time_under_effort }}
+                                    <small class="form-text text-muted">{{ form.time_under_effort.help_text }}</small>
+                                </div>
+                                <div id="test-rest-time-in-seconds" class="form-group">
+                                    <label for="{{ form.rest_time_in_seconds.id_for_label }}">{{ form.rest_time_in_seconds.label }}</label>
+                                    {{ form.rest_time_in_seconds }}
+                                    <small class="form-text text-muted">{{ form.rest_time_in_seconds.help_text }}</small>
+                                </div>
+
+                            {% endfor %}
+                        {% endwith %}
+                    {% endif %}
+                </div>
+
+            {% endif %}
+
+            <div id="notes" class="form-group">
                 <label for="{{ form.notes.id_for_label }}">{{ form.notes.label }}</label>
                 {{ form.notes }}
                 <small class="form-text text-muted">{{ form.notes.help_text }}</small>
             </div>
 
-            <div class="form-group">
-                <label for="{{ form.test_value.id_for_label }}">{{ form.test_value.label }}</label>
-                {{ form.test_value }}
-                <small class="form-text text-muted">{{ form.test_value.help_text }}</small>
-            </div>
             {% include 'components/climbers/save_button.html' %}
         </form>
     </div>

@@ -26,10 +26,10 @@
     <form method="post" action="{% url 'update_exercise' exercise.id %}">
       {% csrf_token %}
       <div class="form-group">
-        <label for="id_exercise_type">Type:</label>
-        {{ form.exercise_type }}
-        {% if form.errors.exercise_type %}
-          <div class="alert alert-danger">{{ form.errors.exercise_type }}</div>
+        <label for="id_sub_categories">Type:</label>
+        {{ form.sub_category }}
+        {% if form.errors.sub_category %}
+          <div class="alert alert-danger">{{ form.errors.sub_category }}</div>
         {% endif %}
       </div>
       <div class="form-group">

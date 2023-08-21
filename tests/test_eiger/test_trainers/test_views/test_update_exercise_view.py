@@ -28,7 +28,7 @@ def test_must_update_exercise_given_valid_form(
         url,
         {
             'name': 'Updated Exercise',
-            'exercise_type': exercise.exercise_type_id,
+            'sub_category': exercise.sub_categories_id,
             'description': 'Updated Description',
         },
     )
@@ -77,7 +77,7 @@ def test_must_not_update_exercise_given_invalid_name_in_form(
         url,
         {
             'name': invalid_name,
-            'exercise_type': exercise_from_authenticated_user.exercise_type_id,
+            'sub_category': exercise_from_authenticated_user.sub_categories_id,
             'description': exercise_from_authenticated_user.description,
         },
     )
@@ -106,7 +106,7 @@ def test_must_not_update_exercise_given_name_that_already_exists_in_form(
         url,
         {
             'name': existing_exercise.name,
-            'exercise_type': exercise_from_authenticated_user.exercise_type_id,
+            'sub_category': exercise_from_authenticated_user.sub_categories_id,
             'description': 'Test Description',
         },
     )
@@ -145,7 +145,7 @@ def test_must_not_update_exercise_given_invalid_description_in_form(
         url,
         {
             'name': exercise_from_authenticated_user.name,
-            'exercise_type': exercise_from_authenticated_user.exercise_type_id,
+            'sub_category': exercise_from_authenticated_user.sub_categories_id,
             'description': '',
         },
     )
@@ -171,13 +171,13 @@ def test_must_not_update_exercise_given_invalid_description_in_form(
 
 @pytest.mark.django_db()
 @pytest.mark.parametrize(
-    argnames='invalid_exercise_type, expected_errors',
+    argnames='invalid_sub_categories, expected_errors',
     argvalues=[
         (
             1_000_000,
             ErrorDict(
                 {
-                    'exercise_type': ErrorList(
+                    'sub_category': ErrorList(
                         [
                             _(
                                 'Select a valid choice. That choice is not one'
@@ -192,7 +192,7 @@ def test_must_not_update_exercise_given_invalid_description_in_form(
             '',
             ErrorDict(
                 {
-                    'exercise_type': ErrorList(
+                    'sub_category': ErrorList(
                         [_('Please select the exercise type.')]
                     )
                 }
@@ -200,18 +200,18 @@ def test_must_not_update_exercise_given_invalid_description_in_form(
         ),
     ],
 )
-def test_must_not_update_exercise_given_invalid_exercise_type_in_form(
+def test_must_not_update_exercise_given_invalid_sub_categories_in_form(
     authenticated_client: Client,
     exercise_from_authenticated_user: Exercise,
     url: str,
-    invalid_exercise_type: str | int,
+    invalid_sub_categories: str | int,
     expected_errors: ErrorDict,
 ) -> None:
     response = authenticated_client.post(
         url,
         {
             'name': exercise_from_authenticated_user.name,
-            'exercise_type': invalid_exercise_type,
+            'sub_category': invalid_sub_categories,
             'description': exercise_from_authenticated_user.description,
         },
     )
@@ -227,8 +227,8 @@ def test_must_not_update_exercise_given_invalid_exercise_type_in_form(
     assert form.errors == expected_errors
     exercise_from_authenticated_user.refresh_from_db()
     assert (
-        exercise_from_authenticated_user.exercise_type.id
-        != invalid_exercise_type
+        exercise_from_authenticated_user.sub_category.id
+        != invalid_sub_categories
     )
 
 
@@ -244,7 +244,7 @@ def test_must_return_not_found_response_given_invalid_exercise_id(
         url,
         {
             'name': 'Updated Exercise',
-            'exercise_type': 1,
+            'sub_category': 1,
             'description': 'Updated Description',
         },
     )
@@ -264,7 +264,7 @@ def test_must_return_not_found_given_exercise_id_that_is_from_another_user(
         url,
         {
             'name': 'Updated Exercise',
-            'exercise_type': 1,
+            'sub_category': 1,
             'description': 'Updated Description',
         },
     )
@@ -286,7 +286,7 @@ def test_must_return_not_found_given_exercise_id_that_is_reviewed(
         url,
         {
             'name': 'Updated Exercise',
-            'exercise_type': 1,
+            'sub_category': 1,
             'description': 'Updated Description',
         },
     )

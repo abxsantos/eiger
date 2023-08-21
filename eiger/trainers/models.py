@@ -32,7 +32,7 @@ class Category(BaseModel):
         verbose_name_plural = _('Categories')
 
 
-class ExerciseType(BaseModel):
+class SubCategory(BaseModel):
     category = models.ForeignKey(
         Category,
         on_delete=models.CASCADE,
@@ -53,7 +53,7 @@ class ExerciseType(BaseModel):
         verbose_name_plural = _('Exercise Types')
         constraints = [
             models.UniqueConstraint(
-                fields=['category', 'name'], name='unique_exercise_type'
+                fields=['category', 'name'], name='unique_sub_categories'
             )
         ]
 
@@ -69,8 +69,8 @@ class Exercise(BaseModel):
         blank=True,
         help_text=_('A description of the exercise.'),
     )
-    exercise_type = models.ForeignKey(
-        ExerciseType,
+    sub_category = models.ForeignKey(
+        SubCategory,
         on_delete=models.CASCADE,
         help_text=_('The type of exercise.'),
         db_index=True,
@@ -116,65 +116,3 @@ class Exercise(BaseModel):
     class Meta:
         verbose_name = _('Exercise')
         verbose_name_plural = _('Exercises')
-
-
-class ExerciseVariation(BaseModel):
-    exercise = models.ForeignKey(
-        Exercise,
-        on_delete=models.CASCADE,
-        help_text=_('The exercise for which this variation is defined.'),
-        db_index=True,
-    )
-    sets = models.PositiveSmallIntegerField(
-        null=True, help_text=_('The number of sets in this variation.')
-    )
-    repetitions = models.PositiveSmallIntegerField(
-        null=True,
-        help_text=_('The number of repetitions per set in this variation.'),
-    )
-    seconds_per_repetition = models.PositiveSmallIntegerField(
-        null=True, help_text=_('The duration of each repetition in seconds.')
-    )
-    rest_per_set_in_seconds = models.PositiveSmallIntegerField(
-        null=True, help_text=_('The duration of rest between sets in seconds.')
-    )
-    rest_per_repetition_in_seconds = models.PositiveSmallIntegerField(
-        null=True,
-        help_text=_('The duration of rest between repetitions in seconds.'),
-    )
-    weight_in_kilos = models.PositiveSmallIntegerField(
-        null=True,
-        help_text=_('The weight used in this variation in kilograms.'),
-    )
-    created_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        help_text=_('The user who created the exercise variation.'),
-    )
-    reviewed = models.BooleanField(
-        default=False,
-        help_text=_(
-            'Indicates whether the exercise variation has been reviewed.'
-        ),
-    )
-
-    def __str__(self) -> str:
-        return f'Variation of {self.exercise.name}'
-
-    class Meta:
-        verbose_name = _('Exercise Variation')
-        verbose_name_plural = _('Exercise Variations')
-        constraints = [
-            models.UniqueConstraint(
-                fields=[
-                    'exercise',
-                    'sets',
-                    'repetitions',
-                    'seconds_per_repetition',
-                    'rest_per_set_in_seconds',
-                    'rest_per_repetition_in_seconds',
-                    'weight_in_kilos',
-                ],
-                name='unique_exercise_variation',
-            )
-        ]

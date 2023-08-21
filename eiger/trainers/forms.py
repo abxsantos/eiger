@@ -1,42 +1,16 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.contrib.auth.models import User
-from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 
-from eiger.trainers.models import Exercise, ExerciseType, ExerciseVariation
-
-
-class TrainerLoginForm(AuthenticationForm):
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
-        self.fields['username'].widget.attrs['class'] = 'form-control'
-        self.fields['password'].widget.attrs['class'] = 'form-control'
-
-
-class TrainerCreationForm(UserCreationForm[User]):
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
-        self.fields['username'].widget.attrs['class'] = 'form-control'
-        self.fields['password1'].widget.attrs['class'] = 'form-control'
-        self.fields['password2'].widget.attrs['class'] = 'form-control'
-
-    def save(self, commit: bool = True) -> User:
-        user = super().save(commit=False)
-        with transaction.atomic():
-            user.save()
-            if hasattr(self, 'save_m2m'):
-                self.save_m2m()
-        return user
+from eiger.trainers.models import Exercise, SubCategory
 
 
 class EditExerciseForm(forms.ModelForm[Exercise]):
     class Meta:
         model = Exercise
-        fields = ['name', 'exercise_type', 'description']
+        fields = ['name', 'sub_category', 'description']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'exercise_type': forms.Select(attrs={'class': 'form-control'}),
+            'sub_category': forms.Select(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
         }
         error_messages = {
@@ -45,7 +19,7 @@ class EditExerciseForm(forms.ModelForm[Exercise]):
                 'unique': _('An exercise with this name already exists.'),
                 'max_length': _('The name cannot exceed 50 characters.'),
             },
-            'exercise_type': {
+            'sub_category': {
                 'required': _('Please select the exercise type.'),
             },
             'description': {
@@ -59,9 +33,9 @@ class EditExerciseForm(forms.ModelForm[Exercise]):
         kwargs.update({'instance': instance})
         super().__init__(*args, **kwargs)
         self.instance: Exercise = instance
-        self.fields['exercise_type'].initial = self.instance.exercise_type
-        self.fields['exercise_type'].queryset = (  # type: ignore[attr-defined]
-            ExerciseType.objects.select_related('category')
+        self.fields['sub_category'].initial = self.instance.sub_category
+        self.fields['sub_category'].queryset = (  # type: ignore[attr-defined]
+            SubCategory.objects.select_related('category')
             .all()
             .only('category__name', 'category_id', 'id', 'name')
             .order_by('category__name')
@@ -95,26 +69,3 @@ class EditExerciseForm(forms.ModelForm[Exercise]):
                 _('Please provide a description for the exercise.')
             )
         return description
-
-
-class EditExerciseVariationForm(forms.ModelForm[ExerciseVariation]):
-    class Meta:
-        model = ExerciseVariation
-        fields = [
-            'sets',
-            'repetitions',
-            'seconds_per_repetition',
-            'rest_per_set_in_seconds',
-            'rest_per_repetition_in_seconds',
-            'weight_in_kilos',
-        ]
-
-    def __init__(self, instance: ExerciseVariation, *args, **kwargs) -> None:
-        kwargs.update({'instance': instance})
-        super().__init__(*args, **kwargs)
-        self.instance: ExerciseVariation = instance
-        if not self.instance.exercise.should_add_weight:
-            self.fields.pop('weight_in_kilos')
-
-        for field_name in self.fields.keys():
-            self.fields[field_name].widget.attrs['class'] = 'form-control'

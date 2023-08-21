@@ -5,24 +5,24 @@ from django.test import Client
 from django.urls import reverse
 from model_bakery import baker
 
-from eiger.trainers.models import Category, ExerciseType
+from eiger.trainers.models import Category, SubCategory
 
 
 @pytest.fixture()
 def url(category: Category) -> str:
-    return reverse('retrieve_category_exercise_types', args=[category.id])
+    return reverse('retrieve_category_sub_categoriess', args=[category.id])
 
 
 @pytest.fixture()
-def exercise_types(category: Category) -> list[ExerciseType]:
-    return baker.make(ExerciseType, category=category, _quantity=3)
+def sub_categories(category: Category) -> list[SubCategory]:
+    return baker.make(SubCategory, category=category, _quantity=3)
 
 
 @pytest.mark.django_db
 def test_successful_response(
     authenticated_client: Client,
     category: Category,
-    exercise_types: list[ExerciseType],
+    sub_categories: list[SubCategory],
     url: str,
 ) -> None:
 
@@ -30,8 +30,8 @@ def test_successful_response(
 
     assert response.status_code == HTTPStatus.OK
     assert response.json() == [
-        {'id': exercise_type.id, 'name': exercise_type.name}
-        for exercise_type in exercise_types
+        {'id': sub_category.id, 'name': sub_category.name}
+        for sub_category in sub_categories
     ]
 
 
@@ -62,7 +62,7 @@ def test_must_redirect_to_index_given_non_authenticated_user(
 def test_view_caching(
     authenticated_client: Client,
     category: Category,
-    exercise_types: list[ExerciseType],
+    sub_categories: list[SubCategory],
     url: str,
 ) -> None:
 
@@ -71,6 +71,6 @@ def test_view_caching(
     assert response.get('Cache-Control') == f'max-age={60 * 60 * 24}'
     assert response.has_header('Expires')
     assert response.json() == [
-        {'id': exercise_type.id, 'name': exercise_type.name}
-        for exercise_type in exercise_types
+        {'id': sub_category.id, 'name': sub_category.name}
+        for sub_category in sub_categories
     ]

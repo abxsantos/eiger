@@ -1,10 +1,10 @@
 from enum import Enum
 
-from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from eiger.authentication.models import Climber
 from eiger.core.models import BaseModel
 
 
@@ -44,7 +44,7 @@ class HoldVerticalCoordinates(Enum):
 
 
 class AccountData(BaseModel):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    climber = models.OneToOneField(Climber, on_delete=models.CASCADE)
     username = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
 
@@ -114,7 +114,7 @@ class LogbookEntry(BaseModel):
         'Boulder', on_delete=models.CASCADE, related_name=related_name
     )
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name=related_name
+        Climber, on_delete=models.CASCADE, related_name=related_name
     )
     date_climbed = models.DateTimeField()
     comment = models.TextField()

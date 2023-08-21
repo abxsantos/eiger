@@ -2,6 +2,7 @@ from django.urls import URLPattern, URLResolver, path
 
 from eiger.training_plan.views import (
     CompleteWorkoutView,
+    TrainingPlanShareView,
     TrainingPlanView,
     WorkoutsFromDayView,
     create_selected_exercise_workout_view,
@@ -41,5 +42,10 @@ urlpatterns: list[URLPattern | URLResolver] = [
         'workout/<uuid:workout_id>',
         CompleteWorkoutView.as_view(),
         name='complete-workout',
+    ),
+    path(
+        'share/<str:training_plan_id>/',
+        TrainingPlanShareView.as_view(),
+        name='share-training-plan',
     ),
 ]

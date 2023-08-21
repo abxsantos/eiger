@@ -1,6 +1,6 @@
 {% extends 'pages/climbers/base.html' %}
 
-{% load i18n static %}
+{% load i18n static custom_filters %}
 
 {% block title %}
     {{ _("Climb Hard - Training Plan") }}
@@ -22,12 +22,17 @@
         .workout-cards {
             font-size: 0.6rem;
         }
+
+        p {
+            font-size: 0.8rem;
+            color: grey;
+        }
     </style>
 {% endblock style %}
 {% block content %}
     <div class="container">
         <h1>{{ training_plan.name }}</h1>
-
+        <p>{{ training_plan.description }}</p>
         <ul class="nav nav-tabs" id="weeksTabs" role="tablist">
             {% for week in training_plan.week_set.all %}
                 <li class="nav-item">
@@ -45,7 +50,7 @@
                 <div class="tab-pane fade {% if forloop.first %}show active{% endif %}" id="week-{{ week.id }}"
                      role="tabpanel" aria-labelledby="week-{{ week.id }}-tab">
                     <div class="row">
-                        {% for day in week.day_set.all %}
+                        {% for day in week.day_set.all|order_by:'date' %}
                             <div class="col-md-4 mb-4">
                                 <div class="card">
                                     <div class="card-body">
@@ -72,11 +77,16 @@
                                                     <tbody>
                                                     {% for workout in day.workout_set.all %}
                                                         <tr>
-                                                            <td>{{ workout.exercise.name }}</td>
+                                                            <td><i
+                                                                    class="fa fa-circle-info popover-icon me-1"
+                                                                    data-bs-toggle="popover"
+                                                                    data-bs-placement="top"
+                                                                    data-bs-content="{{ workout.exercise.description }}">
+                                                            </i>{{ workout.exercise.name }}</td>
                                                             <td>{{ workout.sets }}</td>
                                                             <td>{{ workout.target_repetitions|default_if_none:"-" }}</td>
                                                             <td>{{ workout.target_time|default_if_none:"-" }}</td>
-                                                            <td>{{ workout.target_weight|default_if_none:"-" }}</td>
+                                                            <td>{{ workout.target_weight_in_kilos|default_if_none:"-" }}</td>
                                                         </tr>
                                                     {% endfor %}
                                                     </tbody>
@@ -93,3 +103,8 @@
         </div>
     </div>
 {% endblock content %}
+{% block scripts %}
+    <script>
+        {% include 'js/popovers.js' %}
+    </script>
+{% endblock scripts %}

@@ -1,30 +1,26 @@
-import logging
 from typing import Any
 
+import structlog
 from django.core.management import BaseCommand
 from django.db import transaction
 
 from eiger.moonboard.models import AccountData, Boulder, HoldSetup, Move
 from eiger.moonboard.service.moonboard_api import MoonBoardAPI
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 
 def import_data():
-    for hold_set, angle in [
-        ('MoonBoard 2016', '40'),
-        # ("MoonBoard Masters 2017", "40"),
-        # ("MoonBoard Masters 2017", "25"),
-        # ("MoonBoard Masters 2019", "40"),
-        # ("MoonBoard Masters 2019", "25"),
-        # ("Mini MoonBoard 2020", "40"),
-    ]:
+    for hold_setup in HoldSetup.objects.all():
         logger.info('Starting to import moonboard data...')
-        hold_setup = HoldSetup.objects.get(description=hold_set, angle=angle)
-        account_data = AccountData.objects.get(user_id=2)
+        account_data = AccountData.objects.first()
         json_data = MoonBoardAPI(
             username=account_data.username, password=account_data.password
-        ).get_problems(hold_set=hold_set, angle=angle, problem_number=0)
+        ).get_problems(
+            hold_set=hold_setup.description,
+            angle=hold_setup.angle,
+            problem_number=0,
+        )
 
         request_data = json_data['data']
         boulders_to_create = []

@@ -7,21 +7,21 @@ from hypothesis.extra.django import TestCase
 from model_bakery import baker
 
 from eiger.trainers.forms import EditExerciseForm
-from eiger.trainers.models import Exercise, ExerciseType
+from eiger.trainers.models import Exercise, SubCategory
 
 
 @pytest.fixture
-def form_data(exercise_type: ExerciseType) -> dict[str, str | ExerciseType]:
+def form_data(sub_category: SubCategory) -> dict[str, str | SubCategory]:
     return {
         'name': 'Test Exercise',
-        'exercise_type': exercise_type,
+        'sub_category': sub_category,
         'description': 'Test Description',
     }
 
 
 @pytest.fixture
 def form(
-    exercise: Exercise, form_data: dict[str, str | ExerciseType]
+    exercise: Exercise, form_data: dict[str, str | SubCategory]
 ) -> EditExerciseForm:
     return EditExerciseForm(instance=exercise, data=form_data)
 
@@ -37,7 +37,7 @@ def test_form_data_with_same_exercise_data_must_not_return_errors(
 ) -> None:
     form_data = {
         'name': exercise.name,
-        'exercise_type': exercise.exercise_type,
+        'sub_category': exercise.sub_category,
         'description': exercise.description,
     }
     form = EditExerciseForm(instance=exercise, data=form_data)
@@ -46,12 +46,12 @@ def test_form_data_with_same_exercise_data_must_not_return_errors(
 
 @pytest.mark.django_db
 def test_form_data_with_existing_exercise_name_must_return_duplicated_name_error(
-    exercise_type: ExerciseType, exercise: Exercise
+    sub_category: SubCategory, exercise: Exercise
 ):
     existing_exercise = baker.make(Exercise, name='Test Exercise')
     form_data = {
         'name': existing_exercise.name,
-        'exercise_type': exercise_type,
+        'sub_category': sub_category,
         'description': 'Test Description',
     }
     form = EditExerciseForm(instance=exercise, data=form_data)
@@ -71,7 +71,7 @@ class TestEditExerciseForm(TestCase):
         exercise = baker.prepare(Exercise)
         form_data = {
             'name': name,
-            'exercise_type': exercise.exercise_type,
+            'sub_category': exercise.sub_category,
             'description': 'Test Description',
         }
         form = EditExerciseForm(instance=exercise, data=form_data)
@@ -86,7 +86,7 @@ class TestEditExerciseForm(TestCase):
         exercise = baker.prepare(Exercise)
         form_data = {
             'name': name,
-            'exercise_type': exercise.exercise_type,
+            'sub_category': exercise.sub_category,
             'description': 'Test Description',
         }
         form = EditExerciseForm(instance=exercise, data=form_data)
@@ -105,7 +105,7 @@ class TestEditExerciseForm(TestCase):
         exercise = baker.prepare(Exercise)
         form_data = {
             'name': 'Test Required Description',
-            'exercise_type': exercise.exercise_type,
+            'sub_category': exercise.sub_category,
             'description': description,
         }
         form = EditExerciseForm(instance=exercise, data=form_data)
@@ -117,7 +117,7 @@ class TestEditExerciseForm(TestCase):
         )
 
     @given(
-        exercise_type=strategies.one_of(
+        sub_category=strategies.one_of(
             strategies.text(
                 min_size=1,
                 alphabet=strategies.characters(blacklist_characters=('1',)),
@@ -125,45 +125,45 @@ class TestEditExerciseForm(TestCase):
             strategies.integers(min_value=2),
         )
     )
-    def test_exercise_type_must_return_error_given_invalid_choice(
-        self, exercise_type: Optional[str | int]
+    def test_sub_categories_must_return_error_given_invalid_choice(
+        self, sub_category: Optional[str | int]
     ) -> None:
         exercise = baker.prepare(Exercise)
         form_data = {
             'name': 'Test Required Type',
-            'exercise_type': exercise_type,
+            'sub_category': sub_category,
             'description': 'Test Description',
         }
         form = EditExerciseForm(instance=exercise, data=form_data)
         assert not form.is_valid()
-        assert 'exercise_type' in form.errors
+        assert 'sub_category' in form.errors
         assert (
             _(
                 'Select a valid choice. That choice is not one of the'
                 ' available choices.'
             )
-            in form.errors['exercise_type']
+            in form.errors['sub_category']
         )
 
     @given(
-        exercise_type=strategies.one_of(
+        sub_category=strategies.one_of(
             strategies.text(max_size=0),
             strategies.none(),
         )
     )
-    def test_exercise_type_required(
-        self, exercise_type: Optional[str]
+    def test_sub_categories_required(
+        self, sub_category: Optional[str]
     ) -> None:
         exercise = baker.prepare(Exercise)
         form_data = {
             'name': 'Test Required Type',
-            'exercise_type': exercise_type,
+            'sub_category': sub_category,
             'description': 'Test Description',
         }
         form = EditExerciseForm(instance=exercise, data=form_data)
         assert not form.is_valid()
-        assert 'exercise_type' in form.errors
+        assert 'sub_category' in form.errors
         assert (
             _('Please select the exercise type.')
-            in form.errors['exercise_type']
+            in form.errors['sub_category']
         )

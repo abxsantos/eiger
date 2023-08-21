@@ -1,29 +1,17 @@
 import pytest
 from model_bakery import baker
 
-from eiger.trainers.models import (
-    Category,
-    Exercise,
-    ExerciseType,
-    ExerciseVariation,
-)
+from eiger.trainers.models import Category, Exercise, SubCategory
 
 
 @pytest.fixture
-def exercise_type() -> ExerciseType:
-    return baker.make(ExerciseType)
+def sub_category() -> SubCategory:
+    return baker.make(SubCategory)
 
 
 @pytest.fixture
-def exercise(exercise_type: ExerciseType) -> Exercise:
+def exercise(sub_category: SubCategory) -> Exercise:
     return baker.make(Exercise, _fill_optional=True)
-
-
-@pytest.fixture
-def exercise_variation(exercise: Exercise) -> ExerciseVariation:
-    return baker.make(
-        ExerciseVariation, exercise=exercise, _fill_optional=True
-    )
 
 
 @pytest.fixture()

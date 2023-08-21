@@ -23,6 +23,11 @@
                         <label class="form-check-label" for="{{ exercise.id_for_label }}">
                             {{ exercise.choice_label }}
                         </label>
+                        <i class="fa fa-circle-info fa-xs popover-icon"
+                           data-bs-toggle="popover"
+                           data-bs-placement="top"
+                           data-bs-content="{{ exercise.data.value.instance.description }}">
+                        </i>
                     </div>
                 {% endfor %}
             </div>
@@ -31,3 +36,8 @@
         </form>
     </div>
 {% endblock content %}
+{% block scripts %}
+    <script>
+        {% include 'js/popovers.js' %}
+    </script>
+{% endblock scripts %}

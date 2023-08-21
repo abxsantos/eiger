@@ -7,30 +7,30 @@ from hypothesis.strategies import text
 from model_bakery import baker
 from tests.test_eiger.strategies import postgres_allowed_characters
 
-from eiger.trainers.models import Category, ExerciseType
+from eiger.trainers.models import Category, SubCategory
 
 
 @pytest.mark.django_db()
-def test_exercise_type_string_representation(
-    exercise_type: ExerciseType,
+def test_sub_categories_string_representation(
+    sub_category: SubCategory,
 ) -> None:
     assert (
-        str(exercise_type)
-        == f'{exercise_type.category.name} - {exercise_type.name}'
+        str(sub_category)
+        == f'{sub_category.category.name} - {sub_category.name}'
     )
 
 
-def test_exercise_type_meta_verbose_name() -> None:
-    assert ExerciseType._meta.verbose_name == _('Exercise Type')
+def test_sub_categories_meta_verbose_name() -> None:
+    assert SubCategory._meta.verbose_name == _('Exercise Type')
 
 
-def test_exercise_type_meta_verbose_name_plural() -> None:
-    assert ExerciseType._meta.verbose_name_plural == _('Exercise Types')
+def test_sub_categories_meta_verbose_name_plural() -> None:
+    assert SubCategory._meta.verbose_name_plural == _('Exercise Types')
 
 
 @pytest.mark.django_db()
 def test_name_uniqueness_constraint(
-    exercise_type: ExerciseType,
+    sub_category: SubCategory,
 ) -> None:
     with pytest.raises(
         IntegrityError,
@@ -39,8 +39,8 @@ def test_name_uniqueness_constraint(
             ' "trainers_exercisetype_name_key"'
         ),
     ):
-        ExerciseType.objects.create(
-            name=exercise_type.name, category=baker.make(Category)
+        SubCategory.objects.create(
+            name=sub_category.name, category=baker.make(Category)
         )
 
 
@@ -55,7 +55,7 @@ class TestExerciseType(django.TestCase):
         with pytest.raises(
             DataError, match=r'value too long for type character varying(30)*'
         ):
-            ExerciseType.objects.create(
+            SubCategory.objects.create(
                 name=name, category=baker.make(Category)
             )
 
@@ -66,11 +66,9 @@ class TestExerciseType(django.TestCase):
             alphabet=postgres_allowed_characters,
         ),
     )
-    def test_create_exercise_type(self, name: str) -> None:
+    def test_create_sub_categories(self, name: str) -> None:
         category = baker.make(Category)
-        exercise_type = ExerciseType.objects.create(
-            name=name, category=category
-        )
+        sub_category = SubCategory.objects.create(name=name, category=category)
 
-        assert exercise_type.category == category
-        assert exercise_type.name == name
+        assert sub_category.category == category
+        assert sub_category.name == name

@@ -20,9 +20,9 @@ from django.urls import URLPattern, URLResolver, include, path
 from health_check import urls as health_urls
 
 from eiger.authentication.views import (
-    index_view,
-    login_view,
-    registration_view,
+    climber_index_view,
+    climber_login_view,
+    climber_registration_view,
 )
 from eiger.metric import urls as metrics_urls
 from eiger.moonboard import urls as moonboard_urls
@@ -30,22 +30,22 @@ from eiger.trainers import urls as trainers_urls
 from eiger.training_plan import urls as training_plan_urls
 
 urlpatterns: list[URLPattern | URLResolver] = [
-    path('', index_view, name='index'),
+    path('', climber_index_view, name='index'),
     path(
         'login/',
-        login_view,
+        climber_login_view,
         name='login',
     ),
     path(
         'register/',
-        registration_view,
+        climber_registration_view,
         name='register',
     ),
     path('trainers/', include(trainers_urls)),
     path('training-plan/', include(training_plan_urls)),
     path('moonboard/', include(moonboard_urls)),
     path('metrics/', include(metrics_urls)),
-    path('admin/doc/', include('django.contrib.admindocs.urls')),
+    # path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),
     # Health checks:
     path('healthcheck/', include(health_urls)),

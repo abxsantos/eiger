@@ -35,15 +35,18 @@
 
 {% block content %}
     <div class="container">
-        <h1 class="mt-4">{{ _("Edit Day Workouts")}}</h1>
-        <div class="d-flex justify-content-between align-items-center mt-3">
-            <strong>{{ day.date }} - {{ day.day_of_the_week }}</strong>
-            <a class="btn btn-primary" href="{% url 'exercises-selection' day.id %}">
-                {{ _("Add exercises")}}
-            </a>
-        </div>
-
+        <h1 class="mt-4">{{ _("Edit Day Workouts") }}</h1>
         <form id="update-form" method="post" action="{% url 'workouts-for-day' day.id %}" class="mt-4">
+
+            <div class="d-flex justify-content-between align-items-center mt-3 m-4 ms-0 me-0">
+                <div class="form-group">
+                    {{ form.target_time_unit.label_tag }}
+                    {{ update_date_form }}
+                </div>
+                <a class="btn btn-primary" href="{% url 'exercises-selection' day.id %}">
+                    {{ _("Add exercises") }}
+                </a>
+            </div>
             {% csrf_token %}
             {% for form in forms %}
                 <div class="border p-3 mb-4">
@@ -76,8 +79,8 @@
                         {% endif %}
                         {% if form.instance.exercise.should_add_weight %}
                             <div class="grid-item">
-                                {{ form.target_weight.label_tag }}
-                                {{ form.target_weight }}
+                                {{ form.target_weight_in_kilos.label_tag }}
+                                {{ form.target_weight_in_kilos }}
                             </div>
                         {% endif %}
 

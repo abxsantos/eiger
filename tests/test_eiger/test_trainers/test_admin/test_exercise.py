@@ -32,7 +32,7 @@ def message_user_spy(
 def test_exercise_admin_get_queryset(
     exercise_admin: ExerciseAdmin, mocked_request: MagicMock
 ) -> None:
-    exercise_types = baker.make(Exercise, _quantity=5)
+    sub_categories = baker.make(Exercise, _quantity=5)
 
     queryset = exercise_admin.get_queryset(mocked_request)
 
@@ -42,7 +42,7 @@ def test_exercise_admin_get_queryset(
         ' "trainers_exercise"."created_at",'
         ' "trainers_exercise"."updated_at", "trainers_exercise"."name",'
         ' "trainers_exercise"."description",'
-        ' "trainers_exercise"."exercise_type_id",'
+        ' "trainers_exercise"."sub_categories_id",'
         ' "trainers_exercise"."created_by_id",'
         ' "trainers_exercise"."reviewed",'
         ' "trainers_exercise"."should_add_weight",'
@@ -57,11 +57,11 @@ def test_exercise_admin_get_queryset(
         ' "auth_user"."email", "auth_user"."is_staff",'
         ' "auth_user"."is_active", "auth_user"."date_joined" FROM'
         ' "trainers_exercise" INNER JOIN "trainers_exercisetype" ON'
-        ' ("trainers_exercise"."exercise_type_id" ='
+        ' ("trainers_exercise"."sub_categories_id" ='
         ' "trainers_exercisetype"."id") INNER JOIN "auth_user" ON'
         ' ("trainers_exercise"."created_by_id" = "auth_user"."id")'
     )
-    assert list(queryset) == list(exercise_types)
+    assert list(queryset) == list(sub_categories)
 
 
 def test_exercise_admin_required_list_display_fields(
@@ -69,14 +69,14 @@ def test_exercise_admin_required_list_display_fields(
 ) -> None:
     list_display = exercise_admin.get_list_display(Mock())
 
-    assert list_display == ['name', 'exercise_type', 'created_by', 'reviewed']
+    assert list_display == ['name', 'sub_category', 'created_by', 'reviewed']
 
 
 def test_exercise_admin_required_list_filter(
     exercise_admin: ExerciseAdmin,
 ) -> None:
     list_filter = exercise_admin.get_list_filter(Mock())
-    assert list_filter == ['exercise_type', 'created_by', 'reviewed']
+    assert list_filter == ['sub_category', 'created_by', 'reviewed']
 
 
 def test_exercise_admin_required_search_fields(

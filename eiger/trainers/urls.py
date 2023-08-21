@@ -2,10 +2,8 @@ from django.urls import URLPattern, URLResolver, path
 
 from eiger.trainers.views import (
     home_view,
-    retrieve_category_exercise_types_view,
-    retrieve_exercise_variation_view,
+    retrieve_category_sub_categoriess_view,
     retrieve_exercise_view,
-    update_exercise_variation_view,
     update_exercise_view,
 )
 
@@ -23,17 +21,7 @@ urlpatterns: list[URLPattern | URLResolver] = [
     ),
     path(
         'categories/<int:category_id>/exercise-types',
-        retrieve_category_exercise_types_view,
-        name='retrieve_category_exercise_types',
-    ),
-    path(
-        'exercises/exercises-variations/<int:exercise_variation_id>',
-        retrieve_exercise_variation_view,
-        name='retrieve_exercise_variation',
-    ),
-    path(
-        'exercises/exercises-variations/<int:exercise_variation_id>/',
-        update_exercise_variation_view,
-        name='update_exercise_variation',
+        retrieve_category_sub_categoriess_view,
+        name='retrieve_category_sub_categoriess',
     ),
 ]

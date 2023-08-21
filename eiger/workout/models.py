@@ -24,14 +24,21 @@ class TargetTimeUnit(models.TextChoices):
 
 class Workout(BaseModel):
     day = models.ForeignKey(Day, on_delete=models.CASCADE)
-    sets = models.PositiveSmallIntegerField(default=1)
     exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
+    sets = models.PositiveSmallIntegerField(default=1)
+    rest_per_set_in_seconds = models.PositiveSmallIntegerField(
+        null=True, help_text=_('The duration of rest between sets in seconds.')
+    )
     target_repetitions = models.PositiveSmallIntegerField(null=True)
+    rest_per_repetition_in_seconds = models.PositiveSmallIntegerField(
+        null=True,
+        help_text=_('The duration of rest between repetitions in seconds.'),
+    )
     target_time_in_seconds = models.PositiveSmallIntegerField(null=True)
     target_time_unit = models.CharField(
         blank=True, choices=TargetTimeUnit.choices, max_length=7
     )
-    target_weight = models.PositiveSmallIntegerField(null=True)
+    target_weight_in_kilos = models.PositiveSmallIntegerField(null=True)
 
     @property
     def target_time(self) -> Optional[int]:
@@ -39,6 +46,22 @@ class Workout(BaseModel):
             self.target_time_in_seconds // 60
             if self.target_time_unit == TargetTimeUnit.MINUTES
             else self.target_time_in_seconds
+        )
+
+    @property
+    def rest_per_set(self) -> Optional[int]:
+        return (
+            self.rest_per_set_in_seconds // 60
+            if self.target_time_unit == TargetTimeUnit.MINUTES
+            else self.rest_per_set_in_seconds
+        )
+
+    @property
+    def rest_per_repetition(self) -> Optional[int]:
+        return (
+            self.rest_per_repetition_in_seconds // 60
+            if self.target_time_unit == TargetTimeUnit.MINUTES
+            else self.rest_per_repetition_in_seconds
         )
 
 

@@ -1,7 +1,7 @@
 import pytest
 from django.contrib.auth.models import User
 
-from eiger.trainers.forms import TrainerCreationForm
+from eiger.authentication.forms import CreateUserForm
 
 
 @pytest.fixture()
@@ -18,7 +18,7 @@ def test_trainer_creation_form_save_with_valid_data(
     valid_form_data: dict[str, str]
 ):
     # Save the form
-    user = TrainerCreationForm(valid_form_data).save()
+    user = CreateUserForm(valid_form_data).save()
 
     # Check if a user object was created
     assert isinstance(user, User)

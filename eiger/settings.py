@@ -60,7 +60,7 @@ INSTALLED_APPS: Tuple[str, ...] = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # django-admin:
-    'django.contrib.admindocs',
+    # 'django.contrib.admindocs',
     'django.contrib.admin',
     # Health checks:
     # You may want to enable other checks as well,
