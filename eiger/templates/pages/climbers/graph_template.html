@@ -1,12 +1,12 @@
 {% extends 'pages/climbers/base.html' %}
 
 {% block scripts %}
-    <script>
+  <script>
         const config = {
             responsive: true
         };
-    </script>
-    <script>
+  </script>
+  <script>
         let sunburstDataFromDjango = {{ completed_workouts_exercise_category_sunburst_data|safe }};
         let sunburstData = [
             {
@@ -20,8 +20,8 @@
             title: 'Sunburst Graph of Completed Workouts',
         };
         Plotly.newPlot('sunburst-chart', sunburstData, sunburstLayout, config);
-    </script>
-    <script>
+  </script>
+  <script>
         const lineDataFromDjango = JSON.parse('{{ moonboard_boulder_count_by_climbed_date|safe }}');
         const lineTrace = {
             x: lineDataFromDjango.dates,
@@ -38,8 +38,8 @@
             }
         };
         Plotly.newPlot('line-chart', [lineTrace], lineLayout, config);
-    </script>
-    <script>
+  </script>
+  <script>
         var scatterData = {{ moonboard_date_climbed_attempt_grade_boulder_count_bubble_data|safe }};
 
         var data = [];
@@ -71,8 +71,8 @@
         };
 
         Plotly.newPlot('bubble-chart', data, layout);
-    </script>
-    <script>
+  </script>
+  <script>
         var barChartData = {{ completed_workout_counts|safe }};
 
         var data = [
@@ -96,13 +96,12 @@
         };
 
         Plotly.newPlot('bar-chart', data, layout);
-    </script>
+  </script>
 {% endblock %}
-
 {% block content %}
-    <h1>Data Analytics Graph</h1>
-    <div id="line-chart"></div>
-    <div id="sunburst-chart"></div>
-    <div id="bubble-chart"></div>
-    <div id="bar-chart"></div>
+  <h1>Data Analytics Graph</h1>
+  <div id="line-chart"></div>
+  <div id="sunburst-chart"></div>
+  <div id="bubble-chart"></div>
+  <div id="bar-chart"></div>
 {% endblock %}

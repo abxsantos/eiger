@@ -3,10 +3,10 @@
 {% load i18n static custom_filters %}
 
 {% block title %}
-    {{ _("Climb Hard - Training Plan") }}
+  {{ _("Climb Hard - Training Plan") }}
 {% endblock title %}
 {% block style %}
-    <style>
+  <style>
         .alert {
             margin-top: 0.5rem;
         }
@@ -27,84 +27,93 @@
             font-size: 0.8rem;
             color: grey;
         }
-    </style>
+  </style>
 {% endblock style %}
 {% block content %}
-    <div class="container">
-        <h1>{{ training_plan.name }}</h1>
-        <p>{{ training_plan.description }}</p>
-        <ul class="nav nav-tabs" id="weeksTabs" role="tablist">
-            {% for week in training_plan.week_set.all %}
-                <li class="nav-item">
-                    <a class="nav-link {% if forloop.first %}active{% endif %}" id="week-{{ week.id }}-tab"
-                       data-bs-toggle="tab" href="#week-{{ week.id }}" role="tab" aria-controls="week-{{ week.id }}"
-                       aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">
-                        Week {{ forloop.counter }}
-                    </a>
-                </li>
-            {% endfor %}
-        </ul>
-        <br/>
-        <div class="tab-content" id="weeksTabsContent">
-            {% for week in training_plan.week_set.all %}
-                <div class="tab-pane fade {% if forloop.first %}show active{% endif %}" id="week-{{ week.id }}"
-                     role="tabpanel" aria-labelledby="week-{{ week.id }}-tab">
-                    <div class="row">
-                        {% for day in week.day_set.all|order_by:'date' %}
-                            <div class="col-md-4 mb-4">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <strong class="card-title mb-0">{{ day.date }} -
-                                                {{ day.day_of_the_week }}</strong>
-                                            <a href="{% url 'workouts-for-day' day.id %}" class="edit-icon">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                        </div>
-                                        <p class="card-text">{{ day.description }}</p>
-                                        {% if day.workout_set.all %}
-                                            <div class="workout-cards">
-                                                <table class="table table-bordered">
-                                                    <thead>
-                                                    <tr>
-                                                        <th>{{ _("Exercise") }}</th>
-                                                        <th>{{ _("Sets") }}</th>
-                                                        <th>{{ _("Reps") }}</th>
-                                                        <th>{{ _("Time") }}</th>
-                                                        <th>{{ _("Weight") }}</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    {% for workout in day.workout_set.all %}
-                                                        <tr>
-                                                            <td><i
-                                                                    class="fa fa-circle-info popover-icon me-1"
-                                                                    data-bs-toggle="popover"
-                                                                    data-bs-placement="top"
-                                                                    data-bs-content="{{ workout.exercise.description }}">
-                                                            </i>{{ workout.exercise.name }}</td>
-                                                            <td>{{ workout.sets }}</td>
-                                                            <td>{{ workout.target_repetitions|default_if_none:"-" }}</td>
-                                                            <td>{{ workout.target_time|default_if_none:"-" }}</td>
-                                                            <td>{{ workout.target_weight_in_kilos|default_if_none:"-" }}</td>
-                                                        </tr>
-                                                    {% endfor %}
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
+  <div class="container">
+    <h1>{{ training_plan.name }}</h1>
+    <p>{{ training_plan.description }}</p>
+    <ul class="nav nav-tabs" id="weeksTabs" role="tablist">
+      {% for week in training_plan.week_set.all %}
+        <li class="nav-item">
+          <a class="nav-link
+                    {% if forloop.first %}active{% endif %}"
+             id="week-{{ week.id }}-tab"
+             data-bs-toggle="tab"
+             href="#week-{{ week.id }}"
+             role="tab"
+             aria-controls="week-{{ week.id }}"
+             aria-selected="{% if forloop.first %}
+                              true
+                            {% else %}
+                              false
+                            {% endif %}">Week {{ forloop.counter }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+    <br />
+    <div class="tab-content" id="weeksTabsContent">
+      {% for week in training_plan.week_set.all %}
+        <div class="tab-pane fade
+                    {% if forloop.first %}show active{% endif %}"
+             id="week-{{ week.id }}"
+             role="tabpanel"
+             aria-labelledby="week-{{ week.id }}-tab">
+          <div class="row">
+            {% for day in week.day_set.all|order_by:'date' %}
+              <div class="col-md-4 mb-4">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <strong class="card-title mb-0">{{ day.date }} -
+                      {{ day.day_of_the_week }}</strong>
+                      <a href="{% url 'workouts-for-day' day.id %}" class="edit-icon">
+                        <i class="fas fa-edit"></i>
+                      </a>
                     </div>
+                    <p class="card-text">{{ day.description }}</p>
+                    {% if day.workout_set.all %}
+                      <div class="workout-cards">
+                        <table class="table table-bordered">
+                          <thead>
+                            <tr>
+                              <th>{{ _("Exercise") }}</th>
+                              <th>{{ _("Sets") }}</th>
+                              <th>{{ _("Reps") }}</th>
+                              <th>{{ _("Time") }}</th>
+                              <th>{{ _("Weight") }}</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for workout in day.workout_set.all %}
+                              <tr>
+                                <td>
+                                  <i class="fa fa-circle-info popover-icon me-1"
+                                     data-bs-toggle="popover"
+                                     data-bs-placement="top"
+                                     data-bs-content="{{ workout.exercise.description }}">
+                                  </i>{{ workout.exercise.name }}
+                                </td>
+                                <td>{{ workout.sets }}</td>
+                                <td>{{ workout.target_repetitions|default_if_none:"-" }}</td>
+                                <td>{{ workout.target_time|default_if_none:"-" }}</td>
+                                <td>{{ workout.target_weight_in_kilos|default_if_none:"-" }}</td>
+                              </tr>
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+                    {% endif %}
+                  </div>
                 </div>
+              </div>
             {% endfor %}
+          </div>
         </div>
+      {% endfor %}
     </div>
+  </div>
 {% endblock content %}
 {% block scripts %}
-    <script>
-        {% include 'js/popovers.js' %}
-    </script>
+  <script>{% include 'js/popovers.js' %}</script>
 {% endblock scripts %}

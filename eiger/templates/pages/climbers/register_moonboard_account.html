@@ -3,29 +3,30 @@
 {% load i18n static %}
 
 {% block title %}
-    {{ _("Climb Hard - Create Training Plan") }}
+  {{ _("Climb Hard - Create Training Plan") }}
 {% endblock title %}
 {% block content %}
-    <div class="container">
-        <h1>{{ _("Register your Moonboard Account") }}</h1>
-        {% if is_already_registered %}
-            <form class="d-flex flex-column justify-content-center mt-5" method="post"
-                  action="{% url 'unregister-moonboard-account' %}">
-                {% csrf_token %}
-                <label>{{ _("You already have registered a Moonboard account!") }}</label>
-                <a class="btn btn btn-outline-primary mt-3"
-                   href="{% url 'home' %}">
-                    {{ _("Back to Home") }}
-                </a>
-                <button type="submit"
-                        class="btn btn-danger mt-3">{{ _("Unregister your Moonboard account") }}</button>
-            </form>
-            </div>
-        {% else %}
-            <form method="post" action="{% url 'register-moonboard-account' %}">
-                {% csrf_token %}
-                {{ form.as_p }}
-                {% include 'components/climbers/save_button.html' %}
-            </form>
-        {% endif %}
+  <div class="container">
+    <h1>{{ _("Register your Moonboard Account") }}</h1>
+    {% if is_already_registered %}
+      <form class="d-flex flex-column justify-content-center mt-5"
+            method="post"
+            action="{% url 'unregister-moonboard-account' %}">
+        {% csrf_token %}
+        <label>{{ _("You already have registered a Moonboard account!") }}</label>
+        <a class="btn btn btn-outline-primary mt-3" href="{% url 'home' %}">
+          {{ _("Back to Home") }}
+        </a>
+        <button type="submit" class="btn btn-danger mt-3">
+          {{ _("Unregister your Moonboard account") }}
+        </button>
+      </form>
+    </div>
+  {% else %}
+    <form method="post" action="{% url 'register-moonboard-account' %}">
+      {% csrf_token %}
+      {{ form.as_p }}
+      {% include 'components/climbers/save_button.html' %}
+    </form>
+  {% endif %}
 {% endblock content %}

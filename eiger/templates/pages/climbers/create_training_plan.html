@@ -4,10 +4,10 @@
 {% load custom_filters %}
 
 {% block title %}
-    {{ _("Climb Hard - Create Training Plan") }}
+  {{ _("Climb Hard - Create Training Plan") }}
 {% endblock title %}
 {% block style %}
-    <style>
+  <style>
         .alert {
             margin-top: 0.5rem;
         }
@@ -19,70 +19,66 @@
             padding: 0.75rem 1.25rem;
             border-radius: 0.25rem;
         }
-    </style>
+  </style>
 {% endblock style %}
 {% block content %}
-    <div class="container">
-        <h1>{{ _("Create a Training Plan") }}</h1>
-        <form method="post" action="{% url 'training-plan-creation' %}">
-            {% csrf_token %}
-            <div class="form-group">
-                {{ form.name.label }}
-                {{ form.name }}
-                {% if form.errors.name %}
-                    <div class="alert alert-danger">{{ form.errors.name }}</div>
-                {% endif %}
-            </div>
-            <div class="form-group">
-                {{ form.description.label }}
-                {{ form.description }}
-                {% if form.errors.description %}
-                    <div class="alert alert-danger">{{ form.errors.description }}</div>
-                {% endif %}
-            </div>
-            <div class="form-group">
-                {{ form.number_of_weeks.label }}
-                {{ form.number_of_weeks }}
-                {% if form.errors.number_of_weeks %}
-                    <div class="alert alert-danger">{{ form.errors.number_of_weeks }}</div>
-                {% endif %}
-            </div>
-            <label class="form-check-label custom-label-class">
-                In which days of the week do you want to train?
-            </label>
-            <div class="form-group">
-                {% for choice_value, choice_label in form.fields.training_days_of_the_week.choices %}
-                    <div class="form-check">
-                        <input
-                                type="checkbox"
-                                name="{{ form.training_days_of_the_week.name }}"
-                                id="{{ form.training_days_of_the_week.id_for_label }}_{{ forloop.counter }}"
-                                value="{{ choice_value }}"
-                                {% if choice_value in form.training_days_of_the_week.value %}
-                                checked
-                                {% endif %}
-                                class="form-check-input"
-                        >
-                        <label
-                                for="{{ form.training_days_of_the_week.id_for_label }}_{{ forloop.counter }}"
-                                class="form-check-label"
-                        >
-                            {{ choice_label }}
-                        </label>
-                    </div>
-                {% endfor %}
-            </div>
-            {% if form.errors.training_days_of_the_week %}
-                <div class="alert alert-danger">{{ form.errors.training_days_of_the_week }}</div>
-            {% endif %}
-            <div class="form-group">
-                {{ form.starting_date.label }}
-                {{ form.starting_date }}
-                {% if form.errors.starting_date %}
-                    <div class="alert alert-danger">{{ form.errors.starting_date }}</div>
-                {% endif %}
-            </div>
-            {% include 'components/climbers/save_button.html' %}
-        </form>
-    </div>
+  <div class="container">
+    <h1>{{ _("Create a Training Plan") }}</h1>
+    <form method="post" action="{% url 'training-plan-creation' %}">
+      {% csrf_token %}
+      <div class="form-group">
+        {{ form.name.label }}
+        {{ form.name }}
+        {% if form.errors.name %}
+          <div class="alert alert-danger">{{ form.errors.name }}</div>
+        {% endif %}
+      </div>
+      <div class="form-group">
+        {{ form.description.label }}
+        {{ form.description }}
+        {% if form.errors.description %}
+          <div class="alert alert-danger">{{ form.errors.description }}</div>
+        {% endif %}
+      </div>
+      <div class="form-group">
+        {{ form.number_of_weeks.label }}
+        {{ form.number_of_weeks }}
+        {% if form.errors.number_of_weeks %}
+          <div class="alert alert-danger">{{ form.errors.number_of_weeks }}</div>
+        {% endif %}
+      </div>
+      <label class="form-check-label custom-label-class">
+        In which days of the week do you want to train?
+      </label>
+      <div class="form-group">
+        {% for choice_value, choice_label in form.fields.training_days_of_the_week.choices %}
+          <div class="form-check">
+            <input type="checkbox"
+                   name="{{ form.training_days_of_the_week.name }}"
+                   id="{{ form.training_days_of_the_week.id_for_label }}_{{ forloop.counter }}"
+                   value="{{ choice_value }}"
+                   {% if choice_value in form.training_days_of_the_week.value %}
+                     checked
+                   {% endif %}
+                   class="form-check-input">
+            <label for="{{ form.training_days_of_the_week.id_for_label }}_{{ forloop.counter }}"
+                   class="form-check-label">{{ choice_label }}</label>
+          </div>
+        {% endfor %}
+      </div>
+      {% if form.errors.training_days_of_the_week %}
+        <div class="alert alert-danger">
+          {{ form.errors.training_days_of_the_week }}
+        </div>
+      {% endif %}
+      <div class="form-group">
+        {{ form.starting_date.label }}
+        {{ form.starting_date }}
+        {% if form.errors.starting_date %}
+          <div class="alert alert-danger">{{ form.errors.starting_date }}</div>
+        {% endif %}
+      </div>
+      {% include 'components/climbers/save_button.html' %}
+    </form>
+  </div>
 {% endblock content %}

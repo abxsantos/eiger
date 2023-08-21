@@ -3,10 +3,10 @@
 {% load i18n static %}
 
 {% block title %}
-    {{ _("Climb Hard - Home") }}
+  {{ _("Climb Hard - Home") }}
 {% endblock title %}
 {% block style %}
-    <style>
+  <style>
         #planned-for-today {
             margin-top: 48px;
         }
@@ -80,168 +80,207 @@
             color: grey;
         }
 
-    </style>
+  </style>
 {% endblock style %}
 {% block content %}
-    <div class="container">
-        <h1>{{ _("Training Plans") }}</h1>
-        <p>{{ _("Use this app to create and manage your own customized training plans.") }}</p>
-        <ul class="nav nav-tabs" id="training-plan-tabs" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active tab-text" id="in-progress-tab" data-bs-toggle="tab"
-                   href="#in-progress-content"
-                   role="tab" aria-controls="in-progress-content" aria-selected="true">{{ _("In Progress") }}</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link tab-text" id="upcoming-tab" data-bs-toggle="tab" href="#upcoming-content" role="tab"
-                   aria-controls="upcoming-content" aria-selected="false">{{ _("Upcoming") }}</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link tab-text" id="completed-tab" data-bs-toggle="tab" href="#completed-content"
-                   role="tab"
-                   aria-controls="completed-content" aria-selected="false">{{ _("Completed") }}</a>
-            </li>
-        </ul>
-        <div class="tab-content" id="training-plan-tab-content">
-            <div class="tab-pane fade show active" id="in-progress-content" role="tabpanel"
-                 aria-labelledby="in-progress-tab">
-                <section id="in-progress-training-plans">
-                    {% if in_progress_training_plans %}
-                        {% for training_plan in in_progress_training_plans %}
-                            <a class="no-styling" href="{% url 'retrieve-training-plan' training_plan.id %}">
-                                <div class="training-plan-card">
-                                    <div class="training-plan-header">
-                                        <h5 class="training-plan-name">
-                                            {{ training_plan.name }}
-                                            <a><i class="fas fa-share share-icon" data-id="{{ training_plan.id }}"></i></a>
-                                        </h5>
-                                        <div class="training-plan-details">
-                                            <p>{{ training_plan.starting_date }}
-                                                {{ _("until") }} {{ training_plan.training_end_date }}</p>
-                                        </div>
-                                        <div class="training-plan-progress">
-                                            {{ _("Week") }} {{ training_plan.current_week }}/{{ training_plan.total_weeks_count }}
-                                            <div class="progress">
-                                                <div class="progress-bar" role="progressbar"
-                                                     style="width: {{ training_plan.progress_percentage }}%;"
-                                                     aria-valuenow="{{ training_plan.progress_percentage }}"
-                                                     aria-valuemin="0"
-                                                     aria-valuemax="100"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        {% endfor %}
-                    {% else %}
-                    <div class="d-flex flex-column justify-content-center mt-3">
-                        <p>{{ _("You do not have any in progress training plans. Get started by creating a training plan.") }}</p>
-                        <a class="btn btn-primary"
-                           href="{% url 'training-plan-creation' %}">
-                            {{ _("Create a Training Plan") }}
-                        </a>
+  <div class="container">
+    <h1>{{ _("Training Plans") }}</h1>
+    <p>
+      {{ _("Use this app to create and manage your own customized training plans.") }}
+    </p>
+    <ul class="nav nav-tabs" id="training-plan-tabs" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active tab-text"
+           id="in-progress-tab"
+           data-bs-toggle="tab"
+           href="#in-progress-content"
+           role="tab"
+           aria-controls="in-progress-content"
+           aria-selected="true">{{ _("In Progress") }}</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link tab-text"
+           id="upcoming-tab"
+           data-bs-toggle="tab"
+           href="#upcoming-content"
+           role="tab"
+           aria-controls="upcoming-content"
+           aria-selected="false">{{ _("Upcoming") }}</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link tab-text"
+           id="completed-tab"
+           data-bs-toggle="tab"
+           href="#completed-content"
+           role="tab"
+           aria-controls="completed-content"
+           aria-selected="false">{{ _("Completed") }}</a>
+      </li>
+    </ul>
+    <div class="tab-content" id="training-plan-tab-content">
+      <div class="tab-pane fade show active"
+           id="in-progress-content"
+           role="tabpanel"
+           aria-labelledby="in-progress-tab">
+        <section id="in-progress-training-plans">
+          {% if in_progress_training_plans %}
+            {% for training_plan in in_progress_training_plans %}
+              <a class="no-styling"
+                 href="{% url 'retrieve-training-plan' training_plan.id %}">
+                <div class="training-plan-card">
+                  <div class="training-plan-header">
+                    <h5 class="training-plan-name">
+                      {{ training_plan.name }}
+                      <a><i class="fas fa-share share-icon" data-id="{{ training_plan.id }}"></i></a>
+                    </h5>
+                    <div class="training-plan-details">
+                      <p>
+                        {{ training_plan.starting_date }}
+                        {{ _("until") }} {{ training_plan.training_end_date }}
+                      </p>
                     </div>
-                    {% endif %}
-                </section>
-                <section id="planned-for-today">
-                    <h1>{{ _("Planned for Today") }}</h1>
-                    <div class="container">
-                        {% if planned_workouts_for_today %}
-                            {% for planned_workout in planned_workouts_for_today %}
-                                <a class="no-styling"
-                                   {% if not planned_workout.completedworkout %}href="{% url 'complete-workout' planned_workout.id %}{% endif %}">
-                                    <div class="exercise-card pending-variations-card">
-                                        <div class="exercise-header">
-                                            <h4 class="exercise-name">{{ planned_workout.exercise.name }}</h4>
-                                            <div class="exercise-tags">
-              <span style="background-color: {{ planned_workout.exercise.sub_category.category.color }}"
-                    class="badge">{{ planned_workout.exercise.sub_category }}</span>
-                                            </div>
-                                            {% if planned_workout.completedworkout %}
-                                                <i class="fas fa-check fa-s"></i>
-                                            {% endif %}
-                                        </div>
-                                        <div class="exercise-details">
-                                            <p>
-                                                <strong>{{ planned_workout.sets }}</strong>
-                                                sets
-                                                {% if planned_workout.exercise.should_have_repetition %}
-                                                    × <strong>{{ planned_workout.target_repetitions }}</strong> target
-                                                    reps
-                                                {% endif %}
-                                                {% if planned_workout.exercise.should_have_time %}
-                                                    | <strong>{{ planned_workout.target_time_in_seconds }}</strong>
-                                                    {{ planned_workout.target_time_unit }}
-                                                {% endif %}
-                                                {% if planned_workout.exercise.should_add_weight %}
-                                                    @ <strong>{{ planned_workout.target_weight_in_kilos }}</strong> kg
-                                                {% endif %}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </a>
-                            {% endfor %}
-                        {% else %}
-                            <p>{{ _("No exercises planned for today!") }}</p>
+                    <div class="training-plan-progress">
+                      {{ _("Week") }} {{ training_plan.current_week }}/{{ training_plan.total_weeks_count }}
+                      <div class="progress">
+                        <div class="progress-bar"
+                             role="progressbar"
+                             style="width: {{ training_plan.progress_percentage }}%"
+                             aria-valuenow="{{ training_plan.progress_percentage }}"
+                             aria-valuemin="0"
+                             aria-valuemax="100"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            {% endfor %}
+          {% else %}
+            <div class="d-flex flex-column justify-content-center mt-3">
+              <p>
+                {{ _("You do not have any in progress training plans. Get started by creating a training plan.") }}
+              </p>
+              <a class="btn btn-primary" href="{% url 'training-plan-creation' %}">
+                {{ _("Create a Training Plan") }}
+              </a>
+            </div>
+          {% endif %}
+        </section>
+        <section id="planned-for-today">
+          <h1>{{ _("Planned for Today") }}</h1>
+          <div class="container">
+            {% if planned_workouts_for_today %}
+              {% for planned_workout in planned_workouts_for_today %}
+                <a class="no-styling"
+                   {% if not planned_workout.completedworkout %}
+                     href="{% url 'complete-workout' planned_workout.id %}
+                   {% endif %}
+                   ">
+                  <div class="exercise-card pending-variations-card">
+                    <div class="exercise-header">
+                      <h4 class="exercise-name">{{ planned_workout.exercise.name }}</h4>
+                      <div class="exercise-tags">
+                        <span style="background-color: {{ planned_workout.exercise.sub_category.category.color }}"
+                              class="badge">{{ planned_workout.exercise.sub_category }}</span>
+                      </div>
+                      {% if planned_workout.completedworkout %}
+                        <i class="fas fa-check fa-s"></i>
+                      {% endif %}
+                    </div>
+                    <div class="exercise-details">
+                      <p>
+                        <strong>{{ planned_workout.sets }}</strong>
+                        sets
+                        {% if planned_workout.exercise.should_have_repetition %}
+                          × <strong>{{ planned_workout.target_repetitions }}</strong> target
+                          reps
                         {% endif %}
+                        {% if planned_workout.exercise.should_have_time %}
+                          | <strong>{{ planned_workout.target_time_in_seconds }}</strong>
+                          {{ planned_workout.target_time_unit }}
+                        {% endif %}
+                        {% if planned_workout.exercise.should_add_weight %}
+                          @ <strong>{{ planned_workout.target_weight_in_kilos }}</strong> kg
+                        {% endif %}
+                      </p>
                     </div>
-                </section>
-            </div>
-            <div class="tab-pane fade" id="upcoming-content" role="tabpanel" aria-labelledby="upcoming-tab">
-                {% if upcoming_training_plans %}
-                    {% for training_plan in upcoming_training_plans %}
-                        <a class="no-styling" href="{% url 'retrieve-training-plan' training_plan.id %}">
-                            <div class="training-plan-card">
-                                <div class="training-plan-header">
-                                    <h5 class="training-plan-name">{{ training_plan.name }}</h5>
-                                    <div class="training-plan-details">
-                                        <p>{{ training_plan.starting_date }}
-                                            {{ _("until") }} {{ training_plan.training_end_date }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    {% endfor %}
-                {% else %}
-                    <div class="d-flex flex-column justify-content-center mt-3">
-                        <p>{{ _("You do not have any upcoming training plans. Get started by creating a training plan.") }}</p>
-                        <a class="btn btn-primary"
-                           href="{% url 'training-plan-creation' %}">
-                            {{ _("Create a Training Plan") }}
-                        </a>
-                    </div>
-                {% endif %}
-            </div>
-            <div class="tab-pane fade" id="completed-content" role="tabpanel" aria-labelledby="completed-tab">
-                {% if completed_training_plans %}
-                    {% for training_plan in completed_training_plans %}
-                        <a class="no-styling" href="{% url 'retrieve-training-plan' training_plan.id %}">
-                            <div class="training-plan-card">
-                                <div class="training-plan-header">
-                                    <h5 class="training-plan-name">{{ training_plan.name }}</h5>
-                                    <div class="training-plan-details">
-                                        <p>{{ training_plan.starting_date }}
-                                            {{ _("until") }} {{ training_plan.training_end_date }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    {% endfor %}
-                {% else %}
-                    <div class="d-flex flex-column justify-content-center mt-3">
-                        <p>{{ _("You do not have any completed training plans. Get started by creating a training plan.") }}</p>
-                        <a class="btn btn-primary"
-                           href="{% url 'training-plan-creation' %}">
-                            {{ _("Create a Training Plan") }}
-                        </a>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
+                  </div>
+                </a>
+              {% endfor %}
+            {% else %}
+              <p>{{ _("No exercises planned for today!") }}</p>
+            {% endif %}
+          </div>
+        </section>
+      </div>
+      <div class="tab-pane fade"
+           id="upcoming-content"
+           role="tabpanel"
+           aria-labelledby="upcoming-tab">
+        {% if upcoming_training_plans %}
+          {% for training_plan in upcoming_training_plans %}
+            <a class="no-styling"
+               href="{% url 'retrieve-training-plan' training_plan.id %}">
+              <div class="training-plan-card">
+                <div class="training-plan-header">
+                  <h5 class="training-plan-name">{{ training_plan.name }}</h5>
+                  <div class="training-plan-details">
+                    <p>
+                      {{ training_plan.starting_date }}
+                      {{ _("until") }} {{ training_plan.training_end_date }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </a>
+          {% endfor %}
+        {% else %}
+          <div class="d-flex flex-column justify-content-center mt-3">
+            <p>
+              {{ _("You do not have any upcoming training plans. Get started by creating a training plan.") }}
+            </p>
+            <a class="btn btn-primary" href="{% url 'training-plan-creation' %}">
+              {{ _("Create a Training Plan") }}
+            </a>
+          </div>
+        {% endif %}
+      </div>
+      <div class="tab-pane fade"
+           id="completed-content"
+           role="tabpanel"
+           aria-labelledby="completed-tab">
+        {% if completed_training_plans %}
+          {% for training_plan in completed_training_plans %}
+            <a class="no-styling"
+               href="{% url 'retrieve-training-plan' training_plan.id %}">
+              <div class="training-plan-card">
+                <div class="training-plan-header">
+                  <h5 class="training-plan-name">{{ training_plan.name }}</h5>
+                  <div class="training-plan-details">
+                    <p>
+                      {{ training_plan.starting_date }}
+                      {{ _("until") }} {{ training_plan.training_end_date }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </a>
+          {% endfor %}
+        {% else %}
+          <div class="d-flex flex-column justify-content-center mt-3">
+            <p>
+              {{ _("You do not have any completed training plans. Get started by creating a training plan.") }}
+            </p>
+            <a class="btn btn-primary" href="{% url 'training-plan-creation' %}">
+              {{ _("Create a Training Plan") }}
+            </a>
+          </div>
+        {% endif %}
+      </div>
     </div>
+  </div>
 {% endblock content %}
 {% block scripts %}
-    <script>
+  <script>
         $(document).ready(function () {
             $('.share-icon').click(function () {
                 var trainingPlanId = $(this).data('id');
@@ -269,5 +308,5 @@
                 }, 3000);  // Hide after 3 seconds
             });
         });
-    </script>
+</script>
 {% endblock %}

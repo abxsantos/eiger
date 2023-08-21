@@ -3,11 +3,10 @@
 {% load i18n static %}
 
 {% block title %}
-    {{ _("Climb Hard - Day") }}
+  {{ _("Climb Hard - Day") }}
 {% endblock title %}
-
 {% block style %}
-    <style>
+  <style>
         label {
             font-size: 0.8rem;
         }
@@ -30,64 +29,64 @@
         .time-unit label {
             font-size: 0.625rem;
         }
-    </style>
+  </style>
 {% endblock style %}
-
 {% block content %}
-    <div class="container">
-        <h1 class="mt-4">{{ _("Edit Day Workouts") }}</h1>
-        <form id="update-form" method="post" action="{% url 'workouts-for-day' day.id %}" class="mt-4">
-
-            <div class="d-flex justify-content-between align-items-center mt-3 m-4 ms-0 me-0">
-                <div class="form-group">
-                    {{ form.target_time_unit.label_tag }}
-                    {{ update_date_form }}
-                </div>
-                <a class="btn btn-primary" href="{% url 'exercises-selection' day.id %}">
-                    {{ _("Add exercises") }}
-                </a>
+  <div class="container">
+    <h1 class="mt-4">{{ _("Edit Day Workouts") }}</h1>
+    <form id="update-form"
+          method="post"
+          action="{% url 'workouts-for-day' day.id %}"
+          class="mt-4">
+      <div class="d-flex justify-content-between align-items-center mt-3 m-4 ms-0 me-0">
+        <div class="form-group">
+          {{ form.target_time_unit.label_tag }}
+          {{ update_date_form }}
+        </div>
+        <a class="btn btn-primary" href="{% url 'exercises-selection' day.id %}">
+          {{ _("Add exercises") }}
+        </a>
+      </div>
+      {% csrf_token %}
+      {% for form in forms %}
+        <div class="border p-3 mb-4">
+          <div class="d-flex justify-content-between">
+            <h5>{{ form.instance.exercise.name }}</h5>
+            {% if form.instance.exercise.is_test %}
+              <i class="fas fa-dumbbell fa-xs"></i>
+            {% endif %}
+            <div class="ms-2 time-unit">
+              {{ form.target_time_unit.label_tag }}
+              {{ form.target_time_unit }}
             </div>
-            {% csrf_token %}
-            {% for form in forms %}
-                <div class="border p-3 mb-4">
-                    <div class="d-flex justify-content-between">
-                        <h5>{{ form.instance.exercise.name }}</h5>
-                        {% if form.instance.exercise.is_test %}
-                            <i class="fas fa-dumbbell fa-xs"></i>
-                        {% endif %}
-                        <div class="ms-2 time-unit">
-                            {{ form.target_time_unit.label_tag }}
-                            {{ form.target_time_unit }}
-                        </div>
-                    </div>
-                    <div class="grid-container">
-                        <div class="grid-item">
-                            {{ form.sets.label_tag }}
-                            {{ form.sets }}
-                        </div>
-                        {% if form.instance.exercise.should_have_repetition %}
-                            <div class="grid-item">
-                                {{ form.target_repetitions.label_tag }}
-                                {{ form.target_repetitions }}
-                            </div>
-                        {% endif %}
-                        {% if form.instance.exercise.should_have_time %}
-                            <div class="grid-item">
-                                {{ form.target_time_in_seconds.label_tag }}
-                                {{ form.target_time_in_seconds }}
-                            </div>
-                        {% endif %}
-                        {% if form.instance.exercise.should_add_weight %}
-                            <div class="grid-item">
-                                {{ form.target_weight_in_kilos.label_tag }}
-                                {{ form.target_weight_in_kilos }}
-                            </div>
-                        {% endif %}
-
-                    </div>
-                </div>
-            {% endfor %}
-            {% include 'components/climbers/save_button.html' %}
-        </form>
-    </div>
+          </div>
+          <div class="grid-container">
+            <div class="grid-item">
+              {{ form.sets.label_tag }}
+              {{ form.sets }}
+            </div>
+            {% if form.instance.exercise.should_have_repetition %}
+              <div class="grid-item">
+                {{ form.target_repetitions.label_tag }}
+                {{ form.target_repetitions }}
+              </div>
+            {% endif %}
+            {% if form.instance.exercise.should_have_time %}
+              <div class="grid-item">
+                {{ form.target_time_in_seconds.label_tag }}
+                {{ form.target_time_in_seconds }}
+              </div>
+            {% endif %}
+            {% if form.instance.exercise.should_add_weight %}
+              <div class="grid-item">
+                {{ form.target_weight_in_kilos.label_tag }}
+                {{ form.target_weight_in_kilos }}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+      {% include 'components/climbers/save_button.html' %}
+    </form>
+  </div>
 {% endblock content %}
