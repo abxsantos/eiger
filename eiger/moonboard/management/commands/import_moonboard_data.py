@@ -66,9 +66,9 @@ def import_data():
 
         with transaction.atomic():
             logger.info('Starting to create boulders')
-            Boulder.objects.bulk_create(objs=boulders_to_create)
+            Boulder.objects.bulk_create(objs=boulders_to_create, batch_size=500)
             logger.info('Starting to create moves')
-            Move.objects.bulk_create(objs=moves_to_create)
+            Move.objects.bulk_create(objs=moves_to_create, batch_size=500)
         logger.info('Created Boulder entries and Move entries.')
 
 

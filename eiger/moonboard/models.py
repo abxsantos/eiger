@@ -113,7 +113,7 @@ class LogbookEntry(BaseModel):
     boulder = models.ForeignKey(
         'Boulder', on_delete=models.CASCADE, related_name=related_name
     )
-    user = models.ForeignKey(
+    climber = models.ForeignKey(
         Climber, on_delete=models.CASCADE, related_name=related_name
     )
     date_climbed = models.DateTimeField()

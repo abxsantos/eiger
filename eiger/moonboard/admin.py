@@ -35,7 +35,7 @@ class LogbookEntryAdmin(admin.ModelAdmin):
         'id',
         'created_at',
         'updated_at',
-        'user',
+        'climber',
         'boulder',
         'date_climbed',
         'comment',
