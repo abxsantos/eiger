@@ -44,7 +44,7 @@ class Workout(BaseModel):
     def target_time(self) -> Optional[int]:
         return (
             self.target_time_in_seconds // 60
-            if self.target_time_unit == TargetTimeUnit.MINUTES
+            if self.target_time_unit == TargetTimeUnit.MINUTES.value
             else self.target_time_in_seconds
         )
 
@@ -52,7 +52,7 @@ class Workout(BaseModel):
     def rest_per_set(self) -> Optional[int]:
         return (
             self.rest_per_set_in_seconds // 60
-            if self.target_time_unit == TargetTimeUnit.MINUTES
+            if self.target_time_unit == TargetTimeUnit.MINUTES.value
             else self.rest_per_set_in_seconds
         )
 

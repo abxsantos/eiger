@@ -8,7 +8,7 @@ from eiger.trainers.views import (
 )
 
 urlpatterns: list[URLPattern | URLResolver] = [
-    path('home/', home_view, name='home'),
+    path('home/', home_view, name='trainer-home'),
     path(
         'exercises/<int:exercise_id>',
         retrieve_exercise_view,

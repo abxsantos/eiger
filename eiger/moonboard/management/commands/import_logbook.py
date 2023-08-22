@@ -22,10 +22,11 @@ def convert_number_of_tries(number_of_tries: str, attempts: int) -> int:
         return attempts
 
 
-def import_logbook(payload: dict) -> None:
-    logger.info('Importing logbook entries for user: %s', payload['climber_id'])
+def process_logbook_import(*args, **kwargs) -> None:
+    climber_id, username, password = args
+    logger.info('Importing logbook entries for climber_id %s', climber_id)
     moonboard_logbook_entries = MoonBoardAPI(
-        username=payload['username'], password=payload['password']
+        username=username, password=password
     ).get_logbook()
 
     logbook_entries_to_create = []
@@ -40,12 +41,12 @@ def import_logbook(payload: dict) -> None:
             continue
         comment = moonboard_logbook_entry['comment']
         logger.info(
-            f'Preparing the LogbookEntry {api_id} for Boulder {boulder}'
+            'Preparing the LogbookEntry %s for Boulder %s', api_id, boulder
         )
         logbook_entry = LogbookEntry(
             id=api_id,
             boulder=boulder,
-            climber_id=payload['climber_id'],
+            climber_id=climber_id,
             date_climbed=moonboard_logbook_entry['dateClimbed'],
             comment=slugify(comment) if comment else '',
             attempts=convert_number_of_tries(
@@ -59,7 +60,7 @@ def import_logbook(payload: dict) -> None:
     LogbookEntry.objects.bulk_create(logbook_entries_to_create)
 
     logger.info(
-        f'Created {len(logbook_entries_to_create)} LogbookEntry in database'
+        'Created %s LogbookEntry in database', len(logbook_entries_to_create)
     )
 
 
@@ -67,10 +68,8 @@ class Command(BaseCommand):
     def handle(self, *args: Any, **options: Any) -> None:
         for account_data in AccountData.objects.all().iterator():
             async_task(
-                func=f'{import_logbook.__module__}.{import_logbook.__name__}',
-                payload={
-                    'user_id': account_data.climber_id,
-                    'username': account_data.username,
-                    'password': account_data.password,
-                },
+                f'{process_logbook_import.__module__}.{process_logbook_import.__name__}',
+                account_data.climber_id,
+                account_data.username,
+                account_data.password,
             )

@@ -3,6 +3,7 @@ from datetime import date, datetime, timedelta
 from typing import TypedDict
 from uuid import UUID
 
+from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
 from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404
@@ -112,6 +113,8 @@ def create_training_plan(
             description=form.cleaned_data['description'],
             climber=climber,
             starting_date=starting_date,
+            created_by_id=climber.id,
+            created_by_type=ContentType.objects.get_for_model(climber),
         )
         weeks = []
         days = []
@@ -263,7 +266,7 @@ def list_exercises_for_selection(
     )
 
 
-def create_selected_exercises(day_id: UUID, data) -> str:
+def create_selected_exercises(day_id: UUID, data: dict[str, str]) -> str:
     day: Day = get_object_or_404(
         Day.objects.select_related(
             'week', 'week__training_plan'
@@ -271,34 +274,41 @@ def create_selected_exercises(day_id: UUID, data) -> str:
         id=day_id,
     )
     form = ExerciseSelectionForm(data)
+
     if form.is_valid():
-        selected_exercise_ids = form.cleaned_data['exercises'].values_list(
-            'id', flat=True
+        selected_exercise_ids = set(
+            form.cleaned_data['exercises'].values_list('id', flat=True)
         )
-        initial_selected_exercise_ids = day.workout_set.values_list(
-            'exercise_id', flat=True
+        initial_selected_exercise_ids = set(
+            day.workout_set.values_list('exercise_id', flat=True)
         )
 
-        if not set(selected_exercise_ids) - set(initial_selected_exercise_ids):
-            return str(day.week.training_plan_id)
+        deselected_exercise_ids = (
+            initial_selected_exercise_ids - selected_exercise_ids
+        )
+        new_exercise_ids = (
+            selected_exercise_ids - initial_selected_exercise_ids
+        )
 
-        workouts = [
-            Workout(exercise_id=selected_exercise_id, day=day)
-            for selected_exercise_id in selected_exercise_ids
+        workouts_to_create = [
+            Workout(exercise_id=new_exercise_id, day=day)
+            for new_exercise_id in new_exercise_ids
         ]
 
-        deselected_exercise_ids = set(initial_selected_exercise_ids) - set(
-            selected_exercise_ids
+        training_plan = day.week.training_plan
+        training_plan.created_by_id = training_plan.climber_id
+        training_plan.created_by_type = ContentType.objects.get_for_model(
+            training_plan.climber
         )
 
         with transaction.atomic():
             day.workout_set.filter(
                 exercise_id__in=deselected_exercise_ids
             ).delete()
-            Workout.objects.bulk_create(workouts)
-            training_plan = day.week.training_plan
-            training_plan.created_by_id = training_plan.climber.id
+            Workout.objects.bulk_create(workouts_to_create)
             training_plan.save()
+
+    return str(day.week.training_plan.id)
 
 
 class RetrieveWorkoutsFromDayResult(TypedDict):
@@ -390,7 +400,7 @@ def create_complete_workout(data, climber: Climber, workout_id: UUID) -> str:
     workout: Workout = get_object_or_404(
         Workout.objects.select_related('day__week'), id=workout_id
     )
-    form = CompleteWorkoutForm(data)
+    form = CompleteWorkoutForm(workout, data)
     if form.is_valid():
         completed_workout = CompletedWorkout(
             workout=workout,

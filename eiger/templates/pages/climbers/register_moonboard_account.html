@@ -14,7 +14,7 @@
             action="{% url 'unregister-moonboard-account' %}">
         {% csrf_token %}
         <label>{{ _("You already have registered a Moonboard account!") }}</label>
-        <a class="btn btn btn-outline-primary mt-3" href="{% url 'home' %}">
+        <a class="btn btn btn-outline-primary mt-3" href="{% url 'climber-home' %}">
           {{ _("Back to Home") }}
         </a>
         <button type="submit" class="btn btn-danger mt-3">

@@ -3,6 +3,7 @@ import json
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, F, QuerySet
+from django.db.models.functions import TruncMonth
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
@@ -126,6 +127,66 @@ def retrieve_completed_workout_count_by_exercise_names_data(
     )
 
 
+def retrieve_completed_boulders(climber):
+    queryset = LogbookEntry.objects.filter(climber_id=climber.id).order_by(
+        '-date_climbed'
+    )
+    entries = queryset.select_related('boulder').values(
+        'date_climbed',
+        'boulder__name',
+        'boulder__grade',
+        'user_grade',
+        'attempts',
+        'comment',
+    )
+
+    return {
+        'dates': [
+            entry['date_climbed'].date().isoformat() for entry in entries
+        ],
+        'boulder_names': [entry['boulder__name'] for entry in entries],
+        'grades': [entry['boulder__grade'] for entry in entries],
+        'user_grades': [entry['user_grade'] for entry in entries],
+        'attempts': [entry['attempts'] for entry in entries],
+        'comments': [entry['comment'] for entry in entries],
+    }
+
+
+def retrieve_boulder_progress_chart(climber: Climber):
+    queryset = (
+        LogbookEntry.objects.filter(climber_id=climber.id)
+        .annotate(month=TruncMonth('date_climbed'))
+        .values('month', 'boulder__grade')
+        .annotate(completed_boulders=Count('boulder'))
+        .order_by('boulder__grade', 'month')
+    )
+
+    data = {}
+
+    for entry in queryset:
+        grade = entry['boulder__grade']
+        month = entry['month'].strftime('%Y-%m')
+        completed_boulders = entry['completed_boulders']
+
+        if grade not in data:
+            data[grade] = {}
+
+        if month not in data[grade]:
+            data[grade][month] = 0
+
+        data[grade][month] += completed_boulders
+
+    parsed_data = {
+        'grades': list(data.keys()),
+        'months': list(
+            {month for grade_data in data.values() for month in grade_data}
+        ),
+        'data': data,
+    }
+
+    return json.dumps(parsed_data)
+
+
 @login_required(login_url='/')
 @climber_access_only
 @require_GET
@@ -153,5 +214,11 @@ def graph_view(request: ClimberHttpRequest) -> HttpResponse:
         ] = retrieve_moonboard_date_climbed_attempt_grade_count_bubble_data(
             climber=climber
         )
+        context['moonboard_completed_boulders'] = retrieve_completed_boulders(
+            climber=climber
+        )
+        context[
+            'moonboard_boulder_progress_chart_data'
+        ] = retrieve_boulder_progress_chart(climber)
 
     return render(request, 'pages/climbers/graph_template.html', context)

@@ -8,7 +8,10 @@ from eiger.core.models import BaseModel
 
 class Week(BaseModel):
     training_plan = models.ForeignKey('TrainingPlan', on_delete=models.CASCADE)
-    number = models.IntegerField(unique=True)
+    number = models.IntegerField()
+
+    class Meta:
+        unique_together = ('training_plan', 'number')
 
 
 class Day(BaseModel):
@@ -27,6 +30,9 @@ class Day(BaseModel):
     )
     date = models.DateField()
     notes = models.TextField()
+
+    class Meta:
+        unique_together = ('day_of_the_week', 'week')
 
 
 class TrainingPlan(BaseModel):

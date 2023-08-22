@@ -3,10 +3,10 @@
 {% load i18n static %}
 
 {% block title %}
-  {{ _("Climb Hard - Home") }}
+    {{ _("Climb Hard - Home") }}
 {% endblock title %}
 {% block style %}
-  <style>
+    <style>
         .exercise-card {
             border: 1px solid #ccc;
             border-radius: 5px;
@@ -64,31 +64,42 @@
             margin-bottom: 4px;
         }
 
-  </style>
+    </style>
 {% endblock style %}
 {% block content %}
-  <div class="container">
-    <h1>My Pending Review Exercises</h1>
-    <div class="row">
-      <div class="col-md-6">
-        <h2>Exercises</h2>
-        {% for exercise in pending_exercises %}
-          <div class="exercise-card pending-exercises-card">
-            <div class="exercise-header">
-              <h4 class="exercise-name">{{ exercise.name }}</h4>
-              <a href="{% url 'retrieve_exercise' exercise.id %}" class="edit-icon">
-                <i class="fas fa-edit"></i>
-              </a>
-            </div>
-            <div class="exercise-tags">
+    <div class="container">
+        <h1>My Pending Review Exercises</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Exercises</h2>
+                {% if not pending_exercises %}
+                    <div class="d-flex flex-column justify-content-center mt-3">
+                        <p>
+                            {{ _("You do not have any Exercise pending a review.") }}
+                        </p>
+                        <a class="btn btn-primary" href="{% url 'training-plan-creation' %}">
+                            {{ _("Add an Exercise") }}
+                        </a>
+                    </div>
+                {% else %}
+                    {% for exercise in pending_exercises %}
+                        <div class="exercise-card pending-exercises-card">
+                            <div class="exercise-header">
+                                <h4 class="exercise-name">{{ exercise.name }}</h4>
+                                <a href="{% url 'retrieve_exercise' exercise.id %}" class="edit-icon">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </div>
+                            <div class="exercise-tags">
               <span style="background-color: {{ exercise.sub_category.category.color }}"
                     class="badge">{{ exercise.sub_category }}</span>
+                            </div>
+                            <p class="exercise-description">{{ exercise.description }}</p>
+                            <p class="exercise-created-by">Created by: {{ exercise.created_by }}</p>
+                        </div>
+                    {% endfor %}
+                {% endif %}
             </div>
-            <p class="exercise-description">{{ exercise.description }}</p>
-            <p class="exercise-created-by">Created by: {{ exercise.created_by }}</p>
-          </div>
-        {% endfor %}
-      </div>
+        </div>
     </div>
-  </div>
 {% endblock content %}

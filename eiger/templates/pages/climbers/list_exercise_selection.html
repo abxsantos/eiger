@@ -3,41 +3,40 @@
 {% load i18n static %}
 
 {% block title %}
-  {{ _("Climb Hard - Exercises") }}
+    {{ _("Climb Hard - Exercises") }}
 {% endblock title %}
 {% block content %}
-  <div class="container">
-    <h1 class="mt-4">{{ _("Add exercises to day") }}</h1>
-    <strong>{{ day.date }} - {{ day.day_of_the_week }}</strong>
-    <form method="post" action="{% url 'create-selected-exercises' day.id %}">
-      {% csrf_token %}
-      <div class="form-check mt-3">
-        {% for exercise in form.exercises %}
-          <div class="form-check">
-            <input type="checkbox"
-                   class="form-check-input"
-                   name="{{ exercise.name }}"
-                   value="{{ exercise.value }}"
-                   id="{{ exercise.id_for_label }}"
-                   {% if exercise.data.value.value in initial_selected_exercises %}
-                     checked
-                   {% endif %}>
-            <label class="form-check-label" for="{{ exercise.id_for_label }}">
-              {{ exercise.choice_label }}
-            </label>
-            <i class="fa fa-circle-info fa-xs popover-icon"
-               data-bs-toggle="popover"
-               data-bs-placement="top"
-               data-bs-content="{{ exercise.data.value.instance.description }}">
-            </i>
-          </div>
-        {% endfor %}
-      </div>
-      <br>
-      {% include 'components/climbers/save_button.html' %}
-    </form>
-  </div>
+    <div class="container">
+        <h1 class="mt-4">{{ _("Add exercises to day") }}</h1>
+        <strong>{{ day.date }} - {{ day.day_of_the_week }}</strong>
+        <form method="post" action="{% url 'create-selected-exercises' day.id %}">
+            {% csrf_token %}
+            <div class="form-check mt-3">
+                {% for exercise in form.exercises %}
+                    <div class="form-check">
+                        <label>
+                            <input type="checkbox"
+                                   class="form-check-input"
+                                   name="exercises"
+                                   value="{{ exercise.data.value }}" id="{{ exercise.id_for_label }}"
+                                    {% if exercise.data.value in initial_selected_exercises %} checked {% endif %}>
+                        </label>
+                        <label class="form-check-label" for="{{ exercise.id_for_label }}">
+                            {{ exercise.choice_label }}
+                        </label>
+                        <i class="fa fa-circle-info fa-xs popover-icon"
+                           data-bs-toggle="popover"
+                           data-bs-placement="top"
+                           data-bs-content="{{ exercise.data.value.instance.description }}">
+                        </i>
+                    </div>
+                {% endfor %}
+            </div>
+            <br>
+            {% include 'components/climbers/save_button.html' %}
+        </form>
+    </div>
 {% endblock content %}
 {% block scripts %}
-  <script>{% include 'js/popovers.js' %}</script>
+    <script>{% include 'js/popovers.js' %}</script>
 {% endblock scripts %}

@@ -19,7 +19,7 @@ class LoginForm(AuthenticationForm):
 
     def confirm_login_allowed(self, user: User) -> None:
         super().confirm_login_allowed(user=user)
-        if not user.is_superuser or hasattr(user, self.user_type):
+        if not user.is_superuser or not hasattr(user, self.user_type):
             raise ValidationError(
                 self.error_messages['invalid_login'],
                 code='invalid_login',
@@ -51,3 +51,11 @@ class LoginClimberForm(LoginForm):
 
 class CreateClimberForm(CreateUserForm):
     user_type_model = Climber
+
+
+class LoginTrainerForm(LoginForm):
+    user_type = 'trainer'
+
+
+class CreateTrainerForm(CreateUserForm):
+    user_type_model = Trainer

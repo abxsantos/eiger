@@ -3,7 +3,7 @@
 {% load i18n static %}
 
 {% block title %}
-  {{ _("Climb Hard - Trainers") }}
+  {{ _("Climb Hard") }}
 {% endblock title %}
 {% block style %}
   <style>
@@ -22,7 +22,7 @@
       <div class="col-lg-6 col-md-8">
         <div class="card border-0 shadow-lg my-5">
           <div class="card-body p-5">
-            <h2 class="text-center mb-4">Climb Hard - Trainers</h2>
+            <h2 class="text-center mb-4">Climb Hard</h2>
             <hr />
             <div class="row mt-4">
               <div id="login-component" class="col-md-6">
@@ -39,7 +39,7 @@
                     <p class="errornote">{{ error }}</p>
                   {% endfor %}
                 {% endif %}
-                <form method="post" id="login-form" action="{% url 'trainer-login' %}">
+                <form method="post" id="login-form" action="{% url 'climber-login' %}">
                   {% csrf_token %}
                   <h3 class="mb-3">Log In</h3>
                   <div class="form-row">
@@ -74,7 +74,7 @@
                     <p class="errornote">{{ error }}</p>
                   {% endfor %}
                 {% endif %}
-                <form method="post" id="register-form" action="{% url 'trainer-register' %}">
+                <form method="post" id="register-form" action="{% url 'climber-register' %}">
                   {% csrf_token %}
                   <h3 class="mb-3">Sign Up</h3>
                   <div class="form-row">

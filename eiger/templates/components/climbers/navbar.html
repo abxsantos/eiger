@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container">
-    <a class="navbar-brand" href={% url 'home' %}>Climb Hard</a>
+    <a class="navbar-brand" href={% url 'climber-home' %}>Climb Hard</a>
     <button class="navbar-toggler"
             type="button"
             data-bs-toggle="collapse"
@@ -14,7 +14,7 @@
       <ul class="navbar-nav ms-auto">
         {% if user.is_authenticated %}
           <li class="nav-item">
-            <a class="nav-link" href={% url 'home' %}>{{ _("Training Plans") }}</a>
+            <a class="nav-link" href={% url 'climber-home' %}>{{ _("Training Plans") }}</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'register-moonboard-account' %}">{{ _("Register Moonboard Account") }}</a>
@@ -24,7 +24,7 @@
           </li>
         {% else %}
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'index' %}">Login</a>
+            <a class="nav-link" href="{% url 'climber-index' %}">Login</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Signup</a>

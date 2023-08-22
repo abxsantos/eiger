@@ -6,6 +6,7 @@ from eiger.metric.models import (
     ClimberMetric,
     ExerciseMetricType,
     FingerStrengthMetricConfiguration,
+    RateOfForceDevelopmentConfiguration,
     TimeUnderEffortMetricConfiguration,
 )
 
@@ -51,6 +52,23 @@ class FingerStrengthMetricConfigurationAdmin(
     def get_queryset(
         self, request: HttpRequest
     ) -> QuerySet[FingerStrengthMetricConfiguration]:
+        queryset = super().get_queryset(request)
+        queryset = queryset.select_related(
+            'exercise',
+        )
+        return queryset
+
+
+@admin.register(RateOfForceDevelopmentConfiguration)
+class RateOfForceDevelopmentConfigurationAdmin(
+    admin.ModelAdmin[RateOfForceDevelopmentConfiguration]
+):
+    list_display = ['exercise']
+    search_fields = ['exercise']
+
+    def get_queryset(
+        self, request: HttpRequest
+    ) -> QuerySet[RateOfForceDevelopmentConfiguration]:
         queryset = super().get_queryset(request)
         queryset = queryset.select_related(
             'exercise',

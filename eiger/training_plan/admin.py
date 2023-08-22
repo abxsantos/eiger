@@ -40,7 +40,5 @@ class TrainingPlanAdmin(admin.ModelAdmin[TrainingPlan]):
 
     def get_queryset(self, request: HttpRequest) -> QuerySet[TrainingPlan]:
         queryset = super().get_queryset(request)
-        queryset = queryset.select_related(
-            'created_by',
-        )
+        queryset = queryset.select_related('created_by', 'climber')
         return queryset

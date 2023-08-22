@@ -141,7 +141,7 @@ class CompleteWorkoutView(View):
         )
 
         return redirect(
-            'home',
+            'climber-home',
         )
 
 

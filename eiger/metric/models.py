@@ -61,6 +61,14 @@ class FingerStrengthMetricConfiguration(BaseModel):
     )
 
 
+class RateOfForceDevelopmentConfiguration(BaseModel):
+    exercise = models.OneToOneField(
+        Exercise,
+        on_delete=models.CASCADE,
+        related_name='rfd_metric_configuration',
+    )
+
+
 class TimeUnderEffortMetric(BaseModel):
     workout = models.ForeignKey(Workout, on_delete=models.CASCADE)
     set = models.PositiveSmallIntegerField(default=1)
@@ -74,6 +82,16 @@ class FingerStrengthMetric(BaseModel):
     weight_in_kilos = models.IntegerField(default=0)
     grip_type = models.CharField(max_length=50, choices=GripType.choices)
     edge_size_in_millimeters = models.PositiveSmallIntegerField(default=20)
+
+
+class RateOfForceDevelopmentMetric(BaseModel):
+    workout = models.ForeignKey(Workout, on_delete=models.CASCADE)
+    arm_protocol = models.CharField(max_length=20, choices=ArmProtocol.choices)
+    weight_in_kilos = models.IntegerField(default=0)
+    grip_type = models.CharField(max_length=50, choices=GripType.choices)
+    edge_size_in_millimeters = models.PositiveSmallIntegerField(default=20)
+    set = models.PositiveSmallIntegerField(default=1)
+    maximum_repetitions = models.PositiveSmallIntegerField(default=0)
 
 
 class ClimberMetric(BaseModel):

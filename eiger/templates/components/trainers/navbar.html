@@ -21,10 +21,10 @@
           </li>
         {% else %}
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'index' %}">Login</a>
+            <a class="nav-link" href="{% url 'trainer-index' %}">Login</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Signup</a>
+            <a class="nav-link" href="{% url 'trainer-index' %}">Signup</a>
           </li>
         {% endif %}
       </ul>

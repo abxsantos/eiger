@@ -22,7 +22,7 @@ def home_view(request: HttpRequest) -> HttpResponse:
     )
 
     pending_exercises = Exercise.objects.select_related(
-        'sub_category', 'sub_categories__category'
+        'sub_category', 'sub_category__category'
     ).filter(created_by=user, reviewed=False)
 
     return render(
@@ -47,7 +47,7 @@ def retrieve_exercise_view(
     )
     exercise = get_object_or_404(
         Exercise.objects.select_related(
-            'sub_category', 'sub_categories__category'
+            'sub_category', 'sub_category__category'
         ),
         id=exercise_id,
         created_by=user,

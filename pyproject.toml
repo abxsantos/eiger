@@ -17,6 +17,7 @@ gunicorn = "^20.1.0"
 django-health-check = "^3.17.0"
 django-colorfield = "^0.9.0"
 django-q2 = "^1.5.4"
+croniter = "^1.4.1"
 
 
 [tool.poetry.group.dev.dependencies]
