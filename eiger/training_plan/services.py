@@ -31,8 +31,10 @@ class ListTrainingPlansResult(TypedDict):
     planned_workouts_for_today: QuerySet[Workout]
 
 
-def list_training_plans(climber: Climber) -> ListTrainingPlansResult:
-    today = timezone.now().date()
+def list_training_plans(
+    climber: Climber, timezone_offset: int
+) -> ListTrainingPlansResult:
+    today = (timezone.now() + timedelta(minutes=timezone_offset)).date()
     today_week_number = today.isocalendar()[1]
     training_plans: QuerySet[
         TrainingPlan

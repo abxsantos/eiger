@@ -6,8 +6,11 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.contrib.messages.middleware import MessageMiddleware
 from django.contrib.sessions.middleware import SessionMiddleware
+from django.db import transaction
 from django.http import HttpRequest
 from django.test import Client, RequestFactory
+
+from eiger.authentication.models import Climber
 
 
 @pytest.fixture()
@@ -54,4 +57,28 @@ def trainer(trainer_raw_password) -> User:
 def authenticated_client(trainer: User, trainer_raw_password: str) -> Client:
     client = Client()
     client.login(username=trainer.username, password=trainer_raw_password)
+    return client
+
+
+@pytest.fixture()
+def climber(raw_password) -> User:
+    username = 'testuser'
+    raw_password = raw_password
+    with transaction.atomic():
+        user = get_user_model().objects.create_user(
+            username=username, password=raw_password
+        )
+        Climber.objects.create(user=user)
+    return user
+
+
+@pytest.fixture()
+def raw_password() -> str:
+    return 'testpassword'
+
+
+@pytest.fixture
+def authenticated_climber_client(climber: User, raw_password: str) -> Client:
+    client = Client()
+    client.login(username=climber.username, password=raw_password)
     return client

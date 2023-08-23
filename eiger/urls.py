@@ -20,7 +20,11 @@ from django.urls import URLPattern, URLResolver, include, path
 from health_check import urls as health_urls
 
 from eiger.authentication import urls as auth_urls
-from eiger.authentication.views import climber_index_view, trainer_index_view
+from eiger.authentication.views import (
+    climber_index_view,
+    set_user_timezone_offset_view,
+    trainer_index_view,
+)
 from eiger.metric import urls as metrics_urls
 from eiger.moonboard import urls as moonboard_urls
 from eiger.trainers import urls as trainers_urls
@@ -34,6 +38,11 @@ urlpatterns: list[URLPattern | URLResolver] = [
     path('training-plan/', include(training_plan_urls)),
     path('moonboard/', include(moonboard_urls)),
     path('metrics/', include(metrics_urls)),
+    path(
+        'set-user-timezone-offset/',
+        set_user_timezone_offset_view,
+        name='set-user-timezone-offset',
+    ),
     # path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),
     # Health checks:

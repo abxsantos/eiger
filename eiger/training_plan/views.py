@@ -35,7 +35,10 @@ logger = structlog.get_logger()
 @climber_access_only
 @require_GET
 def list_training_plans_view(request: ClimberHttpRequest):
-    context = list_training_plans(climber=request.climber)
+    context = list_training_plans(
+        climber=request.climber,
+        timezone_offset=request.session.get('user_timezone_offset', 0),
+    )
 
     return render(request, 'pages/climbers/home.html', context)
 

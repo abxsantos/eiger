@@ -2,7 +2,7 @@ from typing import Type, TypedDict
 
 import structlog
 from django.contrib.auth import login
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_GET, require_POST
 
@@ -123,6 +123,14 @@ def climber_login_view(request: HttpRequest) -> HttpResponse:
     logger.debug('Retrieved the user %s given the form data.', user)
     login(request, user)
     return redirect(to='climber-home')
+
+
+@require_POST
+def set_user_timezone_offset_view(request: HttpRequest) -> JsonResponse:
+    timezone_offset = int(request.POST.get('timezone_offset', 0))
+    request.session['user_timezone_offset'] = timezone_offset
+    request.session.save()
+    return JsonResponse({'message': 'Timezone offset updated successfully'})
 
 
 @require_GET
