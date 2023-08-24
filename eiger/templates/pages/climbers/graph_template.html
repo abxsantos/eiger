@@ -7,136 +7,199 @@
         };
     </script>
     <script>
-        let sunburstDataFromDjango = {{ completed_workouts_exercise_category_sunburst_data|safe }};
-        let sunburstData = [
-            {
-                type: 'sunburst',
-                labels: sunburstDataFromDjango.labels,
-                parents: sunburstDataFromDjango.parents,
-                values: sunburstDataFromDjango.values,
+        const buildTrace = (data) => {
+            const lineTrace = {
+                x: [],
+                y: [],
+                text: [],
+                mode: 'lines+markers',
+                line: {shape: 'spline'}
             }
-        ];
-        const sunburstLayout = {
-            title: 'Sunburst Graph of Completed Workouts',
-        };
-        Plotly.newPlot('sunburst-chart', sunburstData, sunburstLayout, config);
-    </script>
-    <script>
-        const lineDataFromDjango = JSON.parse('{{ moonboard_boulder_count_by_climbed_date|safe }}');
-        const lineTrace = {
-            x: lineDataFromDjango.dates,
-            y: lineDataFromDjango.num_entries,
-            mode: 'lines+markers',
-        };
-        const lineLayout = {
-            title: 'Logbook Entries Over Time',
+            data.forEach(function (entry) {
+                lineTrace.x.push(entry.formatted_date_climbed);
+                lineTrace.y.push(entry.total_entries);
+                lineTrace.text.push(`Completed boulder(s) ${entry.total_entries}`);
+            });
+            return lineTrace
+        }
+        Plotly.newPlot('number-of-completed-boulders-by-date', [buildTrace({{ retrieve_boulder_count_by_climbed_date_data|safe }})], {
+            title: 'Completed Boulders Over Time',
             xaxis: {
                 title: 'Date Climbed'
             },
             yaxis: {
                 title: 'Number of Entries'
             }
-        };
-        Plotly.newPlot('line-chart', [lineTrace], lineLayout, config);
+        }, config);
     </script>
     <script>
-        var scatterData = {{ moonboard_date_climbed_attempt_grade_boulder_count_bubble_data|safe }};
 
-        var data = [];
+        var databaseData = {{ number_of_attempts_boulder_name_grade_and_date_climbed_data|safe }};
 
-        for (var i = 0; i < scatterData.length; i++) {
-            var entry = scatterData[i];
-            data.push({
-                x: [entry.date],
-                y: [entry.grade],
-                text: [`${entry.boulder_name} ${entry.num_entries} Entries, ${entry.total_attempts} Attempts`],
-                mode: 'markers',
-                marker: {
-                    size: entry.total_attempts * 10,
-                    opacity: 0.5,
-                },
-                type: 'scatter'
-            });
-        }
+        var traceData = {};
 
-        var layout = {
-            title: 'Bubble Graph of Completed Workouts',
+        // Iterate through the data
+        databaseData.forEach(function (entry) {
+            var trace = entry.boulder__name;
+            // If the trace doesn't exist, create it
+            if (!traceData[trace]) {
+                traceData[trace] = {
+                    x: [],
+                    y: [],
+                    text: [],
+                    mode: 'markers',
+                    type: 'scatter',
+                    name: entry.boulder__name,
+                    marker: {
+                        size: [],
+                        opacity: 0.5,
+                    },
+                };
+            }
+
+            // Add data to the corresponding grade trace
+            traceData[trace].x.push(entry.formatted_date);
+            traceData[trace].y.push(entry.boulder__grade);
+            traceData[trace].text.push(`${entry.boulder__name} | ${entry.total_attempts} attempt(s)`);
+            traceData[trace].marker.size.push(entry.total_attempts * 10);
+        });
+
+        // Create an array of grade traces
+        var traces = Object.values(traceData);
+
+        // Plot the bubble graph
+        Plotly.newPlot('number-of-attempts-boulder-name-grade-and-date-climbed', traces, {
+            title: 'Completed Benchmark Boulders',
             xaxis: {
-                title: 'Date Climbed',
+                title: 'Climbed Date',
                 tickformat: '%Y-%m-%d'
             },
             yaxis: {
                 title: 'Boulder Grade'
+            },
+            legend: {
+                itemclick: 'all', // Set the itemclick to 'all' to show all trace names
             }
-        };
+        });
 
-        Plotly.newPlot('bubble-chart', data, layout);
     </script>
     <script>
-        var barChartData = {{ completed_workout_counts|safe }};
+        var user = {{ benchmark_boulders_by_grade_proportion_climber_data|safe }};
+        var total = {{ total_benchmark_boulders_by_grade_proportion_data|safe }};
 
-        var data = [
-            {
-                x: barChartData.map(item => item.workout__exercise__name),
-                y: barChartData.map(item => item.completed_count),
-                type: 'bar',
-            }
-        ];
+        // Create an object to store data for each grade
+        var userData = {
+            x: [], y: [], type: 'bar', name: 'Completed', marker: {
+                color: 'rgb(55,160,60,0.7)',
+            },
+            width: []
+        };
 
+        // Populate gradeData with user data
+        user.forEach(function (entry) {
+            var grade = entry.boulder__grade;
+            var count = entry.boulder_count;
+
+            userData.x.push(grade);
+            userData.y.push(count);
+            userData.width.push(0.5)
+        });
+
+        var totalData = {
+            x: [], y: [], type: 'bar', name: 'Total', marker: {
+                color: 'rgba(222,45,38,0.7)',
+            },
+            width: []
+        };
+
+        // Combine total data with user data in gradeData
+        total.forEach(function (entry) {
+            var grade = entry.grade;
+            var count = entry.boulder_count;
+
+            totalData.x.push(grade);
+            totalData.y.push(count);
+            totalData.width.push(0.5)
+        });
+
+        // Create layout
         var layout = {
-            title: 'Completed Workout Count per Exercise',
+            title: 'Benchmark Boulders Completion Progress',
             xaxis: {
-                title: 'Exercise Name',
-                tickangle: -45,
+                title: 'Grade',
             },
             yaxis: {
-                title: 'Completed Count',
+                title: 'Count',
             },
-            bargap: 0.1, // Adjust the value to control bar width
+            barmode: 'stack',
         };
-
-        Plotly.newPlot('bar-chart', data, layout);
+        // Plot the stacked bar graph
+        Plotly.newPlot('benchmark-boulders-by-grade-proportion', [userData, totalData], layout);
     </script>
     <script>
-        // Extract data from the Django context
-        var moonboard_completed_boulders =
-        {{ moonboard_completed_boulders|safe }}
-        var traces = [];
-        for (var i = 0; i < moonboard_completed_boulders.boulder_names.length; i++) {
-            var trace = {
-                x: [moonboard_completed_boulders.dates[i]],
-                y: [moonboard_completed_boulders.user_grades[i]],
-                mode: 'markers',
-                type: 'scatter',
-                name: moonboard_completed_boulders.boulder_names[i],
-                text: moonboard_completed_boulders.comments[i],
-                marker: {
-                    size: moonboard_completed_boulders.attempts[i] * 10,
-                    sizemode: 'diameter',
-                    sizeref: 0.1,
-                    opacity: 0.5,
-                }
+        const buildCompletedBouldersByDateTrace = (data) => {
+            const sunburstData = {
+                'labels': [],
+                'parents': [],
+                'values': [],
             };
-            traces.push(trace);
-        }
 
-        // Plot the graph
-        Plotly.newPlot('moonboard-completed-boulders', traces, {
-            title: 'Climbing Log',
-            xaxis: {
-                title: 'Date Climbed'
-            },
-            yaxis: {
-                title: 'User Grade'
-            }
-        }, config);
+            data.forEach(function (entry) {
+                const exercise = entry.workout__exercise__name;
+                const subCategory = entry.workout__exercise__sub_category__category__name;
+                const category = entry.workout__exercise__sub_category__name;
+
+                if (!sunburstData['labels'].includes(category)) {
+                    sunburstData['labels'].push(category);
+                    sunburstData['parents'].push('');
+                    sunburstData['values'].push(0);
+                }
+
+                const categoryIndex = sunburstData['labels'].indexOf(category);
+
+                if (!sunburstData['labels'].includes(subCategory)) {
+                    sunburstData['labels'].push(subCategory);
+                    sunburstData['parents'].push(category);
+                    sunburstData['values'].push(0);
+                }
+
+                const subCategoryIndex = sunburstData['labels'].indexOf(subCategory);
+
+                if (!sunburstData['labels'].includes(exercise)) {
+                    sunburstData['labels'].push(exercise);
+                    sunburstData['parents'].push(subCategory);
+                    sunburstData['values'].push(0);
+                }
+
+                const exerciseIndex = sunburstData['labels'].indexOf(exercise);
+                sunburstData['values'][categoryIndex] += 1;
+                sunburstData['values'][subCategoryIndex] += 1;
+                sunburstData['values'][exerciseIndex] += 1;
+            });
+
+            return sunburstData;
+        };
+
+        const sunburstData = buildCompletedBouldersByDateTrace({{ completed_workouts_exercise_category_data|safe }});
+
+        Plotly.newPlot('completed-workouts-exercise-category', [{
+            type: 'sunburst',
+            labels: sunburstData.labels,
+            parents: sunburstData.parents,
+            values: sunburstData.values,
+            textinfo: 'label+percent parent',
+            hovertemplate: '%{label}<br>%{value}<extra></extra>'
+        }], {
+            title: 'Completed Workouts',
+            margin: {l: 0, r: 0, b: 0, t: 40},
+            leaf: {opacity: 0.4},
+        });
     </script>
 {% endblock %}
 {% block content %}
     <h1>Data Analytics Graph</h1>
-    <div id="line-chart"></div>
-    <div id="sunburst-chart"></div>
-    <div id="bubble-chart"></div>
-    <div id="bar-chart"></div>
-    <div id="moonboard-completed-boulders"></div>
+    <div id="completed-workouts-exercise-category"></div>
+    <div id="number-of-attempts-boulder-name-grade-and-date-climbed"></div>
+    <div id="benchmark-boulders-by-grade-proportion"></div>
+    <div id="number-of-completed-boulders-by-date"></div>
 {% endblock %}
