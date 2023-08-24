@@ -3,7 +3,8 @@
 {% block scripts %}
     <script>
         const config = {
-            responsive: true
+            responsive: true,
+            displaylogo: false
         };
     </script>
     <script>
@@ -80,7 +81,7 @@
             legend: {
                 itemclick: 'all', // Set the itemclick to 'all' to show all trace names
             }
-        });
+        }, config);
 
     </script>
     <script>
@@ -122,8 +123,8 @@
             totalData.width.push(0.5)
         });
 
-        // Create layout
-        var layout = {
+        // Plot the stacked bar graph
+        Plotly.newPlot('benchmark-boulders-by-grade-proportion', [userData, totalData], {
             title: 'Benchmark Boulders Completion Progress',
             xaxis: {
                 title: 'Grade',
@@ -132,9 +133,7 @@
                 title: 'Count',
             },
             barmode: 'stack',
-        };
-        // Plot the stacked bar graph
-        Plotly.newPlot('benchmark-boulders-by-grade-proportion', [userData, totalData], layout);
+        }, config);
     </script>
     <script>
         const buildCompletedBouldersByDateTrace = (data) => {
@@ -193,7 +192,7 @@
             title: 'Completed Workouts',
             margin: {l: 0, r: 0, b: 0, t: 40},
             leaf: {opacity: 0.4},
-        });
+        }, config);
     </script>
 {% endblock %}
 {% block content %}
