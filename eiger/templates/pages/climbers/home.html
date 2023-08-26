@@ -127,7 +127,7 @@
                         {% for training_plan in in_progress_training_plans %}
                             <a class="no-styling"
                                href="{% url 'retrieve-training-plan' training_plan.id %}">
-                                <div class="training-plan-card">
+                                <div id="in-progress-training-plan-{{ training_plan.id }}" class="training-plan-card">
                                     <div class="training-plan-header">
                                         <h5 class="training-plan-name">
                                             {{ training_plan.name }}

@@ -4,12 +4,15 @@ app = "eiger"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
+primary_region = "gru"
 
 [processes]
   app = "./scripts/gunicorn.sh"
+  django_q = "python manage.py qcluster"
 
 [env]
-  DOMAIN_NAME = "eiger.fly.dev, 172.19.132.34"
+  DOMAIN_NAME = "eiger.fly.dev, 172.19.1.42"
+  DJANGO_ENV = "production"
 
 [experimental]
   auto_rollback = true

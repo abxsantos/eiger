@@ -35,13 +35,13 @@
     </script>
     <script>
 
-        var databaseData = {{ number_of_attempts_boulder_name_grade_and_date_climbed_data|safe }};
+        let databaseData = {{ number_of_attempts_boulder_name_grade_and_date_climbed_data|safe }};
 
-        var traceData = {};
+        let traceData = {};
 
         // Iterate through the data
         databaseData.forEach(function (entry) {
-            var trace = entry.boulder__name;
+            let trace = entry.boulder__name;
             // If the trace doesn't exist, create it
             if (!traceData[trace]) {
                 traceData[trace] = {
@@ -66,7 +66,7 @@
         });
 
         // Create an array of grade traces
-        var traces = Object.values(traceData);
+        let traces = Object.values(traceData);
 
         // Plot the bubble graph
         Plotly.newPlot('number-of-attempts-boulder-name-grade-and-date-climbed', traces, {
@@ -85,11 +85,11 @@
 
     </script>
     <script>
-        var user = {{ benchmark_boulders_by_grade_proportion_climber_data|safe }};
-        var total = {{ total_benchmark_boulders_by_grade_proportion_data|safe }};
+        let user = {{ benchmark_boulders_by_grade_proportion_climber_data|safe }};
+        let total = {{ total_benchmark_boulders_by_grade_proportion_data|safe }};
 
         // Create an object to store data for each grade
-        var userData = {
+        let userData = {
             x: [], y: [], type: 'bar', name: 'Completed', marker: {
                 color: 'rgb(55,160,60,0.7)',
             },
@@ -98,15 +98,15 @@
 
         // Populate gradeData with user data
         user.forEach(function (entry) {
-            var grade = entry.boulder__grade;
-            var count = entry.boulder_count;
+            let grade = entry.boulder__grade;
+            let count = entry.boulder_count;
 
             userData.x.push(grade);
             userData.y.push(count);
             userData.width.push(0.5)
         });
 
-        var totalData = {
+        let totalData = {
             x: [], y: [], type: 'bar', name: 'Total', marker: {
                 color: 'rgba(222,45,38,0.7)',
             },
@@ -114,12 +114,14 @@
         };
 
         // Combine total data with user data in gradeData
-        total.forEach(function (entry) {
-            var grade = entry.grade;
-            var count = entry.boulder_count;
+        total.forEach(function (entry, index) {
+            let grade = entry.grade;
+            let completedAmount = userData.y[index] ? userData.y[index] : 0;
+            let totalCount = entry.boulder_count;
 
             totalData.x.push(grade);
-            totalData.y.push(count);
+            totalData.y.push(totalCount - completedAmount);
+            totalData.text.push(`Total amount ${totalCount}`);
             totalData.width.push(0.5)
         });
 

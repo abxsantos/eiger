@@ -18,6 +18,8 @@ fi
 
 export DJANGO_ENV
 
+echo $DATABASE_URL
+
 # Run python specific scripts:
 # Running migrations in startup script might not be the best option, see:
 echo "Migrating..."

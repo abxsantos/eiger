@@ -1,10 +1,12 @@
 from django import forms
+from django.db import transaction
 from django.forms import Field
 
 from eiger.metric.models import (
     ArmProtocol,
     FingerStrengthMetric,
     GripType,
+    RateOfForceDevelopmentMetric,
     TimeUnderEffortMetric,
 )
 from eiger.trainers.models import Exercise
@@ -233,18 +235,52 @@ class CompleteWorkoutForm(forms.ModelForm):
             self.fields['rest_time_in_seconds'].widget.attrs[
                 'class'
             ] = 'form-control'
+        if self.workout.exercise.is_test and hasattr(
+            self.workout.exercise, 'rfd_metric_configuration'
+        ):
+            self.fields['arm_protocol'] = forms.ChoiceField(
+                choices=ArmProtocol.choices
+            )
+            self.fields['arm_protocol'].widget.attrs['class'] = 'form-control'
 
+            self.fields['weight_in_kilos'] = forms.IntegerField(
+                label='Weight in Kilos'
+            )
+            self.fields['weight_in_kilos'].widget.attrs[
+                'class'
+            ] = 'form-control'
+
+            self.fields['grip_type'] = forms.ChoiceField(
+                label='Grip Type', choices=GripType.choices
+            )
+            self.fields['grip_type'].widget.attrs['class'] = 'form-control'
+
+            self.fields['edge_size_in_millimeters'] = forms.IntegerField(
+                label='Edge size in millimiters', min_value=0
+            )
+            self.fields['edge_size_in_millimeters'].widget.attrs[
+                'class'
+            ] = 'form-control'
+
+            self.fields['maximum_repetitions'] = forms.IntegerField(
+                label='Maximum Repetitions', min_value=0
+            )
+            self.fields['maximum_repetitions'].widget.attrs[
+                'class'
+            ] = 'form-control'
+
+    @transaction.atomic()
     def save(self, commit: bool = True) -> CompletedWorkout:
-        completed_workout = super().save(commit=False)
-        completed_workout.workout = self.workout
-        completed_workout.perceived_rpe = self.cleaned_data.get(
-            'perceived_rpe'
+        completed_workout = CompletedWorkout(
+            workout=self.workout,
+            perceived_rpe=self.cleaned_data['intensity'],
+            completed_percentage=self.cleaned_data['completed_percentage'],
+            notes=self.cleaned_data['notes'],
         )
         completed_workout.save()
 
-        if (
-            self.workout.exercise.is_test
-            and self.workout.exercise.finger_strength_metric_configuration
+        if self.workout.exercise.is_test and hasattr(
+            self.workout.exercise, 'finger_strength_metric_configuration'
         ):
             FingerStrengthMetric.objects.create(
                 workout=completed_workout.workout,
@@ -256,9 +292,8 @@ class CompleteWorkoutForm(forms.ModelForm):
                 ),
             )
 
-        if (
-            self.workout.exercise.is_test
-            and self.workout.exercise.time_under_effort_metric_configuration
+        if self.workout.exercise.is_test and hasattr(
+            self.workout.exercise, 'time_under_effort_metric_configuration'
         ):
             for set_number in range(self.workout.sets):
                 TimeUnderEffortMetric.objects.create(
@@ -269,6 +304,23 @@ class CompleteWorkoutForm(forms.ModelForm):
                     ),
                     rest_time_in_seconds=self.cleaned_data.get(
                         'rest_time_in_seconds'
+                    ),
+                )
+        if self.workout.exercise.is_test and hasattr(
+            self.workout.exercise, 'rfd_metric_configuration'
+        ):
+            for set_number in range(self.workout.sets):
+                RateOfForceDevelopmentMetric.objects.create(
+                    workout=completed_workout.workout,
+                    set=set_number + 1,
+                    arm_protocol=self.cleaned_data.get('arm_protocol'),
+                    weight_in_kilos=self.cleaned_data.get('weight_in_kilos'),
+                    grip_type=self.cleaned_data.get('grip_type'),
+                    edge_size_in_millimeters=self.cleaned_data.get(
+                        'edge_size_in_millimeters'
+                    ),
+                    maximum_repetitions=self.cleaned_data.get(
+                        'maximum_repetitions'
                     ),
                 )
 

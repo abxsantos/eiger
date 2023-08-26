@@ -51,6 +51,7 @@ commitizen = "^3.5.0"
 django-stubs = "^4.2.1"
 pytest-xdist = "^3.3.1"
 djlint = "^1.31.1"
+freezegun = "^1.2.2"
 
 
 [tool.commitizen]

@@ -61,7 +61,7 @@ def authenticated_client(trainer: User, trainer_raw_password: str) -> Client:
 
 
 @pytest.fixture()
-def climber(raw_password) -> User:
+def climber_user(raw_password) -> User:
     username = 'testuser'
     raw_password = raw_password
     with transaction.atomic():
@@ -78,7 +78,9 @@ def raw_password() -> str:
 
 
 @pytest.fixture
-def authenticated_climber_client(climber: User, raw_password: str) -> Client:
+def authenticated_climber_client(
+    climber_user: User, raw_password: str
+) -> Client:
     client = Client()
-    client.login(username=climber.username, password=raw_password)
+    client.login(username=climber_user.username, password=raw_password)
     return client

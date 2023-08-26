@@ -8,7 +8,6 @@ from django.db import transaction
 from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from django_q.tasks import async_task
 
 from eiger.authentication.models import Climber
 from eiger.metric.models import ClimberMetric, ExerciseMetricType
@@ -21,7 +20,7 @@ from eiger.training_plan.forms import (
 )
 from eiger.training_plan.models import Day, TrainingPlan, Week
 from eiger.training_plan.utils import get_dates_in_week, get_specific_date
-from eiger.workout.models import CompletedWorkout, Workout
+from eiger.workout.models import Workout
 
 
 class ListTrainingPlansResult(TypedDict):
@@ -62,9 +61,13 @@ def list_training_plans(
             )
             training_plan.total_weeks_count = training_plan.week_set.count()
             training_plan.progress_percentage = (
-                training_plan.current_week
-                / training_plan.total_weeks_count
-                * 100
+                (
+                    training_plan.current_week
+                    / training_plan.total_weeks_count
+                    * 100
+                )
+                if training_plan.total_weeks_count
+                else 0
             )
             in_progress_training_plans.append(training_plan)
         # upcoming training plans
@@ -75,16 +78,14 @@ def list_training_plans(
         Workout
     ] = Workout.objects.select_related('completedworkout').filter(
         day__week__training_plan__in=in_progress_training_plans,
-        day__date=today,
+        day__date=today - timedelta(days=2),
     )
 
-    training_plans: QuerySet[TrainingPlan] = (
-        TrainingPlan.objects.prefetch_related('week_set')
-        .filter(
-            climber=climber,
-            starting_date__gt=today,
-        )
-        .iterator()
+    training_plans: QuerySet[
+        TrainingPlan
+    ] = TrainingPlan.objects.prefetch_related('week_set').filter(
+        climber=climber,
+        starting_date__gt=today,
     )
     for training_plan in training_plans:
         training_plan.training_end_date = (
@@ -394,7 +395,6 @@ def completed_test_workout_event(payload):
         )
         for exercise_metric_type in exercise_metric_types
     ]
-
     ClimberMetric.objects.bulk_create(climber_metrics_to_create)
 
 
@@ -404,23 +404,7 @@ def create_complete_workout(data, climber: Climber, workout_id: UUID) -> str:
     )
     form = CompleteWorkoutForm(workout, data)
     if form.is_valid():
-        completed_workout = CompletedWorkout(
-            workout=workout,
-            perceived_rpe=form.cleaned_data['intensity'],
-            completed_percentage=form.cleaned_data['completed_percentage'],
-            notes=form.cleaned_data['notes'],
-        )
-        with transaction.atomic():
-            completed_workout.save()
-            if workout.exercise.is_test:
-                async_task(
-                    func=completed_test_workout_event,
-                    payload={
-                        'climber_id': climber.id,
-                        'workout_id': completed_workout.id,
-                        'value': form.cleaned_data['test_value'],
-                    },
-                )
+        form.save()
 
     return str(workout.day.week.training_plan_id)
 
